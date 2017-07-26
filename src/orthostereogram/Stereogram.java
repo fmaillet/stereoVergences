@@ -6,8 +6,10 @@
 package orthostereogram;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -22,22 +24,50 @@ public class Stereogram extends JPanel {
     static public BufferedImage OD, OG, ana ;
     static private Anaglyph anaglyph ;
     public int clue ;
-    static public int deltaX ;
+    static public int deltaPixelsX ;
+    static public int currentVergenceValue;
     
-    public Stereogram (int size, int initialDelta) {
-        //Convergence
-        deltaX = initialDelta ;
-        //Create the image
-        OD = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        OG = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        ana = new BufferedImage(size + Math.abs(deltaX), size, BufferedImage.TYPE_INT_RGB);
-        this.setSize(size + Math.abs(deltaX), size);
+    //needed to calculate vergence
+    static Dimension screenSize ;
+    static int screenResolution;
+    static double workingDistance = 70 ;
+    
+    public Stereogram (int stereogramSize, int initialDelta) {
+        //Just to be able to calculate pixels vs vergence demand
+        screenResolution = Toolkit.getDefaultToolkit().getScreenResolution() ;
         
+        //Vergence de base
+        currentVergenceValue = initialDelta ;
+        deltaPixelsX = calcPixelsForVergence(initialDelta) ;
+        //Create the image
+        OD = new BufferedImage(stereogramSize, stereogramSize, BufferedImage.TYPE_INT_RGB);
+        OG = new BufferedImage(stereogramSize, stereogramSize, BufferedImage.TYPE_INT_RGB);
+        ana = new BufferedImage(stereogramSize + Math.abs(deltaPixelsX), stereogramSize, BufferedImage.TYPE_INT_RGB);
+        this.setSize(stereogramSize + Math.abs(deltaPixelsX), stereogramSize);
+        //Render anaglyph
         anaglyph = new Anaglyph () ;
+        
     }
     
+    public int calcPixelsForVergence (int vergence) {
+        
+        //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
+        double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) screenResolution ;
+        //System.out.println (pixels) ;
+        return (int) Math.round(pixels) ;
+    }
+    
+    //step a vergence
     public void stepVergence (int delta) {
-        deltaX = deltaX + delta ;
+        currentVergenceValue = currentVergenceValue + delta ;
+        deltaPixelsX = calcPixelsForVergence ( currentVergenceValue ) ;
+        resize (OD.getWidth(), false) ;
+    }
+    
+    //Just to go to a fixed vergence value
+    public void goVergence (int value) {
+        currentVergenceValue = value ;
+        deltaPixelsX = calcPixelsForVergence (value) ;
         resize (OD.getWidth(), false) ;
     }
     
@@ -47,9 +77,9 @@ public class Stereogram extends JPanel {
         ana.flush(); ana = null ;
         OD = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_RGB);
         OG = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_RGB);
-        ana = new BufferedImage(newSize + Math.abs(deltaX), newSize, BufferedImage.TYPE_INT_RGB);
+        ana = new BufferedImage(newSize + Math.abs(deltaPixelsX), newSize, BufferedImage.TYPE_INT_RGB);
         resetImg (keepClue) ;
-        this.setSize(newSize + Math.abs(deltaX), newSize);
+        this.setSize(newSize + Math.abs(deltaPixelsX), newSize);
         repaint() ;
     }
     
@@ -96,14 +126,14 @@ public class Stereogram extends JPanel {
                 OD.setRGB(dc+i + depth, j+dh, colour.getRGB());
             }
         //On crée l'anaglyphe
-        anaglyph.createStereoscopicCombinedImage (OG, OD, ana, deltaX);
-        if (deltaX < 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
-        else if (deltaX < 0 & (clue == KeyEvent.VK_RIGHT)) clue = KeyEvent.VK_LEFT ;
+        anaglyph.createStereoscopicCombinedImage (OG, OD, ana, deltaPixelsX);
+        if (deltaPixelsX < 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
+        else if (deltaPixelsX < 0 & (clue == KeyEvent.VK_RIGHT)) clue = KeyEvent.VK_LEFT ;
     }
     
     public void paint(Graphics g) {
       
-        if (deltaX >= 0)
+        if (deltaPixelsX >= 0)
             g.drawImage(ana, 0,0,this);
         else
             g.drawImage(ana, 0 + ana.getWidth(), 0, -ana.getWidth(), ana.getHeight(), this);

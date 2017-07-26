@@ -11,7 +11,7 @@ package orthostereogram;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.1.0" ;
+    public static final String VERSION = "0.2.0" ;
 
     /**
      * @param args the command line arguments
@@ -22,7 +22,7 @@ public class OrthoStereogram {
         
         //Main Frame
         NewController controller = new NewController () ;
-        controller.setSize(400, 650);
+        controller.setSize(450, 650);
         controller.setLocationRelativeTo(null);
         controller.setVisible(true);
     }

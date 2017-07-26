@@ -101,7 +101,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         //Position
         setLocationRelativeTo(null);
         //Current deltaX value (in pixels)
-        value = new JLabel (String.valueOf(Stereogram.deltaX));
+        value = new JLabel (String.valueOf(Stereogram.deltaPixelsX));
         value.setBounds(20, 20, 150, 30);
         this.getContentPane().add(value) ;
     }
@@ -161,14 +161,14 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
         if (keyCode == bimage.clue) {
-            
             if (audioOK.stopped()) audioOK.play() ;
             hideCursor () ;
             goodAnswer () ;
         }
         else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
-            
             if (audioBAD.stopped()) audioBAD.play() ;
+            hideCursor () ;
+            badAnswer () ;
         }
         
         if (keyCode == VK_ADD &  !ke.isControlDown()) System.out.println("Plus");
@@ -189,18 +189,24 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     
     public void goodAnswer () {
         
-        if (currentDirectionOfWork == CONVERGENCE & (Stereogram.deltaX+step)>max) {
+        if (currentDirectionOfWork == CONVERGENCE & (Stereogram.deltaPixelsX+step)>max) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
-        if (currentDirectionOfWork == DIVERGENCE & (Stereogram.deltaX+step)<min) {
+        if (currentDirectionOfWork == DIVERGENCE & (Stereogram.deltaPixelsX+step)<min) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
         bimage.stepVergence (step) ;
-        value.setText(String.valueOf(Stereogram.deltaX));
+        value.setText(String.valueOf(Stereogram.currentVergenceValue));
         repaint () ;
         
+    }
+    
+    public void badAnswer () {
+        bimage.goVergence(0);
+        value.setText(String.valueOf(Stereogram.currentVergenceValue));
+        repaint () ;
     }
 
     @Override

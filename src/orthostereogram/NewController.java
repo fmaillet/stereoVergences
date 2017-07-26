@@ -5,6 +5,9 @@
  */
 package orthostereogram;
 
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -17,8 +20,15 @@ public class NewController extends javax.swing.JFrame {
      * Creates new form NewController
      */
     public NewController() {
+        setLayout(null);
         initComponents();
-        setTitle ("orthoStéréogram (F. Maillet - "+OrthoStereogram.VERSION+")") ;
+        jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
+        //image
+        Image imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
+        jImage.setIcon(new ImageIcon(imgBR)); jImage.setText("");
+        setTitle ("StéréoVergences (F. Maillet - "+OrthoStereogram.VERSION+")") ;
+        this.getContentPane().setBackground(Color.CYAN);
+        this.setResizable(false);
     }
 
     /**
@@ -30,6 +40,7 @@ public class NewController extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel8 = new javax.swing.JLabel();
         jStart = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -39,10 +50,22 @@ public class NewController extends javax.swing.JFrame {
         jMin = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         jInitial = new javax.swing.JSpinner();
+        jLabel6 = new javax.swing.JLabel();
+        jScreen1 = new javax.swing.JSpinner();
+        jLabel7 = new javax.swing.JLabel();
+        jUnit = new javax.swing.JLabel();
+        jUnit2 = new javax.swing.JLabel();
+        jUnit3 = new javax.swing.JLabel();
+        jUnit4 = new javax.swing.JLabel();
+        jImage = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        jLabel8.setText("jLabel8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.cyan);
-        setPreferredSize(new java.awt.Dimension(400, 650));
+        setPreferredSize(new java.awt.Dimension(420, 650));
+        getContentPane().setLayout(null);
 
         jStart.setText("Démarrer");
         jStart.addActionListener(new java.awt.event.ActionListener() {
@@ -50,76 +73,74 @@ public class NewController extends javax.swing.JFrame {
                 jStartActionPerformed(evt);
             }
         });
+        getContentPane().add(jStart);
+        jStart.setBounds(32, 291, 90, 23);
 
         jLabel1.setText("Max :");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(220, 190, 40, 14);
 
         jLabel2.setText("Step :");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(32, 230, 40, 14);
 
         jMax.setModel(new javax.swing.SpinnerNumberModel(35, 10, 60, 5));
+        getContentPane().add(jMax);
+        jMax.setBounds(270, 189, 57, 20);
 
-        jStep.setModel(new javax.swing.SpinnerNumberModel(10, -30, 30, 1));
+        jStep.setModel(new javax.swing.SpinnerNumberModel(5, -30, 30, 1));
+        getContentPane().add(jStep);
+        jStep.setBounds(100, 227, 55, 20);
 
         jLabel3.setText("Min :");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(32, 192, 40, 14);
 
         jMin.setModel(new javax.swing.SpinnerNumberModel(-10, -30, 60, 1));
+        getContentPane().add(jMin);
+        jMin.setBounds(98, 189, 57, 20);
 
         jLabel4.setText("Initial value :");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(32, 154, 62, 14);
 
         jInitial.setModel(new javax.swing.SpinnerNumberModel(0, -30, 60, 1));
+        getContentPane().add(jInitial);
+        jInitial.setBounds(98, 151, 57, 20);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jStart)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(138, 138, 138)
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(37, 37, 37)
-                                        .addComponent(jStep, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(107, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jInitial, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jInitial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(44, 44, 44)
-                .addComponent(jStart)
-                .addContainerGap(274, Short.MAX_VALUE))
-        );
+        jLabel6.setText("Working distance :");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(180, 30, 110, 14);
+
+        jScreen1.setModel(new javax.swing.SpinnerNumberModel(70, 20, 300, 10));
+        getContentPane().add(jScreen1);
+        jScreen1.setBounds(300, 30, 57, 20);
+
+        jLabel7.setText("(cm)");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(370, 30, 30, 14);
+
+        jUnit.setText("\\u");
+        getContentPane().add(jUnit);
+        jUnit.setBounds(165, 154, 10, 14);
+
+        jUnit2.setText("\\u");
+        getContentPane().add(jUnit2);
+        jUnit2.setBounds(165, 192, 10, 14);
+
+        jUnit3.setText("\\u");
+        getContentPane().add(jUnit3);
+        jUnit3.setBounds(337, 192, 10, 14);
+
+        jUnit4.setText("\\u");
+        getContentPane().add(jUnit4);
+        jUnit4.setBounds(165, 230, 10, 14);
+
+        jImage.setText("image");
+        getContentPane().add(jImage);
+        jImage.setBounds(10, 11, 130, 70);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(10, 122, 390, 10);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -168,14 +189,24 @@ public class NewController extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jImage;
     private javax.swing.JSpinner jInitial;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JSpinner jMax;
     private javax.swing.JSpinner jMin;
+    private javax.swing.JSpinner jScreen1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton jStart;
     private javax.swing.JSpinner jStep;
+    private javax.swing.JLabel jUnit;
+    private javax.swing.JLabel jUnit2;
+    private javax.swing.JLabel jUnit3;
+    private javax.swing.JLabel jUnit4;
     // End of variables declaration//GEN-END:variables
 }
