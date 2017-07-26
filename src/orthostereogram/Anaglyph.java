@@ -42,6 +42,14 @@ public class Anaglyph {
     public static void createStereoscopicCombinedImage(
             BufferedImage left, BufferedImage right, BufferedImage combined, int deltaX) {
         
+        if (deltaX < 0 ) {
+            BufferedImage tmp = left ;
+            left = right ;
+            right = tmp ;
+            deltaX = - deltaX ;
+        }
+        
+        
         int width = left.getWidth();
         int height = left.getHeight();
         

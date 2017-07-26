@@ -10,6 +10,8 @@ package orthostereogram;
  * @author Fred
  */
 public class OrthoStereogram {
+    
+    public static final String VERSION = "0.1.0" ;
 
     /**
      * @param args the command line arguments
@@ -19,7 +21,7 @@ public class OrthoStereogram {
         System.setProperty("sun.awt.noerasebackground", "true");
         
         //Main Frame
-        Controller controller = new Controller () ;
+        NewController controller = new NewController () ;
         controller.setSize(400, 650);
         controller.setLocationRelativeTo(null);
         controller.setVisible(true);

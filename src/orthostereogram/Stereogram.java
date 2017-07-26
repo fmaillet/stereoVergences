@@ -22,21 +22,21 @@ public class Stereogram extends JPanel {
     static public BufferedImage OD, OG, ana ;
     static private Anaglyph anaglyph ;
     public int clue ;
-    static private int deltaX ;
+    static public int deltaX ;
     
-    public Stereogram (int size) {
+    public Stereogram (int size, int initialDelta) {
         //Convergence
-        deltaX = 10 ;
+        deltaX = initialDelta ;
         //Create the image
         OD = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         OG = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        ana = new BufferedImage(size + deltaX, size, BufferedImage.TYPE_INT_RGB);
-        this.setSize(size + deltaX, size);
+        ana = new BufferedImage(size + Math.abs(deltaX), size, BufferedImage.TYPE_INT_RGB);
+        this.setSize(size + Math.abs(deltaX), size);
         
         anaglyph = new Anaglyph () ;
     }
     
-    public void incConvergence (int delta) {
+    public void stepVergence (int delta) {
         deltaX = deltaX + delta ;
         resize (OD.getWidth(), false) ;
     }
@@ -47,9 +47,9 @@ public class Stereogram extends JPanel {
         ana.flush(); ana = null ;
         OD = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_RGB);
         OG = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_RGB);
-        ana = new BufferedImage(newSize + deltaX, newSize, BufferedImage.TYPE_INT_RGB);
+        ana = new BufferedImage(newSize + Math.abs(deltaX), newSize, BufferedImage.TYPE_INT_RGB);
         resetImg (keepClue) ;
-        this.setSize(newSize + deltaX, newSize);
+        this.setSize(newSize + Math.abs(deltaX), newSize);
         repaint() ;
     }
     
@@ -97,11 +97,16 @@ public class Stereogram extends JPanel {
             }
         //On crée l'anaglyphe
         anaglyph.createStereoscopicCombinedImage (OG, OD, ana, deltaX);
+        if (deltaX < 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
+        else if (deltaX < 0 & (clue == KeyEvent.VK_RIGHT)) clue = KeyEvent.VK_LEFT ;
     }
     
     public void paint(Graphics g) {
       
-      g.drawImage(ana, 0,0,this);
+        if (deltaX >= 0)
+            g.drawImage(ana, 0,0,this);
+        else
+            g.drawImage(ana, 0 + ana.getWidth(), 0, -ana.getWidth(), ana.getHeight(), this);
       
    }
 }

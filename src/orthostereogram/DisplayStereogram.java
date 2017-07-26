@@ -30,6 +30,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import org.newdawn.easyogg.OggClip;
 
 /**
@@ -42,8 +43,19 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int imgSize = 400 ;
     OggClip audioOK = null ;
     OggClip audioBAD = null ;
+    JLabel value ;
     
-    public DisplayStereogram () {
+    //Constants
+    final static private int CONVERGENCE = 1  ;
+    final static private int DIVERGENCE  = -1 ;
+    
+    //Parameters
+    static private int step = 5 ;
+    static private int max = 35 ;
+    static private int min = -10 ;
+    static private int currentDirectionOfWork = CONVERGENCE ;
+    
+    public DisplayStereogram (int initialDelta) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
         setLayout(null);
@@ -52,7 +64,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
 
         
         //On crée un stéréogramme
-        bimage = new Stereogram (imgSize) ;
+        bimage = new Stereogram (imgSize, initialDelta) ;
         bimage.resetImg (false) ; 
         getContentPane().add(bimage);
         
@@ -61,6 +73,14 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
         try { audioBAD = new OggClip(this.getClass().getResourceAsStream("incorrect.ogg")); }
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
+    }
+    
+    public void setMode (int step, int max, int min) {
+        
+        //Step increment
+        this.step = step ;
+        this.max = max ;
+        this.min = min ;
     }
     
     public void setSizes () {
@@ -80,6 +100,10 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         }); 
         //Position
         setLocationRelativeTo(null);
+        //Current deltaX value (in pixels)
+        value = new JLabel (String.valueOf(Stereogram.deltaX));
+        value.setBounds(20, 20, 150, 30);
+        this.getContentPane().add(value) ;
     }
     
     public void hideCursor () {
@@ -137,14 +161,14 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
         if (keyCode == bimage.clue) {
-            bimage.incConvergence (5) ;
-            repaint () ;
+            
+            if (audioOK.stopped()) audioOK.play() ;
             hideCursor () ;
-            if (audioOK != null) audioOK.play() ;
+            goodAnswer () ;
         }
         else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
             
-            if (audioBAD != null) audioBAD.play() ;
+            if (audioBAD.stopped()) audioBAD.play() ;
         }
         
         if (keyCode == VK_ADD &  !ke.isControlDown()) System.out.println("Plus");
@@ -161,6 +185,22 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
             bimage.resize(imgSize, true);
         }
         setSizes () ;
+    }
+    
+    public void goodAnswer () {
+        
+        if (currentDirectionOfWork == CONVERGENCE & (Stereogram.deltaX+step)>max) {
+            step = - step ;
+            currentDirectionOfWork = - currentDirectionOfWork ;
+        }
+        if (currentDirectionOfWork == DIVERGENCE & (Stereogram.deltaX+step)<min) {
+            step = - step ;
+            currentDirectionOfWork = - currentDirectionOfWork ;
+        }
+        bimage.stepVergence (step) ;
+        value.setText(String.valueOf(Stereogram.deltaX));
+        repaint () ;
+        
     }
 
     @Override
