@@ -88,7 +88,7 @@ public class NewController extends javax.swing.JFrame {
         getContentPane().add(jMax);
         jMax.setBounds(270, 189, 57, 20);
 
-        jStep.setModel(new javax.swing.SpinnerNumberModel(5, -30, 30, 1));
+        jStep.setModel(new javax.swing.SpinnerNumberModel(2, -30, 30, 1));
         getContentPane().add(jStep);
         jStep.setBounds(100, 227, 55, 20);
 

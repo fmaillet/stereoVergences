@@ -189,11 +189,11 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     
     public void goodAnswer () {
         
-        if (currentDirectionOfWork == CONVERGENCE & (Stereogram.deltaPixelsX+step)>max) {
+        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue>max) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
-        if (currentDirectionOfWork == DIVERGENCE & (Stereogram.deltaPixelsX+step)<min) {
+        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue<min) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
