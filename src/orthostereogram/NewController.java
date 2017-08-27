@@ -19,13 +19,18 @@ public class NewController extends javax.swing.JFrame {
     /**
      * Creates new form NewController
      */
-    public NewController() {
+    public NewController(boolean xboxConnected) {
         setLayout(null);
         initComponents();
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
-        //image
-        Image imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
-        jImage.setIcon(new ImageIcon(imgBR)); jImage.setText("");
+        //image Lunettes 3D
+        Image imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
+        jImg3D.setIcon(new ImageIcon(imgBR)); jImg3D.setText("");
+        //image xbox
+        Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
+        jImgXBOX.setIcon(new ImageIcon(imgXBOX)); jImgXBOX.setText("");
+        jImgXBOX.setEnabled(xboxConnected);
+        //Divers
         setTitle ("StéréoVergences (F. Maillet - "+OrthoStereogram.VERSION+")") ;
         this.getContentPane().setBackground(Color.CYAN);
         this.setResizable(false);
@@ -41,11 +46,11 @@ public class NewController extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel8 = new javax.swing.JLabel();
-        jStart = new javax.swing.JButton();
+        jStart_CD = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jMax = new javax.swing.JSpinner();
-        jStep = new javax.swing.JSpinner();
+        jTimeOut = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jMin = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
@@ -57,144 +62,211 @@ public class NewController extends javax.swing.JFrame {
         jUnit2 = new javax.swing.JLabel();
         jUnit3 = new javax.swing.JLabel();
         jUnit4 = new javax.swing.JLabel();
-        jImage = new javax.swing.JLabel();
+        jImg3D = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel5 = new javax.swing.JLabel();
+        jStep = new javax.swing.JSpinner();
+        jUnit5 = new javax.swing.JLabel();
+        jImgXBOX = new javax.swing.JLabel();
 
         jLabel8.setText("jLabel8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.cyan);
         setPreferredSize(new java.awt.Dimension(420, 650));
-        getContentPane().setLayout(null);
 
-        jStart.setText("Démarrer");
-        jStart.addActionListener(new java.awt.event.ActionListener() {
+        jStart_CD.setText("C <-> D");
+        jStart_CD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStartActionPerformed(evt);
+                jStart_CDActionPerformed(evt);
             }
         });
-        getContentPane().add(jStart);
-        jStart.setBounds(32, 291, 90, 23);
 
         jLabel1.setText("Max :");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(220, 190, 40, 14);
 
-        jLabel2.setText("Step :");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(32, 230, 40, 14);
+        jLabel2.setText("Time Out :");
 
         jMax.setModel(new javax.swing.SpinnerNumberModel(35, 10, 60, 5));
-        getContentPane().add(jMax);
-        jMax.setBounds(270, 189, 57, 20);
 
-        jStep.setModel(new javax.swing.SpinnerNumberModel(2, -30, 30, 1));
-        getContentPane().add(jStep);
-        jStep.setBounds(100, 227, 55, 20);
+        jTimeOut.setModel(new javax.swing.SpinnerNumberModel(20, 0, 120, 5));
 
         jLabel3.setText("Min :");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(32, 192, 40, 14);
 
         jMin.setModel(new javax.swing.SpinnerNumberModel(-10, -30, 60, 1));
-        getContentPane().add(jMin);
-        jMin.setBounds(98, 189, 57, 20);
 
         jLabel4.setText("Initial value :");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(32, 154, 62, 14);
 
         jInitial.setModel(new javax.swing.SpinnerNumberModel(0, -30, 60, 1));
-        getContentPane().add(jInitial);
-        jInitial.setBounds(98, 151, 57, 20);
 
         jLabel6.setText("Working distance :");
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(180, 30, 110, 14);
 
         jScreen1.setModel(new javax.swing.SpinnerNumberModel(70, 20, 300, 10));
-        getContentPane().add(jScreen1);
-        jScreen1.setBounds(300, 30, 57, 20);
 
         jLabel7.setText("(cm)");
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(370, 30, 30, 14);
 
         jUnit.setText("\\u");
-        getContentPane().add(jUnit);
-        jUnit.setBounds(165, 154, 10, 14);
 
         jUnit2.setText("\\u");
-        getContentPane().add(jUnit2);
-        jUnit2.setBounds(165, 192, 10, 14);
 
         jUnit3.setText("\\u");
-        getContentPane().add(jUnit3);
-        jUnit3.setBounds(337, 192, 10, 14);
 
         jUnit4.setText("\\u");
-        getContentPane().add(jUnit4);
-        jUnit4.setBounds(165, 230, 10, 14);
 
-        jImage.setText("image");
-        getContentPane().add(jImage);
-        jImage.setBounds(10, 11, 130, 70);
-        getContentPane().add(jSeparator1);
-        jSeparator1.setBounds(10, 122, 390, 10);
+        jImg3D.setText("image");
+
+        jLabel5.setText("Step :");
+
+        jStep.setModel(new javax.swing.SpinnerNumberModel(2, -30, 30, 1));
+
+        jUnit5.setText("seconds");
+
+        jImgXBOX.setText("image");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel4)
+                        .addGap(4, 4, 4)
+                        .addComponent(jInitial, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jUnit))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jUnit2)
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jUnit3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(jStep, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jStart_CD, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jScreen1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jScreen1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7)))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jInitial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jUnit))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel3))
+                    .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jUnit2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel1))
+                    .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jUnit3)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jUnit4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel5)))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jStart_CD)
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStartActionPerformed
+    private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue()) ;
-        stereo.setMode ((Integer) jStep.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue()) ;
+        stereo.setMode ((Integer) jStep.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
-    }//GEN-LAST:event_jStartActionPerformed
+    }//GEN-LAST:event_jStart_CDActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NewController().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jImage;
+    private javax.swing.JLabel jImg3D;
+    private javax.swing.JLabel jImgXBOX;
     private javax.swing.JSpinner jInitial;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -202,11 +274,13 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JSpinner jMin;
     private javax.swing.JSpinner jScreen1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton jStart;
+    private javax.swing.JButton jStart_CD;
     private javax.swing.JSpinner jStep;
+    private javax.swing.JSpinner jTimeOut;
     private javax.swing.JLabel jUnit;
     private javax.swing.JLabel jUnit2;
     private javax.swing.JLabel jUnit3;
     private javax.swing.JLabel jUnit4;
+    private javax.swing.JLabel jUnit5;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JPanel;
 
 
@@ -64,7 +65,28 @@ public class Stereogram extends JPanel {
     }
     
     //Just to go to a fixed vergence value
-    public void goVergence (int value) {
+    public void goToVergence (int value) {
+        currentVergenceValue = value ;
+        deltaPixelsX = calcPixelsForVergence (value) ;
+        resize (OD.getWidth(), false) ;
+    }
+    
+    public void slideToVergence (DisplayStereogram display, int value) {
+        int step ;
+        if (currentVergenceValue == value) return ;
+        int debut = calcPixelsForVergence (currentVergenceValue ) ;
+        int fin   = calcPixelsForVergence (value ) ;
+        //Calcul d'un step en pixels
+        step = (fin - debut) / 10 ;
+        System.out.println (step) ;
+        for (int i = debut; i>fin; i=i+step) {
+            System.out.println (i) ;
+            ana.flush(); ana = null ;
+            ana = new BufferedImage(OD.getWidth() + Math.abs(i), OD.getWidth(), BufferedImage.TYPE_INT_RGB);
+            anaglyph.createStereoscopicCombinedImage (OG, OD, ana, i);
+            display.repaint () ;
+            try {TimeUnit.MILLISECONDS.sleep(250);} catch (InterruptedException e) {}
+        }
         currentVergenceValue = value ;
         deltaPixelsX = calcPixelsForVergence (value) ;
         resize (OD.getWidth(), false) ;

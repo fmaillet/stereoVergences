@@ -5,6 +5,7 @@
  */
 package orthostereogram;
 
+import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -20,6 +21,7 @@ import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
@@ -29,6 +31,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import org.newdawn.easyogg.OggClip;
@@ -37,7 +42,7 @@ import org.newdawn.easyogg.OggClip;
  *
  * @author Fred
  */
-public class DisplayStereogram extends JFrame implements WindowListener, KeyListener, MouseMotionListener {
+public class DisplayStereogram extends JFrame implements WindowListener, KeyListener, MouseMotionListener, XboxControllerListener {
     
     static private Stereogram bimage  ;
     static private int imgSize = 400 ;
@@ -53,7 +58,12 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int step = 5 ;
     static private int max = 35 ;
     static private int min = -10 ;
+    static private int timeOut = 20 ;
     static private int currentDirectionOfWork = CONVERGENCE ;
+    
+    //Gestion du temps
+    final ScheduledThreadPoolExecutor executor ;
+    ScheduledFuture<?> scheduledFuture ;
     
     public DisplayStereogram (int initialDelta) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,6 +71,10 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         setLayout(null);
         this.setSize(1000, 700);
         getContentPane().setBackground( Color.WHITE );
+        
+        //Si on a la box
+        if (OrthoStereogram.xbox.isConnected())
+            OrthoStereogram.xbox.addXboxControllerListener(this );
 
         
         //On crée un stéréogramme
@@ -73,14 +87,18 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
         try { audioBAD = new OggClip(this.getClass().getResourceAsStream("incorrect.ogg")); }
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
+        
+        //On initialise le timeout
+        executor = new ScheduledThreadPoolExecutor(1);        
     }
     
-    public void setMode (int step, int max, int min) {
+    public void setMode (int step, int max, int min, int timeOut) {
         
         //Step increment
         this.step = step ;
         this.max = max ;
         this.min = min ;
+        this.timeOut = timeOut ;
     }
     
     public void setSizes () {
@@ -120,32 +138,32 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
 
     @Override
     public void windowClosing(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void windowClosed(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void windowIconified(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void windowDeiconified(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void windowActivated(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void windowDeactivated(WindowEvent we) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -165,11 +183,12 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
             hideCursor () ;
             goodAnswer () ;
         }
-        else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
+        else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT | keyCode == VK_SPACE) {
             if (audioBAD.stopped()) audioBAD.play() ;
             hideCursor () ;
             badAnswer () ;
         }
+        
         
         if (keyCode == VK_ADD &  !ke.isControlDown()) System.out.println("Plus");
         else if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
@@ -188,25 +207,32 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     }
     
     public void goodAnswer () {
-        
-        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue>max) {
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
+        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue > max) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
-        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue<min) {
+        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue < min) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
         bimage.stepVergence (step) ;
         value.setText(String.valueOf(Stereogram.currentVergenceValue));
         repaint () ;
-        
+        //On relance le timer
+        scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
     
     public void badAnswer () {
-        bimage.goVergence(0);
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        bimage.stepVergence(-step);
         value.setText(String.valueOf(Stereogram.currentVergenceValue));
         repaint () ;
+    }
+    
+    public void timeOut () {
+        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_SPACE, 'A'));
     }
 
     @Override
@@ -222,6 +248,107 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     @Override
     public void mouseMoved(MouseEvent me) {
         setCursor(Cursor.getDefaultCursor());
+    }
+
+    @Override
+    public void buttonA(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonB(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonX(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonY(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void back(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void start(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftShoulder(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightShoulder(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumb(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumb(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void dpad(int i, boolean bln) {
+        if (bln)
+            switch (i) {
+            case 0:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
+                     break;
+            case 2:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
+                     break;         
+            case 4:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
+                     break;
+            case 6:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
+                     break;       
+            default: break ;
+            }
+    }
+
+    @Override
+    public void leftTrigger(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightTrigger(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumbMagnitude(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumbDirection(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumbMagnitude(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumbDirection(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void isConnected(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
  
     

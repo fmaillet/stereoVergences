@@ -1,0 +1,20 @@
+Versions :
+
+A faire :
+- possibilité de "slider" jusqu'à une certaine valeur (à partir de la valeur actuelle)
+- implémenter la verticalité
+- bug echo sur le son ?! => solution ? mettre un thread avec le son à jouer genre "play(bad-answer)" dans un thread autonome
+(revoir ce qui a été fait ailleurs sur orthoEVA ou orthoVS ?)
+
+0.3.0 (en cours)
+- time out sur réponses (après la première)
+
+0.2.1 (27.07/2017)
+- correction bug du calcul de vergence
+
+0.2.0 (26.07.2017)
+- calcul des vergences vs pixels
+- aller-retour convergence-divergence
+
+0.1.0 (24.07.207)
+- création du stéréogramme avec anaglyph
