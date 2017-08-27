@@ -5,11 +5,18 @@ A faire :
 - implémenter la verticalité
 - bug echo sur le son ?! => solution ? mettre un thread avec le son à jouer genre "play(bad-answer)" dans un thread autonome
 (revoir ce qui a été fait ailleurs sur orthoEVA ou orthoVS ?)
+- adapter selon les lunettes R/B ou B/R
 
-0.3.0 (en cours)
+0.3.1 (27.08.2017)
+- correction bug dépassement des limites
+- activité variée C+D, C, D
+
+0.3.0 (27.08.2017)
 - time out sur réponses (après la première)
+- xbox controller : added answer dpad
+- début de type d'activité (C<->D)
 
-0.2.1 (27.07/2017)
+0.2.1 (27.07.2017)
 - correction bug du calcul de vergence
 
 0.2.0 (26.07.2017)

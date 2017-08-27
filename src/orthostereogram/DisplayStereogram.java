@@ -51,8 +51,8 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     JLabel value ;
     
     //Constants
-    final static private int CONVERGENCE = 1  ;
-    final static private int DIVERGENCE  = -1 ;
+    final static public int CONVERGENCE = 1  ;
+    final static public int DIVERGENCE  = -1 ;
     
     //Parameters
     static private int step = 5 ;
@@ -65,7 +65,8 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
     
-    public DisplayStereogram (int initialDelta) {
+    public DisplayStereogram (int initialDelta, int currentDirectionOfWork) {
+        this.currentDirectionOfWork = currentDirectionOfWork ;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
         setLayout(null);
@@ -209,11 +210,11 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     public void goodAnswer () {
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
-        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue > max) {
+        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue+step > max) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
-        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue < min) {
+        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue+step < min) {
             step = - step ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
