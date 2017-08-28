@@ -55,6 +55,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     final static public int DIVERGENCE  = -1 ;
     
     //Parameters
+    static private int stepC, stepD ;
     static private int step = 5 ;
     static private int max = 35 ;
     static private int min = -10 ;
@@ -66,14 +67,17 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     ScheduledFuture<?> scheduledFuture ;
     
     public DisplayStereogram (int initialDelta, int currentDirectionOfWork) {
-        this.currentDirectionOfWork = currentDirectionOfWork ;
+        
+        //On travaille dans quel sens : C ou D ?
+        this.currentDirectionOfWork = currentDirectionOfWork ;        
+        //jolie fenêtre
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
         setLayout(null);
         this.setSize(1000, 700);
         getContentPane().setBackground( Color.WHITE );
         
-        //Si on a la box
+        //Si on a la xbox
         if (OrthoStereogram.xbox.isConnected())
             OrthoStereogram.xbox.addXboxControllerListener(this );
 
@@ -93,10 +97,12 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         executor = new ScheduledThreadPoolExecutor(1);        
     }
     
-    public void setMode (int step, int max, int min, int timeOut) {
+    public void setMode (int stepC, int stepD, int max, int min, int timeOut) {
         
+        this.stepC = stepC ; this.stepD = stepD ;
         //Step increment
-        this.step = step ;
+        if (currentDirectionOfWork == CONVERGENCE) this.step = stepC ;
+        else this.step = -stepD ;
         this.max = max ;
         this.min = min ;
         this.timeOut = timeOut ;
@@ -208,18 +214,20 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     }
     
     public void goodAnswer () {
+        //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
+        //Directiond e travail ?
         if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue+step > max) {
-            step = - step ;
+            step = - stepD ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
         if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue+step < min) {
-            step = - step ;
+            step = stepC ;
             currentDirectionOfWork = - currentDirectionOfWork ;
         }
         bimage.stepVergence (step) ;
-        value.setText(String.valueOf(Stereogram.currentVergenceValue));
+        value.setText("Current: "+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
         repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
@@ -228,7 +236,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     public void badAnswer () {
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         bimage.stepVergence(-step);
-        value.setText(String.valueOf(Stereogram.currentVergenceValue));
+        value.setText("Current: "+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
         repaint () ;
     }
     

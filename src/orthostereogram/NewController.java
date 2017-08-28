@@ -23,6 +23,7 @@ public class NewController extends javax.swing.JFrame {
         setLayout(null);
         initComponents();
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
+        jUnit6.setText("\u0394");
         //image Lunettes 3D
         Image imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
         jImg3D.setIcon(new ImageIcon(imgBR)); jImg3D.setText("");
@@ -65,12 +66,15 @@ public class NewController extends javax.swing.JFrame {
         jImg3D = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel5 = new javax.swing.JLabel();
-        jStep = new javax.swing.JSpinner();
+        jStepC = new javax.swing.JSpinner();
         jUnit5 = new javax.swing.JLabel();
         jImgXBOX = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         jStart_C = new javax.swing.JButton();
         jStart_D = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jUnit6 = new javax.swing.JLabel();
+        jStepD = new javax.swing.JSpinner();
 
         jLabel8.setText("jLabel8");
 
@@ -117,9 +121,9 @@ public class NewController extends javax.swing.JFrame {
 
         jImg3D.setText("image");
 
-        jLabel5.setText("Step :");
+        jLabel5.setText("Step (C) :");
 
-        jStep.setModel(new javax.swing.SpinnerNumberModel(2, -30, 30, 1));
+        jStepC.setModel(new javax.swing.SpinnerNumberModel(2, 0, 30, 1));
 
         jUnit5.setText("seconds");
 
@@ -139,6 +143,12 @@ public class NewController extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setText("Step (D) :");
+
+        jUnit6.setText("\\u");
+
+        jStepD.setModel(new javax.swing.SpinnerNumberModel(1, 1, 30, 1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -153,32 +163,41 @@ public class NewController extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel5))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jInitial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jMin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jStep, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jStepC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTimeOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jUnit, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jUnit2, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(jUnit3))
-                            .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jUnit, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jUnit2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jUnit6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jUnit3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(30, 30, 30))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -240,25 +259,28 @@ public class NewController extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jUnit3)
-                            .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)))
+                            .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
-                                .addComponent(jUnit2)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jUnit2)
+                                    .addComponent(jLabel1))))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jStep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jUnit4))
+                        .addComponent(jStepC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jUnit4)
+                        .addComponent(jLabel9)
+                        .addComponent(jUnit6)
+                        .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel5)))
@@ -282,7 +304,7 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE) ;
-        stereo.setMode ((Integer) jStep.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -290,7 +312,7 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE) ;
-        stereo.setMode ((Integer) jStep.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue()) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -298,8 +320,8 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.DIVERGENCE) ;
-        int step = (Integer) jStep.getValue() ; step = - step ;
-        stereo.setMode (step, 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
+        int step = (Integer) jStepC.getValue() ; step = - step ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -319,6 +341,7 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JSpinner jMax;
     private javax.swing.JSpinner jMin;
     private javax.swing.JSpinner jScreen1;
@@ -327,12 +350,14 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JButton jStart_C;
     private javax.swing.JButton jStart_CD;
     private javax.swing.JButton jStart_D;
-    private javax.swing.JSpinner jStep;
+    private javax.swing.JSpinner jStepC;
+    private javax.swing.JSpinner jStepD;
     private javax.swing.JSpinner jTimeOut;
     private javax.swing.JLabel jUnit;
     private javax.swing.JLabel jUnit2;
     private javax.swing.JLabel jUnit3;
     private javax.swing.JLabel jUnit4;
     private javax.swing.JLabel jUnit5;
+    private javax.swing.JLabel jUnit6;
     // End of variables declaration//GEN-END:variables
 }

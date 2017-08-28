@@ -6,6 +6,11 @@ A faire :
 - bug echo sur le son ?! => solution ? mettre un thread avec le son à jouer genre "play(bad-answer)" dans un thread autonome
 (revoir ce qui a été fait ailleurs sur orthoEVA ou orthoVS ?)
 - adapter selon les lunettes R/B ou B/R
+- bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
+
+0.3.2 (en cours)
+- added differents steps for C or D
+- begin beter display information
 
 0.3.1 (27.08.2017)
 - correction bug dépassement des limites
