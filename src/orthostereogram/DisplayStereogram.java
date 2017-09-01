@@ -64,6 +64,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int min = -10 ;
     static private int timeOut = 20 ;
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
+    static private boolean alternate = false ;
     
     //Gestion du temps
     final ScheduledThreadPoolExecutor executor ;
@@ -100,7 +101,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         executor = new ScheduledThreadPoolExecutor(1);        
     }
     
-    public void setMode (int stepC, int stepD, int max, int min, int timeOut) {
+    public void setMode (int stepC, int stepD, int max, int min, int timeOut, boolean alternate) {
         
         this.stepC = stepC ; this.stepD = stepD ;
         //Step increment
@@ -111,6 +112,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         this.max = max ;
         this.min = min ;
         this.timeOut = timeOut ;
+        this.alternate = alternate ;
     }
     
     public void setSizes () {
@@ -224,20 +226,20 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
-        //Directiond e travail ?
+        //Faut-il changer le step ?
         if (currentDirectionOfWork == CONVERGENCE_UP & Stereogram.currentVergenceValue+step > max) {
             step = - stepC ;
             currentDirectionOfWork = CONVERGENCE_DOWN ;
         }
-        if (currentDirectionOfWork == CONVERGENCE_DOWN & Stereogram.currentVergenceValue+step < 0) {
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN & Stereogram.currentVergenceValue+step < 0) {
             step = - stepD ;
             currentDirectionOfWork = DIVERGENCE_UP ;
         }
-        if (currentDirectionOfWork == DIVERGENCE_UP & Stereogram.currentVergenceValue+step < min) {
+        else if (currentDirectionOfWork == DIVERGENCE_UP & Stereogram.currentVergenceValue+step < min) {
             step = stepD ;
             currentDirectionOfWork = DIVERGENCE_DOWN ;
         }
-        if (currentDirectionOfWork == DIVERGENCE_DOWN & Stereogram.currentVergenceValue+step > 0) {
+        else if (currentDirectionOfWork == DIVERGENCE_DOWN & Stereogram.currentVergenceValue+step > 0) {
             step = stepC ;
             currentDirectionOfWork = CONVERGENCE_UP ;
         }
