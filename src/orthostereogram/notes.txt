@@ -10,7 +10,9 @@ A faire :
 
 0.3.2 (en cours)
 - added differents steps for C or D
-- begin beter display information
+- size up information display with direction of work
+- corrected up and down steps values
+- corrected step bad answers
 
 0.3.1 (27.08.2017)
 - correction bug dépassement des limites

@@ -8,6 +8,7 @@ package orthostereogram;
 import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -51,8 +52,10 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     JLabel value ;
     
     //Constants
-    final static public int CONVERGENCE = 1  ;
-    final static public int DIVERGENCE  = -1 ;
+    final static public int CONVERGENCE_UP = 2  ;
+    final static public int CONVERGENCE_DOWN = 1  ;
+    final static public int DIVERGENCE_UP  = -1 ;
+    final static public int DIVERGENCE_DOWN  = -2 ;
     
     //Parameters
     static private int stepC, stepD ;
@@ -60,7 +63,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int max = 35 ;
     static private int min = -10 ;
     static private int timeOut = 20 ;
-    static private int currentDirectionOfWork = CONVERGENCE ;
+    static private int currentDirectionOfWork = CONVERGENCE_UP ;
     
     //Gestion du temps
     final ScheduledThreadPoolExecutor executor ;
@@ -101,8 +104,10 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         
         this.stepC = stepC ; this.stepD = stepD ;
         //Step increment
-        if (currentDirectionOfWork == CONVERGENCE) this.step = stepC ;
-        else this.step = -stepD ;
+        if (currentDirectionOfWork == CONVERGENCE_UP) this.step = stepC ;
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN) this.step = -stepC ;
+        else if (currentDirectionOfWork == DIVERGENCE_UP) this.step = -stepD ;
+        else this.step = stepD ;
         this.max = max ;
         this.min = min ;
         this.timeOut = timeOut ;
@@ -127,7 +132,8 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         setLocationRelativeTo(null);
         //Current deltaX value (in pixels)
         value = new JLabel (String.valueOf(Stereogram.deltaPixelsX));
-        value.setBounds(20, 20, 150, 30);
+        value.setFont(new Font(value.getFont().getName(), Font.BOLD, 16));
+        value.setBounds(20, 20, 150, 35);
         this.getContentPane().add(value) ;
     }
     
@@ -214,29 +220,54 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     }
     
     public void goodAnswer () {
+        String tmp = new String() ;
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
         //Directiond e travail ?
-        if (currentDirectionOfWork == CONVERGENCE & Stereogram.currentVergenceValue+step > max) {
+        if (currentDirectionOfWork == CONVERGENCE_UP & Stereogram.currentVergenceValue+step > max) {
+            step = - stepC ;
+            currentDirectionOfWork = CONVERGENCE_DOWN ;
+        }
+        if (currentDirectionOfWork == CONVERGENCE_DOWN & Stereogram.currentVergenceValue+step < 0) {
             step = - stepD ;
-            currentDirectionOfWork = - currentDirectionOfWork ;
+            currentDirectionOfWork = DIVERGENCE_UP ;
         }
-        if (currentDirectionOfWork == DIVERGENCE & Stereogram.currentVergenceValue+step < min) {
+        if (currentDirectionOfWork == DIVERGENCE_UP & Stereogram.currentVergenceValue+step < min) {
+            step = stepD ;
+            currentDirectionOfWork = DIVERGENCE_DOWN ;
+        }
+        if (currentDirectionOfWork == DIVERGENCE_DOWN & Stereogram.currentVergenceValue+step > 0) {
             step = stepC ;
-            currentDirectionOfWork = - currentDirectionOfWork ;
+            currentDirectionOfWork = CONVERGENCE_UP ;
         }
+        //Step on
         bimage.stepVergence (step) ;
-        value.setText("Current: "+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
+        //Affichage
+        if (currentDirectionOfWork == CONVERGENCE_UP) tmp = "C\u2191 " ;
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN) tmp = "C\u2193 " ;
+        else if (currentDirectionOfWork == DIVERGENCE_UP) tmp = "D\u2191 " ;
+        else tmp = "D\u2193 " ;
+        value.setText(tmp+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
         repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
     
     public void badAnswer () {
+        String tmp = new String() ;
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
-        bimage.stepVergence(-step);
-        value.setText("Current: "+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
+        if (currentDirectionOfWork == CONVERGENCE_UP & Stereogram.currentVergenceValue > 0) bimage.stepVergence(-step);
+        if (currentDirectionOfWork == CONVERGENCE_DOWN & Stereogram.currentVergenceValue > 0) bimage.stepVergence(step);
+        if (currentDirectionOfWork == DIVERGENCE_UP & Stereogram.currentVergenceValue < 0) bimage.stepVergence(-step);
+        if (currentDirectionOfWork == DIVERGENCE_DOWN & Stereogram.currentVergenceValue < 0) bimage.stepVergence(step);
+        if (Stereogram.currentVergenceValue == 0) bimage.goToVergence(0);
+        //Affichage
+        if (currentDirectionOfWork == CONVERGENCE_UP) tmp = "C\u2191 " ;
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN) tmp = "C\u2193 " ;
+        else if (currentDirectionOfWork == DIVERGENCE_UP) tmp = "D\u2191 " ;
+        else tmp = "D\u2193 " ;
+        value.setText(tmp+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
         repaint () ;
     }
     

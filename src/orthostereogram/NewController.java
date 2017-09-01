@@ -303,7 +303,7 @@ public class NewController extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE) ;
+        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -311,7 +311,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_CDActionPerformed
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE) ;
+        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -319,7 +319,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_CActionPerformed
 
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.DIVERGENCE) ;
+        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.DIVERGENCE_UP) ;
         int step = (Integer) jStepC.getValue() ; step = - step ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue()) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
