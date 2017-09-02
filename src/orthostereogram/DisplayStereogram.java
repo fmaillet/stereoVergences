@@ -66,6 +66,10 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
     static private boolean alternate = false ;
     
+    //pour l'alternance
+    static int currentConvergenceValue ;
+    static int currentDivergenceValue ;
+    
     //Gestion du temps
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
@@ -113,6 +117,8 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         this.min = min ;
         this.timeOut = timeOut ;
         this.alternate = alternate ;
+        currentConvergenceValue = 0 ;
+        currentDivergenceValue = 0 ;
     }
     
     public void setSizes () {
@@ -223,10 +229,12 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     
     public void goodAnswer () {
         String tmp = new String() ;
+                
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
-        //Faut-il changer le step ?
+        
+        //On change le step aux bornes selon la direction de travail
         if (currentDirectionOfWork == CONVERGENCE_UP & Stereogram.currentVergenceValue+step > max) {
             step = - stepC ;
             currentDirectionOfWork = CONVERGENCE_DOWN ;
@@ -243,8 +251,65 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
             step = stepC ;
             currentDirectionOfWork = CONVERGENCE_UP ;
         }
+        //Si on alterne :
+        if (alternate)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP :
+                    currentConvergenceValue = currentConvergenceValue + stepC ;
+                    if (currentConvergenceValue > max) { currentConvergenceValue = max ; step = stepC = - stepC ; }
+                    else if (currentConvergenceValue < 0) { currentConvergenceValue = 0 ; step = stepC = - stepC ;}
+                    break;
+                case DIVERGENCE_UP :
+                    currentDivergenceValue = currentDivergenceValue - stepD ;
+                    if (currentDivergenceValue < min) { currentDivergenceValue = min ; step = stepD = - stepD ; }
+                    else if (currentDivergenceValue > 0) { currentDivergenceValue = 0 ; step = stepD = - stepD ;}
+                    break ;
+            }
+        //avant de modifier la direcetion courante
+        if (currentDirectionOfWork == CONVERGENCE_UP) tmp = "C\u2191 " ;
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN) tmp = "C\u2193 " ;
+        else if (currentDirectionOfWork == DIVERGENCE_UP) tmp = "D\u2191 " ;
+        else tmp = "D\u2193 " ;
+        
         //Step on
-        bimage.stepVergence (step) ;
+        if (alternate & currentDirectionOfWork == CONVERGENCE_UP) {
+            bimage.goToVergence(currentConvergenceValue);
+            currentDirectionOfWork = DIVERGENCE_UP ;
+        }
+        else if (alternate & currentDirectionOfWork == DIVERGENCE_UP) {
+            bimage.goToVergence(currentDivergenceValue);
+            currentDirectionOfWork = CONVERGENCE_UP ;
+        }
+        else    bimage.stepVergence (step) ;
+        
+        //Mise à jour valeur courante
+        value.setText(tmp+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
+        repaint () ;
+        //On relance le timer
+        scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
+    }
+    
+    public void badAnswer () {
+        String tmp = new String() ;
+        //Time out off
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
+        //Si on alterne
+        if (alternate)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : bimage.goToVergence(currentDivergenceValue); currentDirectionOfWork = DIVERGENCE_UP ; break ;
+                case DIVERGENCE_UP  : bimage.goToVergence(currentConvergenceValue); currentDirectionOfWork = CONVERGENCE_UP ; break ;
+            }
+        //et si on alterne pas
+        else if (Stereogram.currentVergenceValue == 0) bimage.goToVergence(0);
+        else
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : if (Stereogram.currentVergenceValue > 0) bimage.stepVergence(-step); break ;
+                case CONVERGENCE_DOWN : if (Stereogram.currentVergenceValue > 0) bimage.stepVergence(step); break ;
+                case DIVERGENCE_UP : if (Stereogram.currentVergenceValue < 0) bimage.stepVergence(-step); break ;
+                case DIVERGENCE_DOWN : if (Stereogram.currentVergenceValue < 0) bimage.stepVergence(step); break ;
+            }
+        
         //Affichage
         if (currentDirectionOfWork == CONVERGENCE_UP) tmp = "C\u2191 " ;
         else if (currentDirectionOfWork == CONVERGENCE_DOWN) tmp = "C\u2193 " ;
@@ -254,23 +319,6 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
-    }
-    
-    public void badAnswer () {
-        String tmp = new String() ;
-        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
-        if (currentDirectionOfWork == CONVERGENCE_UP & Stereogram.currentVergenceValue > 0) bimage.stepVergence(-step);
-        if (currentDirectionOfWork == CONVERGENCE_DOWN & Stereogram.currentVergenceValue > 0) bimage.stepVergence(step);
-        if (currentDirectionOfWork == DIVERGENCE_UP & Stereogram.currentVergenceValue < 0) bimage.stepVergence(-step);
-        if (currentDirectionOfWork == DIVERGENCE_DOWN & Stereogram.currentVergenceValue < 0) bimage.stepVergence(step);
-        if (Stereogram.currentVergenceValue == 0) bimage.goToVergence(0);
-        //Affichage
-        if (currentDirectionOfWork == CONVERGENCE_UP) tmp = "C\u2191 " ;
-        else if (currentDirectionOfWork == CONVERGENCE_DOWN) tmp = "C\u2193 " ;
-        else if (currentDirectionOfWork == DIVERGENCE_UP) tmp = "D\u2191 " ;
-        else tmp = "D\u2193 " ;
-        value.setText(tmp+String.valueOf(Stereogram.currentVergenceValue)+" \u0394");
-        repaint () ;
     }
     
     public void timeOut () {

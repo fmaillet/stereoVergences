@@ -9,7 +9,7 @@ A faire :
 - bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
 
 0.3.3 (en cours)
--
+- alternate convergence and divergence
 
 0.3.2 (01/09/2017)
 - added differents steps for C or D
