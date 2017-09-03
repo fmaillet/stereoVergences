@@ -126,8 +126,8 @@ public class Stereogram extends JPanel {
         int p ;
         if (keepClue) switch (clue) {
             case KeyEvent.VK_UP : p = 0 ; break ;
-            case KeyEvent.VK_LEFT : p = 1; break ;
-            case KeyEvent.VK_RIGHT : p = 2 ; break ;
+            case KeyEvent.VK_LEFT : if (OrthoStereogram.BR_glasses) p = 1; else p = 2; break ;
+            case KeyEvent.VK_RIGHT : if (OrthoStereogram.BR_glasses) p = 2 ; else p = 1 ; break ;
             default : p = 3 ; break ;
         }
         else p = rand.nextInt(4) ;

@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.3.3" ;
+    public static final String VERSION = "0.4.0" ;
     public static boolean BR_glasses = true ;
 
     /**

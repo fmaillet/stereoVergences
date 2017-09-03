@@ -28,9 +28,9 @@ public class NewController extends javax.swing.JFrame {
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
         jUnit6.setText("\u0394");
         
-        //image Lunettes 3D
-        imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
-        imgRB = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
+        //image Lunettes 3D (inversées)
+        imgRB = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
+        imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
         if (OrthoStereogram.BR_glasses) jImg3D.setIcon(new ImageIcon(imgBR));
         else jImg3D.setIcon(new ImageIcon(imgRB));
         jImg3D.setText("");
