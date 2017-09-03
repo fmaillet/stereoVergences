@@ -19,14 +19,22 @@ public class NewController extends javax.swing.JFrame {
     /**
      * Creates new form NewController
      */
+    
+    Image imgBR, imgRB ;
+    
     public NewController(boolean xboxConnected) {
         setLayout(null);
         initComponents();
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
         jUnit6.setText("\u0394");
+        
         //image Lunettes 3D
-        Image imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
-        jImg3D.setIcon(new ImageIcon(imgBR)); jImg3D.setText("");
+        imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
+        imgRB = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
+        if (OrthoStereogram.BR_glasses) jImg3D.setIcon(new ImageIcon(imgBR));
+        else jImg3D.setIcon(new ImageIcon(imgRB));
+        jImg3D.setText("");
+        
         //image xbox
         Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
         jImgXBOX.setIcon(new ImageIcon(imgXBOX)); jImgXBOX.setText("");
@@ -76,6 +84,7 @@ public class NewController extends javax.swing.JFrame {
         jUnit6 = new javax.swing.JLabel();
         jStepD = new javax.swing.JSpinner();
         jStart_CD_alter = new javax.swing.JButton();
+        jStart_CD_jump = new javax.swing.JButton();
 
         jLabel8.setText("jLabel8");
 
@@ -121,6 +130,11 @@ public class NewController extends javax.swing.JFrame {
         jUnit4.setText("\\u");
 
         jImg3D.setText("image");
+        jImg3D.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jImg3DMouseClicked(evt);
+            }
+        });
 
         jLabel5.setText("Step (C) :");
 
@@ -154,6 +168,13 @@ public class NewController extends javax.swing.JFrame {
         jStart_CD_alter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jStart_CD_alterActionPerformed(evt);
+            }
+        });
+
+        jStart_CD_jump.setText("C # D");
+        jStart_CD_jump.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jStart_CD_jumpActionPerformed(evt);
             }
         });
 
@@ -235,7 +256,10 @@ public class NewController extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jStart_CD_alter, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jStart_CD_alter, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jStart_CD_jump, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jStart_CD, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
@@ -308,7 +332,9 @@ public class NewController extends javax.swing.JFrame {
                     .addComponent(jStart_C)
                     .addComponent(jStart_D))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jStart_CD_alter)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jStart_CD_alter)
+                    .addComponent(jStart_CD_jump))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -317,7 +343,7 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -325,7 +351,7 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -334,7 +360,7 @@ public class NewController extends javax.swing.JFrame {
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.DIVERGENCE_UP) ;
         int step = (Integer) jStepC.getValue() ; step = - step ;
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -342,11 +368,30 @@ public class NewController extends javax.swing.JFrame {
 
     private void jStart_CD_alterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_alterActionPerformed
         DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
     }//GEN-LAST:event_jStart_CD_alterActionPerformed
+
+    private void jStart_CD_jumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_jumpActionPerformed
+        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
+        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        stereo.setAppearence () ;
+        stereo.setVisible(true);
+    }//GEN-LAST:event_jStart_CD_jumpActionPerformed
+
+    private void jImg3DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jImg3DMouseClicked
+        if (OrthoStereogram.BR_glasses) {
+            OrthoStereogram.BR_glasses = false;
+            jImg3D.setIcon(new ImageIcon(imgRB));
+        }
+        else {
+            OrthoStereogram.BR_glasses = true;
+            jImg3D.setIcon(new ImageIcon(imgBR));
+        }
+    }//GEN-LAST:event_jImg3DMouseClicked
 
     
 
@@ -371,6 +416,7 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JButton jStart_C;
     private javax.swing.JButton jStart_CD;
     private javax.swing.JButton jStart_CD_alter;
+    private javax.swing.JButton jStart_CD_jump;
     private javax.swing.JButton jStart_D;
     private javax.swing.JSpinner jStepC;
     private javax.swing.JSpinner jStepD;

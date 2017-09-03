@@ -148,16 +148,29 @@ public class Stereogram extends JPanel {
             }
         //On crée l'anaglyphe
         anaglyph.createStereoscopicCombinedImage (OG, OD, ana, deltaPixelsX);
-        if (deltaPixelsX < 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
-        else if (deltaPixelsX < 0 & (clue == KeyEvent.VK_RIGHT)) clue = KeyEvent.VK_LEFT ;
+        if (OrthoStereogram.BR_glasses) {
+            if (deltaPixelsX < 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
+            else if (deltaPixelsX < 0 & clue == KeyEvent.VK_RIGHT) clue = KeyEvent.VK_LEFT ;
+        }
+        else {
+            if (deltaPixelsX >= 0 & clue == KeyEvent.VK_LEFT)  clue = KeyEvent.VK_RIGHT ;
+            else if (deltaPixelsX >= 0 & clue == KeyEvent.VK_RIGHT) clue = KeyEvent.VK_LEFT ;
+        }
     }
     
     public void paint(Graphics g) {
       
-        if (deltaPixelsX >= 0)
-            g.drawImage(ana, 0,0,this);
-        else
-            g.drawImage(ana, 0 + ana.getWidth(), 0, -ana.getWidth(), ana.getHeight(), this);
-      
+        if (OrthoStereogram.BR_glasses) {
+            if (deltaPixelsX >= 0)
+                g.drawImage(ana, 0,0,this);
+            else
+                g.drawImage(ana, 0 + ana.getWidth(), 0, -ana.getWidth(), ana.getHeight(), this);
+        }
+        else {
+            if (deltaPixelsX >= 0)
+                g.drawImage(ana, 0 + ana.getWidth(), 0, -ana.getWidth(), ana.getHeight(), this);
+            else
+                g.drawImage(ana, 0,0,this);
+        }
    }
 }

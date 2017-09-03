@@ -65,6 +65,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     static private int timeOut = 20 ;
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
     static private boolean alternate = false ;
+    static private boolean jump = false ;
     
     //pour l'alternance
     static int currentConvergenceValue ;
@@ -105,7 +106,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         executor = new ScheduledThreadPoolExecutor(1);        
     }
     
-    public void setMode (int stepC, int stepD, int max, int min, int timeOut, boolean alternate) {
+    public void setMode (int stepC, int stepD, int max, int min, int timeOut, boolean alternate, boolean jump) {
         
         this.stepC = stepC ; this.stepD = stepD ;
         //Step increment
@@ -117,6 +118,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         this.min = min ;
         this.timeOut = timeOut ;
         this.alternate = alternate ;
+        this.jump = jump ;
         currentConvergenceValue = 0 ;
         currentDivergenceValue = 0 ;
     }
@@ -272,7 +274,18 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         else tmp = "D\u2193 " ;
         
         //Step on
-        if (alternate & currentDirectionOfWork == CONVERGENCE_UP) {
+        if (jump)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : 
+                    bimage.goToVergence(max);
+                    currentDirectionOfWork = DIVERGENCE_UP ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    bimage.goToVergence(min);
+                    currentDirectionOfWork = CONVERGENCE_UP ;
+                    break ;
+            }
+        else if (alternate & currentDirectionOfWork == CONVERGENCE_UP) {
             bimage.goToVergence(currentConvergenceValue);
             currentDirectionOfWork = DIVERGENCE_UP ;
         }
@@ -295,7 +308,18 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
         //Si on alterne
-        if (alternate)
+        if (jump)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : 
+                    bimage.goToVergence(max);
+                    currentDirectionOfWork = DIVERGENCE_UP ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    bimage.goToVergence(min);
+                    currentDirectionOfWork = CONVERGENCE_UP ;
+                    break ;
+            }
+        else if (alternate)
             switch (currentDirectionOfWork) {
                 case CONVERGENCE_UP : bimage.goToVergence(currentDivergenceValue); currentDirectionOfWork = DIVERGENCE_UP ; break ;
                 case DIVERGENCE_UP  : bimage.goToVergence(currentConvergenceValue); currentDirectionOfWork = CONVERGENCE_UP ; break ;
@@ -396,12 +420,15 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
             switch (i) {
             case 0:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
                      break;
+            case 1: break ;
             case 2:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
-                     break;         
+                     break;   
+            case 3: break ;
             case 4:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
                      break;
+            case 5: break ;
             case 6:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
-                     break;       
+                     break;
             default: break ;
             }
     }
