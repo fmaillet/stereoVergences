@@ -13,9 +13,14 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_6;
+import static java.awt.event.KeyEvent.VK_ADD;
+import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -26,6 +31,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 import java.awt.image.WritableRaster;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import static orthostereogram.Stereogram.ana;
@@ -37,13 +44,26 @@ import static orthostereogram.Stereogram.ana;
 public class SlideStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
     
     //Constructor
-    
+    Anaglyph anaglyph ;
     static private Stereogram bimage  ;
-    static private int imgSize = 500 ;
     private OneEye od, og ;
-    private int deltaX = 300 ;
+    private int deltaX = 0 ;
+    Cursor transparentCursor ;
     
-    public SlideStereogramView () {
+    //every tics
+    final ScheduledThreadPoolExecutor executor ;
+    
+    //Boundaries
+    private int min = -200 ;
+    private int max = +400 ;
+    private int timeout = 150 ;
+    
+    public SlideStereogramView (int speed) {
+        //Trasnparent cursor
+        int[] pixels = new int[16 * 16];
+        Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
+        transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(0, 0), "invisibleCursor");
+        
         //jolie fenêtre
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
@@ -51,27 +71,30 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         this.setSize(1000, 700);
         getContentPane().setBackground( Color.WHITE );
         
+        //On initialise le timeout
+        executor = new ScheduledThreadPoolExecutor(1);
+        switch (speed) {
+            case 0 : timeout = 200 ; break ;
+            case 1 : timeout = 150 ; break ;
+            case 2 : timeout = 100 ; break ;
+        }
     }
 
     public void setAppearence () {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
-        //setLocationRelativeTo(null);
-        
         
         //Create stereogram
-        bimage = new Stereogram (imgSize, 0) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, 0) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
-        BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Anaglyph anaglyph = new Anaglyph () ;
-        anaglyph.createStereoscopicBlueImage (bimage.OD, ana) ;
-        og = new OneEye (ana) ;
-        anaglyph.createStereoscopicRedImage (bimage.OG, ana) ;
-        od = new OneEye (ana);
-        
-        
-        
+        //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);
+        anaglyph = new Anaglyph () ;
+        anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+        og = new OneEye (0) ;
+        anaglyph.createStereoscopicRedImage (bimage.OG) ;
+        od = new OneEye (1);
+
         //Position
         od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
         og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
@@ -79,21 +102,29 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         this.getContentPane().add (og) ;
         od.setVisible(true);
         og.setVisible(true);
-        //Transparency
-        //od.setBackground(new Color(0,0,0,125));
-        //og.setBackground(new Color(0,0,0,125));
         
+        //On lance le timer
+        executor.scheduleAtFixedRate(() -> timeOut(),6000, timeout, TimeUnit.MILLISECONDS);
     }
+    
+    
     
     public void setPositions () {
         od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
         og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
     }
     
+    private int direction = KeyEvent.VK_LEFT ;
+    
+    public void timeOut () {
+        
+        if (deltaX < min) direction = KeyEvent.VK_RIGHT ;
+        else if (deltaX > max ) direction = KeyEvent.VK_LEFT ;
+        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, direction, 'A'));
+    }
+    
     public void hideCursor () {
-        int[] pixels = new int[16 * 16];
-        Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
-        Cursor transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(0, 0), "invisibleCursor");
+        
         setCursor(transparentCursor);
     }
     
@@ -111,6 +142,30 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
+        else if (keyCode == VK_SPACE) {deltaX = 0; direction = KeyEvent.VK_LEFT ;}
+         
+        //Dynamic resizing
+        if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
+            NewController.imgSize = (int) (NewController.imgSize * 0.9 ) ;
+            bimage.resize(NewController.imgSize, true);
+            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+            setPositions () ;
+        }
+        else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
+            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
+            bimage.resize(NewController.imgSize, true);
+            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+            setPositions () ;
+        }
+        else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
+            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
+            bimage.resize(NewController.imgSize, true);
+            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+            setPositions () ;
+        }
         
         hideCursor () ;
     }
@@ -137,7 +192,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowClosing(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        executor.shutdownNow() ;
     }
 
     @Override
@@ -170,19 +225,30 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 //Classe OD OG
 class OneEye extends JPanel {
     
-    private BufferedImage vue ;
+    private int eye ;
 
-    public OneEye (BufferedImage vue) {
+    public OneEye (int eye) {
+        this.eye = eye ;
         setVisible(false);
         //Copie de l'image
-        ColorModel cm = vue.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = vue.copyData(null);
-        this.vue = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+        //ColorModel cm = SlideStereogramView.eyes[eye].getColorModel();
+        //boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        //WritableRaster raster = SlideStereogramView.eyes[eye].copyData(null);
+        //this.vue = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
         //Taille du panel
-        this.setSize(vue.getWidth(), vue.getHeight());
+        if (eye == 0)
+            this.setSize(Stereogram.OD.getWidth(), Stereogram.OD.getHeight());
+        else
+            this.setSize(Stereogram.OG.getWidth(), Stereogram.OG.getHeight());
         setOpaque(false) ;
         
+    }
+    
+    public void resize () {
+         if (eye == 0)
+            this.setSize(Stereogram.OD.getWidth(), Stereogram.OD.getHeight());
+        else
+            this.setSize(Stereogram.OG.getWidth(), Stereogram.OG.getHeight());
     }
     
     public void paint(Graphics g) {
@@ -190,7 +256,18 @@ class OneEye extends JPanel {
         
         //float alpha = 0.5f ;
         //AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-        g.setXORMode(Color.WHITE);          
-        g.drawImage(vue, 0,0,this);
+        g.setXORMode(Color.WHITE);
+        if (eye == 0) {
+            if (OrthoStereogram.BR_glasses)
+                g.drawImage(Stereogram.OD, 0,0,this);
+            else
+                g.drawImage(Stereogram.OD, 0 + Stereogram.OD.getWidth(), 0, -Stereogram.OD.getWidth(), Stereogram.OD.getHeight(), this);
+        }
+        else {
+            if (OrthoStereogram.BR_glasses)
+                g.drawImage(Stereogram.OG, 0,0,this);
+            else
+                g.drawImage(Stereogram.OG, 0 + Stereogram.OG.getWidth(), 0, -Stereogram.OG.getWidth(), Stereogram.OG.getHeight(), this);
+        }
     }
 }

@@ -107,7 +107,7 @@ public class Anaglyph {
     }
     
     //Juste l'image rouge
-    public static void createStereoscopicRedImage(BufferedImage left, BufferedImage ana) {
+    public static void createStereoscopicRedImage(BufferedImage left) {
         //BufferedImage ana = new BufferedImage(left.getWidth(), left.getHeight(), BufferedImage.TYPE_INT_RGB);
         int width = left.getWidth();
         int height = left.getHeight();
@@ -126,14 +126,14 @@ public class Anaglyph {
                 combinedRGB[0] = leftRGB[0];
                 combinedRGB[1] = rightRGB[1];
                 combinedRGB[2] = rightRGB[2];
-                ana.getRaster().setPixel(x, y, combinedRGB);
+                left.getRaster().setPixel(x, y, combinedRGB);
             }
         }
         
     }
     
     //Juste l'image rouge
-    public static void createStereoscopicBlueImage(BufferedImage right, BufferedImage ana) {
+    public static void createStereoscopicBlueImage(BufferedImage right) {
         //BufferedImage ana = new BufferedImage(left.getWidth(), left.getHeight(), BufferedImage.TYPE_INT_RGB);
         int width = right.getWidth();
         int height = right.getHeight();
@@ -152,7 +152,7 @@ public class Anaglyph {
                 combinedRGB[0] = leftRGB[0];
                 combinedRGB[1] = rightRGB[1];
                 combinedRGB[2] = rightRGB[2];
-                ana.getRaster().setPixel(x, y, combinedRGB);
+                right.getRaster().setPixel(x, y, combinedRGB);
                 //ana.getRaster().setp
             }
         }

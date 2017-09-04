@@ -21,6 +21,10 @@ public class NewController extends javax.swing.JFrame {
      */
     
     Image imgBR, imgRB ;
+    static public int imgSize = 600 ;
+    
+    //Just to initiate ?
+    SlideStereogramView slide ;
     
     public NewController(boolean xboxConnected) {
         setLayout(null);
@@ -86,6 +90,8 @@ public class NewController extends javax.swing.JFrame {
         jStart_CD_alter = new javax.swing.JButton();
         jStart_CD_jump = new javax.swing.JButton();
         jStart_Slide = new javax.swing.JButton();
+        jSliderTimeOut = new javax.swing.JComboBox<>();
+        jSeparator3 = new javax.swing.JSeparator();
 
         jLabel8.setText("jLabel8");
 
@@ -179,12 +185,15 @@ public class NewController extends javax.swing.JFrame {
             }
         });
 
-        jStart_Slide.setText("Slide test");
+        jStart_Slide.setText("Auto Slider");
         jStart_Slide.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jStart_SlideActionPerformed(evt);
             }
         });
+
+        jSliderTimeOut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "slow", "medium", "fast" }));
+        jSliderTimeOut.setSelectedIndex(1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,9 +262,6 @@ public class NewController extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -274,8 +280,18 @@ public class NewController extends javax.swing.JFrame {
                                         .addComponent(jStart_C)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jStart_D))
-                                    .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(44, 44, 44)
+                                        .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -335,7 +351,7 @@ public class NewController extends javax.swing.JFrame {
                     .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jStart_CD)
                     .addComponent(jStart_C)
@@ -344,9 +360,13 @@ public class NewController extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jStart_CD_alter)
                     .addComponent(jStart_CD_jump))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jStart_Slide)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jStart_Slide)
+                    .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         pack();
@@ -405,11 +425,12 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jImg3DMouseClicked
 
     private void jStart_SlideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_SlideActionPerformed
-        SlideStereogramView stereo = new SlideStereogramView () ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex()) ;
+        slide.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
-        stereo.setVisible(true);
-        stereo.setAppearence () ;
+        slide.setVisible(true); slide.repaint();
+        //set after to avoid misplacement of panels
+        slide.setAppearence () ;
     }//GEN-LAST:event_jStart_SlideActionPerformed
 
     
@@ -432,6 +453,8 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JSpinner jScreen1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JComboBox<String> jSliderTimeOut;
     private javax.swing.JButton jStart_C;
     private javax.swing.JButton jStart_CD;
     private javax.swing.JButton jStart_CD_alter;

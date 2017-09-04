@@ -46,7 +46,6 @@ import org.newdawn.easyogg.OggClip;
 public class ClassicStereogramView extends JFrame implements WindowListener, KeyListener, MouseMotionListener, XboxControllerListener {
     
     static private Stereogram bimage  ;
-    static private int imgSize = 400 ;
     OggClip audioOK = null ;
     OggClip audioBAD = null ;
     JLabel value ;
@@ -92,7 +91,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
 
         
         //On crée un stéréogramme
-        bimage = new Stereogram (imgSize, initialDelta) ;
+        bimage = new Stereogram (NewController.imgSize, initialDelta) ;
         bimage.resetImg (false) ; 
         getContentPane().add(bimage);
         
@@ -213,18 +212,18 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
         }
         
         
-        if (keyCode == VK_ADD &  !ke.isControlDown()) System.out.println("Plus");
-        else if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
-            imgSize = (int) (imgSize * 0.9 ) ;
-            bimage.resize(imgSize, true);
+        //Dynamic resizing
+        if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
+            NewController.imgSize = (int) (NewController.imgSize * 0.9 ) ;
+            bimage.resize(NewController.imgSize, true);
         }
         else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
-            imgSize = (int) (imgSize * 1.1 ) ;
-            bimage.resize(imgSize, true);
+            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
+            bimage.resize(NewController.imgSize, true);
         }
         else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
-            imgSize = (int) (imgSize * 1.1 ) ;
-            bimage.resize(imgSize, true);
+            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
+            bimage.resize(NewController.imgSize, true);
         }
         setSizes () ;
     }
