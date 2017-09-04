@@ -5,6 +5,7 @@
  */
 package orthostereogram;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -38,7 +39,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     //Constructor
     
     static private Stereogram bimage  ;
-    static private int imgSize = 400 ;
+    static private int imgSize = 500 ;
     private OneEye od, og ;
     private int deltaX = 300 ;
     
@@ -69,11 +70,18 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         anaglyph.createStereoscopicRedImage (bimage.OG, ana) ;
         od = new OneEye (ana);
         
+        
+        
         //Position
         od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
         og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
         this.getContentPane().add (od) ;
         this.getContentPane().add (og) ;
+        od.setVisible(true);
+        og.setVisible(true);
+        //Transparency
+        //od.setBackground(new Color(0,0,0,125));
+        //og.setBackground(new Color(0,0,0,125));
         
     }
     
@@ -165,6 +173,7 @@ class OneEye extends JPanel {
     private BufferedImage vue ;
 
     public OneEye (BufferedImage vue) {
+        setVisible(false);
         //Copie de l'image
         ColorModel cm = vue.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -172,10 +181,16 @@ class OneEye extends JPanel {
         this.vue = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
         //Taille du panel
         this.setSize(vue.getWidth(), vue.getHeight());
+        setOpaque(false) ;
+        
     }
     
     public void paint(Graphics g) {
-        super.paintComponent(g);
+        //super.paintComponent(g);
+        
+        //float alpha = 0.5f ;
+        //AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
+        g.setXORMode(Color.WHITE);          
         g.drawImage(vue, 0,0,this);
     }
 }

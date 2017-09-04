@@ -153,6 +153,7 @@ public class Anaglyph {
                 combinedRGB[1] = rightRGB[1];
                 combinedRGB[2] = rightRGB[2];
                 ana.getRaster().setPixel(x, y, combinedRGB);
+                //ana.getRaster().setp
             }
         }
         
