@@ -146,6 +146,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jStart_D" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="jStart_Slide" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -241,7 +242,9 @@
                   <Component id="jStart_CD_alter" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jStart_CD_jump" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="22" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jStart_Slide" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -421,6 +424,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jStart_CD_jumpActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jStart_Slide">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Slide test"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jStart_SlideActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

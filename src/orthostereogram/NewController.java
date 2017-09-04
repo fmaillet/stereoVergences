@@ -85,6 +85,7 @@ public class NewController extends javax.swing.JFrame {
         jStepD = new javax.swing.JSpinner();
         jStart_CD_alter = new javax.swing.JButton();
         jStart_CD_jump = new javax.swing.JButton();
+        jStart_Slide = new javax.swing.JButton();
 
         jLabel8.setText("jLabel8");
 
@@ -178,6 +179,13 @@ public class NewController extends javax.swing.JFrame {
             }
         });
 
+        jStart_Slide.setText("Slide test");
+        jStart_Slide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jStart_SlideActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -265,7 +273,8 @@ public class NewController extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jStart_C)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jStart_D)))))
+                                        .addComponent(jStart_D))
+                                    .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -335,14 +344,16 @@ public class NewController extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jStart_CD_alter)
                     .addComponent(jStart_CD_jump))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jStart_Slide)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
+        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -350,7 +361,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_CDActionPerformed
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
+        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -358,7 +369,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_CActionPerformed
 
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.DIVERGENCE_UP) ;
+        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.DIVERGENCE_UP) ;
         int step = (Integer) jStepC.getValue() ; step = - step ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -367,7 +378,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_DActionPerformed
 
     private void jStart_CD_alterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_alterActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
+        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -375,7 +386,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_CD_alterActionPerformed
 
     private void jStart_CD_jumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_jumpActionPerformed
-        DisplayStereogram stereo = new DisplayStereogram ((Integer) jInitial.getValue(), DisplayStereogram.CONVERGENCE_UP) ;
+        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP) ;
         stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
@@ -392,6 +403,14 @@ public class NewController extends javax.swing.JFrame {
             jImg3D.setIcon(new ImageIcon(imgBR));
         }
     }//GEN-LAST:event_jImg3DMouseClicked
+
+    private void jStart_SlideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_SlideActionPerformed
+        SlideStereogramView stereo = new SlideStereogramView () ;
+        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        
+        stereo.setVisible(true);
+        stereo.setAppearence () ;
+    }//GEN-LAST:event_jStart_SlideActionPerformed
 
     
 
@@ -418,6 +437,7 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JButton jStart_CD_alter;
     private javax.swing.JButton jStart_CD_jump;
     private javax.swing.JButton jStart_D;
+    private javax.swing.JButton jStart_Slide;
     private javax.swing.JSpinner jStepC;
     private javax.swing.JSpinner jStepD;
     private javax.swing.JSpinner jTimeOut;

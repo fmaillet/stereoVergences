@@ -43,7 +43,7 @@ import org.newdawn.easyogg.OggClip;
  *
  * @author Fred
  */
-public class DisplayStereogram extends JFrame implements WindowListener, KeyListener, MouseMotionListener, XboxControllerListener {
+public class ClassicStereogramView extends JFrame implements WindowListener, KeyListener, MouseMotionListener, XboxControllerListener {
     
     static private Stereogram bimage  ;
     static private int imgSize = 400 ;
@@ -75,7 +75,7 @@ public class DisplayStereogram extends JFrame implements WindowListener, KeyList
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
     
-    public DisplayStereogram (int initialDelta, int currentDirectionOfWork) {
+    public ClassicStereogramView (int initialDelta, int currentDirectionOfWork) {
         
         //On travaille dans quel sens : C ou D ?
         this.currentDirectionOfWork = currentDirectionOfWork ;        

@@ -71,7 +71,7 @@ public class Stereogram extends JPanel {
         resize (OD.getWidth(), false) ;
     }
     
-    public void slideToVergence (DisplayStereogram display, int value) {
+    public void slideToVergence (ClassicStereogramView display, int value) {
         int step ;
         if (currentVergenceValue == value) return ;
         int debut = calcPixelsForVergence (currentVergenceValue ) ;
@@ -159,7 +159,7 @@ public class Stereogram extends JPanel {
     }
     
     public void paint(Graphics g) {
-      
+        super.paintComponent(g);
         if (OrthoStereogram.BR_glasses) {
             if (deltaPixelsX >= 0)
                 g.drawImage(ana, 0,0,this);
