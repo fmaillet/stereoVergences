@@ -125,6 +125,7 @@ public class NewController extends javax.swing.JFrame {
         jLabel6.setText("Working distance :");
 
         jScreen1.setModel(new javax.swing.SpinnerNumberModel(70, 20, 300, 10));
+        jScreen1.setEnabled(false);
 
         jLabel7.setText("(cm)");
 
@@ -425,7 +426,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jImg3DMouseClicked
 
     private void jStart_SlideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_SlideActionPerformed
-        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex()) ;
+        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue()) ;
         slide.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
         slide.setVisible(true); slide.repaint();

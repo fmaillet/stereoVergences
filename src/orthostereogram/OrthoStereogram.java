@@ -6,6 +6,7 @@
 package orthostereogram;
 
 import ch.aplu.xboxcontroller.XboxController;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,6 +17,8 @@ public class OrthoStereogram {
     
     public static final String VERSION = "0.4.0" ;
     public static boolean BR_glasses = true ;
+    
+    public static int screenResolution ;
 
     /**
      * @param args the command line arguments
@@ -25,6 +28,9 @@ public class OrthoStereogram {
     static public boolean xboxConnected = false ;
     
     public static void main(String[] args) {
+        
+        screenResolution = Toolkit.getDefaultToolkit().getScreenResolution() ;
+        
         // no flickering on resize
         System.setProperty("sun.awt.noerasebackground", "true");
         

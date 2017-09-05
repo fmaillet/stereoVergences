@@ -5,9 +5,9 @@
  */
 package orthostereogram;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -21,21 +21,16 @@ import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_SUBTRACT;
-import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
-import java.awt.image.WritableRaster;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import static orthostereogram.Stereogram.ana;
 
 /**
  *
@@ -54,11 +49,21 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     final ScheduledThreadPoolExecutor executor ;
     
     //Boundaries
-    private int min = -200 ;
-    private int max = +400 ;
+    private int minPixels = -200 ;
+    private int maxPixels = +400 ;
     private int timeout = 150 ;
     
-    public SlideStereogramView (int speed) {
+    //needed to calculate vergence
+    static Dimension screenSize ;
+    static double workingDistance = 70 ;
+    
+    //Min and max are given in dioptries
+    public SlideStereogramView (int speed, int min, int max) {
+        this.minPixels = calcPixelsForVergence (min) ;
+        this.maxPixels = calcPixelsForVergence (max) ;
+        System.out.println ("min : " + min + " max : " + max) ;
+        System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
+        
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
         Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
@@ -107,19 +112,25 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         executor.scheduleAtFixedRate(() -> timeOut(),6000, timeout, TimeUnit.MILLISECONDS);
     }
     
-    
+    public int calcPixelsForVergence (int vergence) {
+        System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
+        //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
+        double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
+        //System.out.println (pixels) ;
+        return (int) Math.round(pixels) ;
+    }
     
     public void setPositions () {
-        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
-        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
+        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX/2, (this.getHeight()-od.getHeight())/2);
+        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX/2, (this.getHeight()-og.getHeight())/2);
     }
     
     private int direction = KeyEvent.VK_LEFT ;
     
     public void timeOut () {
         
-        if (deltaX < min) direction = KeyEvent.VK_RIGHT ;
-        else if (deltaX > max ) direction = KeyEvent.VK_LEFT ;
+        if (deltaX < minPixels) direction = KeyEvent.VK_RIGHT ;
+        else if (deltaX > maxPixels ) direction = KeyEvent.VK_LEFT ;
         this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, direction, 'A'));
     }
     
