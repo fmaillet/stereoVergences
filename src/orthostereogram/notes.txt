@@ -7,7 +7,7 @@ A faire :
 - bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
 - working distance !!
 
-(en cours)
+0.5.0 (en cours)
 - corrected resize keepclue with BR inverted
 - slider stereogram between min and max
 
