@@ -37,6 +37,8 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     static public BufferedImage od, og ;
     static public BufferedImage bimage, image ;
     
+    private int deltaX = 200 ;
+    
     public TestImageStereogram () {
         
         //Image ?
@@ -82,7 +84,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         bimage = new BufferedImage(temporary.getImage().getWidth(null), temporary.getImage().getHeight(null), BufferedImage.TYPE_INT_RGB);
         bimage.getGraphics().drawImage(temporary.getImage(), 0, 0, null);*/
         
-        /*//On coupe en deux
+        //on crée l'OD (moitié gauche ?)
         BufferedImage sub = bimage.getSubimage(0, 0, 300, 300) ;
         // Create empty compatible image
         od = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
@@ -92,15 +94,27 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         }
         finally {
             g.dispose();
-        }*/
+        }
+        //on crée l'OG (moitié droite ?)
+        sub = bimage.getSubimage(300, 0, 300, 300) ;
+        og = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
+        g = og.createGraphics();
+        try {
+            g.drawImage(sub, 0, 0, null);
+        }
+        finally {
+            g.dispose();
+        }
         
         //Un panel pour afficher ça
-        OneEyeBis xpanel = new OneEyeBis (bimage) ;
-        xpanel.setLocation((this.getWidth()-xpanel.getWidth()) / 2, (this.getHeight()-xpanel.getHeight())/2);
+        OneEyeBis xpanelOD = new OneEyeBis (od) ;
+        OneEyeBis xpanelOG = new OneEyeBis (og) ;
+        xpanelOD.setLocation((this.getWidth()-xpanelOD.getWidth()) / 2 - deltaX/2, (this.getHeight()-xpanelOD.getHeight())/2);
+        xpanelOG.setLocation((this.getWidth()-xpanelOG.getWidth()) / 2 + deltaX/2, (this.getHeight()-xpanelOG.getHeight())/2);
         //xpanel.setLocation(100, 100);
         //System.out.println (xpanel.getWidth()) ;
-        this.getContentPane().add(xpanel) ;
-        
+        this.getContentPane().add(xpanelOD) ;
+        this.getContentPane().add(xpanelOG) ;
     }
 
     @Override
@@ -174,13 +188,14 @@ class OneEyeBis extends JPanel {
         this.oo = oo ;
         
         System.out.println("xpanel: " +oo.getWidth());
-        this.setSize(TestImageStereogram.bimage.getWidth(null), TestImageStereogram.bimage.getHeight(null));
+        this.setSize(oo.getWidth(null), oo.getHeight(null));
         this.setOpaque(false);
     }
     
     public void paint(Graphics g) {
         //super.paintComponent(g);
-        g.drawImage(TestImageStereogram.bimage, 0,0,this);
+        g.setXORMode(Color.WHITE);
+        g.drawImage(oo, 0,0,this);
     }
     
 }
