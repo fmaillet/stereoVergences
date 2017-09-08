@@ -52,6 +52,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     private int minPixels = -200 ;
     private int maxPixels = +400 ;
     private int timeout = 150 ;
+    private int direction = KeyEvent.VK_LEFT ;
     
     //needed to calculate vergence
     static Dimension screenSize ;
@@ -124,8 +125,6 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX/2, (this.getHeight()-od.getHeight())/2);
         og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX/2, (this.getHeight()-og.getHeight())/2);
     }
-    
-    private int direction = KeyEvent.VK_LEFT ;
     
     public void timeOut () {
         

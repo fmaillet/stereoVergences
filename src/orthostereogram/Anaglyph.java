@@ -141,6 +141,8 @@ public class Anaglyph {
         int[] rightRGB = new int[3];
         int[] combinedRGB = new int[3];
         
+        System.out.println (width + " " + height) ;
+        
         //Bande gauche
         leftRGB[0] = leftRGB[1] = leftRGB[2] = 255;
         convertToGrayscale(leftRGB);
