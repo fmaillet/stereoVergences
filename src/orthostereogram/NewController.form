@@ -455,13 +455,14 @@
     <Component class="javax.swing.JComboBox" name="jSliderTimeOut">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
+          <StringArray count="4">
             <StringItem index="0" value="slow"/>
             <StringItem index="1" value="medium"/>
             <StringItem index="2" value="fast"/>
+            <StringItem index="3" value="very fast"/>
           </StringArray>
         </Property>
-        <Property name="selectedIndex" type="int" value="1"/>
+        <Property name="selectedIndex" type="int" value="2"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

@@ -62,8 +62,8 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     public SlideStereogramView (int speed, int min, int max) {
         this.minPixels = calcPixelsForVergence (min) ;
         this.maxPixels = calcPixelsForVergence (max) ;
-        System.out.println ("min : " + min + " max : " + max) ;
-        System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
+        //System.out.println ("min : " + min + " max : " + max) ;
+        //System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
         
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
@@ -114,7 +114,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     }
     
     public int calcPixelsForVergence (int vergence) {
-        System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
+        //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
         double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;

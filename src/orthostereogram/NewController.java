@@ -194,8 +194,8 @@ public class NewController extends javax.swing.JFrame {
             }
         });
 
-        jSliderTimeOut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "slow", "medium", "fast" }));
-        jSliderTimeOut.setSelectedIndex(1);
+        jSliderTimeOut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "slow", "medium", "fast", "very fast" }));
+        jSliderTimeOut.setSelectedIndex(2);
 
         jStart_TestImg.setText("Test img");
         jStart_TestImg.addActionListener(new java.awt.event.ActionListener() {
@@ -446,7 +446,7 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jStart_SlideActionPerformed
 
     private void jStart_TestImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_TestImgActionPerformed
-        TestImageStereogram test = new TestImageStereogram () ;
+        TestImageStereogram test = new TestImageStereogram (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue()) ;
         test.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         test.setVisible(true); test.repaint();
