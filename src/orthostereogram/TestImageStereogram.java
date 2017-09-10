@@ -13,15 +13,21 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_6;
+import static java.awt.event.KeyEvent.VK_ADD;
+import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.MemoryImageSource;
@@ -29,6 +35,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -72,8 +79,8 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         this.maxPixels = calcPixelsForVergence (maxVergence) ;
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
-        Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
-        transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(0, 0), "invisibleCursor");
+        Image img = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
+        transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0, 0), "invisibleCursor");
         
         //Image ?
         URL url = TestImageStereogram.class.getResource("/Ressources/3d-practise.png");
@@ -81,12 +88,12 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         
         //jolie fenêtre
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle ("Stéréogramme: ") ;
+        setTitle ("Slider") ;
         setLayout(null);
         this.setSize(1000, 700);
         getContentPane().setBackground( Color.WHITE );
         
-        //On initialise le timeout
+        //On initialise les timeout
         executorVergence = new ScheduledThreadPoolExecutor(1);
         executorMove = new ScheduledThreadPoolExecutor(1);
         switch (speed) {
@@ -105,25 +112,32 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         return (int) Math.round(pixels) ;
     }
     
-    public boolean isBoundariesOK () {
+    private boolean isBoundariesOK () {
         int w = xpanelOD.getWidth() ;
         //Envergure du stéréogramme
         int c, d ;
-        if (Math.abs(deltaX) > w) c = 2 * w + Math.abs(deltaX) ;
-        else c = w + Math.abs(deltaX) ;
+        d = Math.abs(deltaX) ;
+        if (d > w) c = 2 * w + d ;
+        else c = w + d ;
         //rapporté au centre
-        if (dirMove == KeyEvent.VK_LEFT ) d = center.x + c / 2;
-        else d = center.x - c / 2;
+        if (dirMove == KeyEvent.VK_LEFT ) {
+            //d = center.x + c / 2;
+            return ( (center.x + c / 2) < this.getWidth()) ;
+        }
+        else {
+            d = center.x - c / 2;
+            return ( (center.x - c / 2) > 0) ;
+        }
         //Fin
-        info.setText("panel= " + String.valueOf(w) + " Center=" + String.valueOf(center.x)+ " deltaX=" + String.valueOf(deltaX) + " c=" + String.valueOf(c) + " max=" + String.valueOf(this.getWidth()));
-        if (dirMove == KeyEvent.VK_LEFT ) return (d < this.getWidth()) ;
-        else return (d > 0) ;
+        //info.setText("panel= " + String.valueOf(w) + " Center=" + String.valueOf(center.x)+ " deltaX=" + String.valueOf(deltaX) + " c=" + String.valueOf(c) + " max=" + String.valueOf(this.getWidth()));
+        //if (dirMove == KeyEvent.VK_LEFT ) return (d < this.getWidth()) ;
+        //else return (d > 0) ;
     }
     
     public void setAppearence () {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
-        
+        this.setIgnoreRepaint(true);
             
         /*//Test animated gif
         URL url = TestImageStereogram.class.getResource("/ressources/animated.gif");
@@ -185,10 +199,24 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         xpanelOD.setLocation(center.x - deltaX/2 - xpanelOD.getWidth()/2, center.y);
         xpanelOG.setLocation(center.x + deltaX/2 - xpanelOG.getWidth()/2, center.y);
     }
+    
+    //code from : https://stackoverflow.com/questions/4216123/how-to-scale-a-bufferedimage
+    public BufferedImage scaleImg (BufferedImage before, double scale) {
+        int w = (int) (before.getWidth() * scale) ;
+        int h = (int) (before.getHeight() * scale) ;
+        BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        AffineTransformOp scaleOp = 
+           new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+        after = scaleOp.filter(before, after);
+        
+        return after ;
+    }
 
     @Override
     public void windowOpened(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //repaint() ;
     }
 
     @Override
@@ -228,7 +256,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
 
     @Override
     public void mouseMoved(MouseEvent me) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setCursor(Cursor.getDefaultCursor());
     }
 
     @Override
@@ -241,7 +269,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         setCursor(transparentCursor);
     }
     
-    public void timeOutMove () {
+    private void timeOutMove () {
         //Check to move the image
         if ( dirMove == KeyEvent.VK_LEFT ) {
             if (isBoundariesOK() ) center.x++ ;
@@ -253,14 +281,11 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         }
     }
 
-    public void timeOutVergence () {
+    private void timeOutVergence () {
         
         if (deltaX < minPixels) dirVergence = KeyEvent.VK_RIGHT ;
         else if (deltaX > maxPixels ) dirVergence = KeyEvent.VK_LEFT ;
         this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, dirVergence, 'A'));
-        
-        
-         
     }
     
     @Override
@@ -270,7 +295,35 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
-        else if (keyCode == VK_SPACE) {deltaX = 0; dirVergence = KeyEvent.VK_LEFT ;}
+        else if (keyCode == VK_SPACE) {
+            center.x = this.getWidth() / 2;
+            center.y = (this.getHeight()-xpanelOD.getHeight())/2 ;
+            deltaX = 0;
+            dirVergence = KeyEvent.VK_LEFT ;
+        }
+        
+        //Dynamic resizing
+        if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
+            od = scaleImg (od, 0.9); og = scaleImg (og, 0.9);
+            xpanelOD.resize(od); 
+            xpanelOG.resize(og);
+            center.y = (this.getHeight()-xpanelOD.getHeight())/2 ;
+            setPositions () ;
+        }
+        else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
+            od = scaleImg (od, 1.1); og = scaleImg (og, 1.1);
+            xpanelOD.resize(od); 
+            xpanelOG.resize(og);
+            center.y = (this.getHeight()-xpanelOD.getHeight())/2 ;
+            setPositions () ;
+        }
+        else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
+            od = scaleImg (od, 1.1); og = scaleImg (og, 1.1);
+            xpanelOD.resize(od); 
+            xpanelOG.resize(og);
+            center.y = (this.getHeight()-xpanelOD.getHeight())/2 ;
+            setPositions () ;
+        }
         
         hideCursor () ;
     }
@@ -285,18 +338,24 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
 
 class OneEyeBis extends JPanel {
     
-    BufferedImage oo ;
+    private BufferedImage oo ;
     
     public OneEyeBis (BufferedImage oo) {
         this.oo = oo ;
         
-        System.out.println("xpanel: " +oo.getWidth());
+        //System.out.println("xpanel: " +oo.getWidth());
         this.setSize(oo.getWidth(null), oo.getHeight(null));
         this.setOpaque(false);
+        this.setIgnoreRepaint(true);
+    }
+    
+    public void resize (BufferedImage oo) {
+        this.oo = oo ;
+        this.setSize(oo.getWidth(null), oo.getHeight(null));
     }
     
     public void paint(Graphics g) {
-        //super.paintComponent(g);
+        super.paintComponent(g);
         g.setXORMode(Color.WHITE);
         g.drawImage(oo, 0,0,this);
     }
