@@ -30,9 +30,10 @@ public class Stereogram extends JPanel {
     //needed to calculate vergence
     static Dimension screenSize ;
     static int screenResolution;
-    static double workingDistance = 70 ;
+    static int workingDistance = 70 ;
     
-    public Stereogram (int stereogramSize, int initialDelta) {
+    public Stereogram (int stereogramSize, int workingDistance, int initialDelta) {
+        this.workingDistance = workingDistance ;
         //Just to be able to calculate pixels vs vergence demand
         screenResolution = Toolkit.getDefaultToolkit().getScreenResolution() ;
         

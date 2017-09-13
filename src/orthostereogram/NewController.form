@@ -105,7 +105,7 @@
                           <Group type="102" attributes="0">
                               <Component id="jLabel6" min="-2" pref="110" max="-2" attributes="0"/>
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                              <Component id="jScreen1" min="-2" pref="57" max="-2" attributes="0"/>
+                              <Component id="jWorkingDistance" min="-2" pref="57" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jImgXBOX" min="-2" pref="130" max="-2" attributes="0"/>
                       </Group>
@@ -180,7 +180,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jScreen1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jWorkingDistance" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -328,12 +328,11 @@
         <Property name="text" type="java.lang.String" value="Working distance :"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JSpinner" name="jScreen1">
+    <Component class="javax.swing.JSpinner" name="jWorkingDistance">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="70" maximum="300" minimum="20" numberType="java.lang.Integer" stepSize="10" type="number"/>
         </Property>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">

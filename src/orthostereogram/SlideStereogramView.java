@@ -56,12 +56,13 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     
     //needed to calculate vergence
     static Dimension screenSize ;
-    static double workingDistance = 70 ;
+    static int workingDistance = 70 ;
     
     //Min and max are given in dioptries
-    public SlideStereogramView (int speed, int min, int max) {
+    public SlideStereogramView (int speed, int min, int max, int workingDistance) {
         this.minPixels = calcPixelsForVergence (min) ;
         this.maxPixels = calcPixelsForVergence (max) ;
+        this.workingDistance = workingDistance ;
         //System.out.println ("min : " + min + " max : " + max) ;
         //System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
         
@@ -80,9 +81,10 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         //On initialise le timeout
         executor = new ScheduledThreadPoolExecutor(1);
         switch (speed) {
-            case 0 : timeout = 200 ; break ;
-            case 1 : timeout = 150 ; break ;
-            case 2 : timeout = 100 ; break ;
+            case 0 : timeout = 150 ; break ;
+            case 1 : timeout = 100 ; break ;
+            case 2 : timeout = 50 ; break ;
+            case 3 : timeout = 25 ; break ;
         }
     }
 
@@ -91,7 +93,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         this.addMouseMotionListener(this);
         
         //Create stereogram
-        bimage = new Stereogram (NewController.imgSize, 0) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, workingDistance, 0) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
         //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);

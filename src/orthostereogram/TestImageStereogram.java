@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static orthostereogram.SlideStereogramView.workingDistance;
+
 
 
 /**
@@ -63,6 +63,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     
     //Boundaries
     private int minVergence, maxVergence ;
+    private int workingDistance = 70 ;
     private int minPixels = -200 ;
     private int maxPixels = +400 ;
     private int timeout = 150 ;
@@ -72,11 +73,12 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     //every tics
     final ScheduledThreadPoolExecutor executorVergence, executorMove ;
     
-    public TestImageStereogram (int speed, int minVergence, int maxVergence) {
+    public TestImageStereogram (int speed, int minVergence, int maxVergence, int workingDistance) {
         this.minVergence = minVergence ;
         this.maxVergence = maxVergence ;
         this.minPixels = calcPixelsForVergence (minVergence) ;
         this.maxPixels = calcPixelsForVergence (maxVergence) ;
+        this.workingDistance = workingDistance ;
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
         Image img = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));

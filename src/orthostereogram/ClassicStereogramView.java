@@ -65,6 +65,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
     static private boolean alternate = false ;
     static private boolean jump = false ;
+    private int workingDistance = 70 ;
     
     //pour l'alternance
     static int currentConvergenceValue ;
@@ -74,10 +75,11 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
     
-    public ClassicStereogramView (int initialDelta, int currentDirectionOfWork) {
+    public ClassicStereogramView (int initialDelta, int currentDirectionOfWork, int workingDistance) {
         
         //On travaille dans quel sens : C ou D ?
-        this.currentDirectionOfWork = currentDirectionOfWork ;        
+        this.currentDirectionOfWork = currentDirectionOfWork ;
+        this.workingDistance = workingDistance ;
         //jolie fenêtre
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
@@ -91,7 +93,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
 
         
         //On crée un stéréogramme
-        bimage = new Stereogram (NewController.imgSize, initialDelta) ;
+        bimage = new Stereogram (NewController.imgSize, workingDistance, initialDelta) ;
         bimage.resetImg (false) ; 
         getContentPane().add(bimage);
         
