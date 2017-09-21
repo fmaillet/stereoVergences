@@ -29,16 +29,12 @@ import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.awt.image.MemoryImageSource;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -73,7 +69,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     //every tics
     final ScheduledThreadPoolExecutor executorVergence, executorMove ;
     
-    public TestImageStereogram (int speed, int minVergence, int maxVergence, int workingDistance) {
+    public TestImageStereogram (String file, int speed, int minVergence, int maxVergence, int workingDistance) {
         this.minVergence = minVergence ;
         this.maxVergence = maxVergence ;
         this.minPixels = calcPixelsForVergence (minVergence) ;
@@ -85,7 +81,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0, 0), "invisibleCursor");
         
         //Image ?
-        URL url = TestImageStereogram.class.getResource("/Ressources/3d-practise.png");
+        URL url = TestImageStereogram.class.getResource("/Ressources/"+file);
         try {bimage = ImageIO.read(url);} catch (IOException io) {System.out.println ("IO !!") ;}
         
         //jolie fenêtre

@@ -6,6 +6,8 @@
 package orthostereogram;
 
 import ch.aplu.xboxcontroller.XboxController;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
@@ -39,7 +41,9 @@ public class OrthoStereogram {
             xbox = new XboxController((is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
         } catch (Exception e) {JOptionPane.showMessageDialog(null, "Erreur init xbox (dll)!!"); }
         xboxConnected = xbox.isConnected() ;
-                
+        
+        
+        
         //Main Frame
         NewController controller = new NewController (xboxConnected) ;
         //controller.setSize(450, 650);
