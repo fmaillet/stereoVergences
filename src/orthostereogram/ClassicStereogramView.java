@@ -46,8 +46,9 @@ import org.newdawn.easyogg.OggClip;
 public class ClassicStereogramView extends JFrame implements WindowListener, KeyListener, MouseMotionListener, XboxControllerListener {
     
     static private Stereogram bimage  ;
-    OggClip audioOK = null ;
-    OggClip audioBAD = null ;
+    //OggClip audioOK = null ;
+    //OggClip audioBAD = null ;
+    SoundThread audioOK, audioBAD ;
     JLabel value ;
     
     //Constants
@@ -74,6 +75,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     //Gestion du temps
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
+    boolean keyPressedIsActive = false ;
     
     public ClassicStereogramView (int initialDelta, int currentDirectionOfWork, int workingDistance) {
         
@@ -98,10 +100,14 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
         getContentPane().add(bimage);
         
         //On crée les fichiers sons
-        try { audioOK = new OggClip(this.getClass().getResourceAsStream("correct.ogg")); }
+        /*try { audioOK = new OggClip(this.getClass().getResourceAsStream("correct.ogg")); }
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
         try { audioBAD = new OggClip(this.getClass().getResourceAsStream("incorrect.ogg")); }
-        catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
+        catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}*/
+        
+        //New audio try
+        audioOK = new SoundThread (true) ;
+        audioBAD = new SoundThread (false) ;
         
         //On initialise le timeout
         executor = new ScheduledThreadPoolExecutor(1);        
@@ -200,34 +206,40 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
         
+        if (keyPressedIsActive) return ;
+        
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
         if (keyCode == bimage.clue) {
-            if (audioOK.stopped()) audioOK.play() ;
+            audioOK.run() ;
             hideCursor () ;
             goodAnswer () ;
         }
         else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT | keyCode == VK_SPACE) {
-            if (audioBAD.stopped()) audioBAD.play() ;
+            audioBAD.run() ;
             hideCursor () ;
             badAnswer () ;
         }
         
         
         //Dynamic resizing
+        keyPressedIsActive = true ;
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 0.9 ) ;
-            bimage.resize(NewController.imgSize, true);
+            if ( NewController.imgScale( 0.9 ) )
+                bimage.resize(NewController.imgSize, true);
         }
         else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
-            bimage.resize(NewController.imgSize, true);
+            if ( NewController.imgScale( 1.1 ) )
+                bimage.resize(NewController.imgSize, true);
         }
         else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
-            bimage.resize(NewController.imgSize, true);
+            if ( NewController.imgScale( 1.1 ) )
+                bimage.resize(NewController.imgSize, true);
         }
+        //On recentre le stéréogramme
         setSizes () ;
+        //On a fini
+        keyPressedIsActive = false ;
     }
     
     public void goodAnswer () {

@@ -59,10 +59,11 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     static int workingDistance = 70 ;
     
     //Min and max are given in dioptries
-    public SlideStereogramView (int speed, int min, int max, int workingDistance) {
+    public SlideStereogramView (int speed, int min, int max, int workingDistance, int initialValue) {
         this.minPixels = calcPixelsForVergence (min) ;
         this.maxPixels = calcPixelsForVergence (max) ;
         this.workingDistance = workingDistance ;
+        this.deltaX = calcPixelsForVergence (initialValue) ;
         //System.out.println ("min : " + min + " max : " + max) ;
         //System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
         
@@ -120,12 +121,12 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
         double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;
-        return (int) Math.round(pixels) ;
+        return (int) Math.round(pixels/2) ;
     }
     
     public void setPositions () {
-        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX/2, (this.getHeight()-od.getHeight())/2);
-        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX/2, (this.getHeight()-og.getHeight())/2);
+        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
+        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
     }
     
     public void timeOut () {
@@ -147,9 +148,13 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         
     }
 
+    
     @Override
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
+        boolean isActive = false ;
+        
+        if (isActive) return ;
         
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
@@ -158,28 +163,35 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
          
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 0.9 ) ;
-            bimage.resize(NewController.imgSize, true);
-            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
-            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
-            setPositions () ;
+            isActive = true ;
+            if (NewController.imgScale( 0.9 )) {
+                bimage.resize(NewController.imgSize, true);
+                od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+                og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+                setPositions () ;
+            }
         }
         else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
-            bimage.resize(NewController.imgSize, true);
-            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
-            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
-            setPositions () ;
+            isActive = true ;
+            if ( NewController.imgScale( 1.1 ) ) {
+                bimage.resize(NewController.imgSize, true);
+                od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+                og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+                setPositions () ;
+            }
         }
         else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
-            NewController.imgSize = (int) (NewController.imgSize * 1.1 ) ;
-            bimage.resize(NewController.imgSize, true);
-            od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
-            og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
-            setPositions () ;
+            isActive = true ;
+            if ( NewController.imgScale( 1.1 ) ) {
+                bimage.resize(NewController.imgSize, true);
+                od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
+                og.resize(); anaglyph.createStereoscopicRedImage (bimage.OG) ;
+                setPositions () ;
+            }
         }
         
         hideCursor () ;
+        isActive = false;
     }
 
     @Override

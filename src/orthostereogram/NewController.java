@@ -10,6 +10,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -26,6 +27,8 @@ public class NewController extends javax.swing.JFrame {
     Image imgBR, imgRB ;
     static public int imgSize = 600 ;
     int numberOfScreens = 1 ;
+    int screenHeight ;
+    static JFrame currentFrame ;
     
     //Just to initiate ?
     SlideStereogramView slide ;
@@ -59,6 +62,9 @@ public class NewController extends javax.swing.JFrame {
             devices = env.getScreenDevices();
             numberOfScreens = devices.length;
         } catch (HeadlessException e) { }
+        
+        //Huateur en pixels de l'écran ?
+        screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
         //On affiche
         jScreens.setText(String.valueOf(numberOfScreens)+" écrans");
     }
@@ -438,6 +444,7 @@ public class NewController extends javax.swing.JFrame {
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
+        currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CDActionPerformed
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
@@ -446,6 +453,7 @@ public class NewController extends javax.swing.JFrame {
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
+        currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CActionPerformed
 
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
@@ -455,6 +463,7 @@ public class NewController extends javax.swing.JFrame {
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
+        currentFrame = stereo ;
     }//GEN-LAST:event_jStart_DActionPerformed
 
     private void jStart_CD_alterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_alterActionPerformed
@@ -463,6 +472,7 @@ public class NewController extends javax.swing.JFrame {
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
+        currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CD_alterActionPerformed
 
     private void jStart_CD_jumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_jumpActionPerformed
@@ -471,6 +481,7 @@ public class NewController extends javax.swing.JFrame {
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
+        currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CD_jumpActionPerformed
 
     private void jImg3DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jImg3DMouseClicked
@@ -485,25 +496,34 @@ public class NewController extends javax.swing.JFrame {
     }//GEN-LAST:event_jImg3DMouseClicked
 
     private void jStart_SlideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_SlideActionPerformed
-        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue()) ;
+        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue()) ;
         slide.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
         slide.setVisible(true); slide.repaint();
         //set after to avoid misplacement of panels
         slide.setAppearence () ;
+        currentFrame = slide ;
     }//GEN-LAST:event_jStart_SlideActionPerformed
 
     private void jStart_TestImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_TestImgActionPerformed
         
         String file = (String) jImageChoice.getSelectedItem() + ".png" ;
         System.out.println (file) ;
-        TestImageStereogram test = new TestImageStereogram (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue()) ;
+        ImageStereogramView test = new ImageStereogramView (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue()) ;
         test.setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         test.setVisible(true); test.repaint();
         test.setAppearence () ;
     }//GEN-LAST:event_jStart_TestImgActionPerformed
 
+    static public boolean imgScale (double factor) {
+        int tmp = (int) (imgSize * factor) ;
+        if (tmp > currentFrame.getContentPane().getHeight() | tmp < 200) return false ;
+        else {
+            imgSize = tmp ;
+            return true ;
+        }
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

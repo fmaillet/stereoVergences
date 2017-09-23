@@ -45,7 +45,7 @@ import javax.swing.JPanel;
  *
  * @author Fred
  */
-public class TestImageStereogram extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
+public class ImageStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
     
     Image imgStereo ;
     static public BufferedImage od, og ;
@@ -53,7 +53,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     Cursor transparentCursor ;
     
     private Point center ;
-    private int deltaX = 200 ;
+    private int deltaX = 0 ;
     private OneEyeBis xpanelOD, xpanelOG ;
     private JLabel info ;
     
@@ -69,7 +69,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     //every tics
     final ScheduledThreadPoolExecutor executorVergence, executorMove ;
     
-    public TestImageStereogram (String file, int speed, int minVergence, int maxVergence, int workingDistance) {
+    public ImageStereogramView (String file, int speed, int minVergence, int maxVergence, int workingDistance) {
         this.minVergence = minVergence ;
         this.maxVergence = maxVergence ;
         this.minPixels = calcPixelsForVergence (minVergence) ;
@@ -81,7 +81,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
         transparentCursor = Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0, 0), "invisibleCursor");
         
         //Image ?
-        URL url = TestImageStereogram.class.getResource("/Ressources/"+file);
+        URL url = ImageStereogramView.class.getResource("/Ressources/"+file);
         try {bimage = ImageIO.read(url);} catch (IOException io) {System.out.println ("IO !!") ;}
         
         //jolie fenêtre
@@ -123,7 +123,7 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
             return ( (center.x + c / 2) < this.getWidth()) ;
         }
         else {
-            d = center.x - c / 2;
+            //d = center.x - c / 2;
             return ( (center.x - c / 2) > 0) ;
         }
         //Fin
@@ -202,6 +202,10 @@ public class TestImageStereogram extends JFrame implements WindowListener, Mouse
     public BufferedImage scaleImg (BufferedImage before, double scale) {
         int w = (int) (before.getWidth() * scale) ;
         int h = (int) (before.getHeight() * scale) ;
+        //On vérifie els bornes !
+        if (h > this.getContentPane().getHeight() | h < 200 ) return before ;
+        if (w > this.getContentPane().getWidth() | w < 150 ) return before ;
+        //c'est bon on peut y aller
         BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         AffineTransform at = new AffineTransform();
         at.scale(scale, scale);

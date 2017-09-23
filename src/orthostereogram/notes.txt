@@ -5,12 +5,16 @@ A faire :
 - bug echo sur le son ?! => solution ? mettre un thread avec le son à jouer genre "play(bad-answer)" dans un thread autonome
 (revoir ce qui a été fait ailleurs sur orthoEVA ou orthoVS ?)
 - bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
-- working distance !!
 
-0.5.0 (en cours)
+0.5.1 (en cours)
+
+0.5.0 (23/09/2017)
 - corrected resize keepclue with BR inverted
 - slider stereogram between min and max
 - NewController +grand pour le tactile
+- min & max resizing
+- suppress keyEvents to avoid multiple resizing calls
+- ogg sound thread
 
 0.4.0 (03/09/2017)
 - alternate convergence and divergence
