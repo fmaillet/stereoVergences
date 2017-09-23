@@ -30,6 +30,7 @@ import java.awt.image.MemoryImageSource;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -44,6 +45,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     private OneEye od, og ;
     private int deltaX = 0 ;
     Cursor transparentCursor ;
+    private JLabel info ;
     
     //every tics
     final ScheduledThreadPoolExecutor executor ;
@@ -76,7 +78,8 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
         setLayout(null);
-        this.setSize(1000, 700);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
         
         //On initialise le timeout
@@ -112,16 +115,26 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         od.setVisible(true);
         og.setVisible(true);
         
+        //infos
+        info = new JLabel ("Iitializing...") ;
+        info.setBounds(10, 10, 300, 30);
+        this.getContentPane().add(info) ;
+        
         //On lance le timer
-        executor.scheduleAtFixedRate(() -> timeOut(),6000, timeout, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> timeOut(),5000, timeout, TimeUnit.MILLISECONDS);
     }
     
     public int calcPixelsForVergence (int vergence) {
         //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
-        double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
+        double pixels = (double) ((double)vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;
         return (int) Math.round(pixels/2) ;
+    }
+    
+    public double calcVergenceForPixels (int pixels) {
+        double vergence = (double) (pixels * 254 * 2) / (double) (OrthoStereogram.screenResolution * workingDistance) ;
+        return (vergence) ;
     }
     
     public void setPositions () {
@@ -192,6 +205,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         
         hideCursor () ;
         isActive = false;
+        info.setText(String.format("%+2.1f",calcVergenceForPixels(deltaX)));
     }
 
     @Override

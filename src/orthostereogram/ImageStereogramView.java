@@ -88,7 +88,8 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Slider") ;
         setLayout(null);
-        this.setSize(1000, 700);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
         
         //On initialise les timeout
@@ -108,6 +109,11 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;
         return (int) Math.round(pixels) ;
+    }
+    
+    public double calcVergenceForPixels (int pixels) {
+        double vergence = (double) (pixels * 254 * 2) / (double) (OrthoStereogram.screenResolution * workingDistance) ;
+        return (vergence) ;
     }
     
     private boolean isBoundariesOK () {
@@ -136,6 +142,8 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.setIgnoreRepaint(true);
+        
+        
             
         /*//Test animated gif
         URL url = TestImageStereogram.class.getResource("/ressources/animated.gif");
@@ -144,7 +152,7 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         tt.setBounds (10, 10, 600, 300) ;
         this.getContentPane().add(tt);*/
         
-        info = new JLabel ("info") ;
+        info = new JLabel ("Initializing...") ;
         info.setBounds(10, 10, 300, 30);
         this.getContentPane().add(info) ;
                 
@@ -328,6 +336,7 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         }
         
         hideCursor () ;
+        info.setText(String.format("%+2.1f",calcVergenceForPixels(deltaX)));
     }
 
     @Override

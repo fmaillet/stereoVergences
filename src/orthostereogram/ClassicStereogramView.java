@@ -66,7 +66,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
     static private boolean alternate = false ;
     static private boolean jump = false ;
-    private int workingDistance = 70 ;
+    private int workingDistance ;
     
     //pour l'alternance
     static int currentConvergenceValue ;
@@ -78,7 +78,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     boolean keyPressedIsActive = false ;
     
     public ClassicStereogramView (int initialDelta, int currentDirectionOfWork, int workingDistance) {
-        
+        this.setVisible(false);
         //On travaille dans quel sens : C ou D ?
         this.currentDirectionOfWork = currentDirectionOfWork ;
         this.workingDistance = workingDistance ;
@@ -86,7 +86,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle ("Stéréogramme: ") ;
         setLayout(null);
-        this.setSize(1000, 700);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
         
         //Si on a la xbox

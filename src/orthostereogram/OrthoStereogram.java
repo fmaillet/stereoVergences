@@ -6,8 +6,6 @@
 package orthostereogram;
 
 import ch.aplu.xboxcontroller.XboxController;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 

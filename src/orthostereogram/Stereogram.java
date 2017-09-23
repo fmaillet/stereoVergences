@@ -34,6 +34,13 @@ public class Stereogram extends JPanel {
     
     public Stereogram (int stereogramSize, int workingDistance, int initialDelta) {
         this.workingDistance = workingDistance ;
+        
+        //Check for odd size
+        if ( (stereogramSize & 1) != 0 )  {
+            stereogramSize-- ;
+            System.out.println ("Beware !! stereogram even size !! (corrected...)") ;
+        } 
+        
         //Just to be able to calculate pixels vs vergence demand
         screenResolution = Toolkit.getDefaultToolkit().getScreenResolution() ;
         
@@ -106,6 +113,7 @@ public class Stereogram extends JPanel {
     }
     
     //Reset the stereogram content
+    //if keepclue= true then same clue
     public void resetImg (boolean keepClue) {
         Random rand = new Random() ;
         Color colour ;
