@@ -15,10 +15,11 @@ import javax.swing.JOptionPane;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.5.0" ;
+    public static final String VERSION = "0.5.1" ;
     public static boolean BR_glasses = true ;
     
     public static int screenResolution ;
+    public static NewController controller ;
 
     /**
      * @param args the command line arguments
@@ -43,7 +44,7 @@ public class OrthoStereogram {
         
         
         //Main Frame
-        NewController controller = new NewController (xboxConnected) ;
+        controller = new NewController (xboxConnected) ;
         //controller.setSize(450, 650);
         controller.setLocationRelativeTo(null);
         controller.setVisible(true);

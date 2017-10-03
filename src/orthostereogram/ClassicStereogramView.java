@@ -189,12 +189,12 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
 
     @Override
     public void windowActivated(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrthoStereogram.controller.setEnabled(false);
     }
 
     @Override
     public void windowDeactivated(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrthoStereogram.controller.setEnabled(true);
     }
 
     @Override

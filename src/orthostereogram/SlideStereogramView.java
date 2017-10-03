@@ -235,7 +235,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowClosed(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrthoStereogram.controller.setEnabled(true);
     }
 
     @Override
@@ -250,12 +250,13 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowActivated(WindowEvent we) {
+        OrthoStereogram.controller.setEnabled(false);
         hideCursor () ;
     }
 
     @Override
     public void windowDeactivated(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
     
 }

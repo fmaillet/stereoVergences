@@ -368,7 +368,10 @@ class OneEyeBis extends JPanel {
     public void paint(Graphics g) {
         super.paintComponent(g);
         g.setXORMode(Color.WHITE);
-        g.drawImage(oo, 0,0,this);
+        if (OrthoStereogram.BR_glasses)
+            g.drawImage(oo, 0,0,this);
+        else
+                g.drawImage(oo, 0 + oo.getWidth(), 0, -oo.getWidth(), oo.getHeight(), this);
     }
     
 }

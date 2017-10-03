@@ -3,7 +3,6 @@ Versions :
 A faire :
 - implémenter la verticalité
 - bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
-- corriger/vérifier chgt de lunettes RB vs BR
 - garder la xbox sur NewController pour ne pas la perdre
 - en fonction de la taille de l'écran, limiter les valeurs de vergence
 - paramétrage du grain
@@ -13,6 +12,7 @@ A faire :
 - choice screen to display
 - stereogram size set always to even (for grain design)
 - instantaneous vergence value in slide & image
+- corrected glasses BR/RB change in "image"
 
 
 0.5.0 (23/09/2017)
