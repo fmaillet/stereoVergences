@@ -106,9 +106,9 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
     public int calcPixelsForVergence (int vergence) {
         //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
-        double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) OrthoStereogram.screenResolution ;
+        double pixels = (double) ((double)vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;
-        return (int) Math.round(pixels) ;
+        return (int) Math.round(pixels/2) ;
     }
     
     public double calcVergenceForPixels (int pixels) {
@@ -180,8 +180,15 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         
         //On anaglyphe les images
         Anaglyph anaglyph = new Anaglyph () ;
-        anaglyph.createStereoscopicRedImage (od) ;
-        anaglyph.createStereoscopicBlueImage (og) ;
+        if (OrthoStereogram.BR_glasses) {
+            anaglyph.createStereoscopicRedImage (od) ;
+            anaglyph.createStereoscopicBlueImage (og) ;
+        }
+        else {
+            anaglyph.createStereoscopicRedImage (og) ;
+            anaglyph.createStereoscopicBlueImage (od) ;
+        }
+            
         
         //Un panel pour afficher ça
         //deltaX = bimage.getWidth() /2  ;
@@ -371,7 +378,7 @@ class OneEyeBis extends JPanel {
         if (OrthoStereogram.BR_glasses)
             g.drawImage(oo, 0,0,this);
         else
-                g.drawImage(oo, 0 + oo.getWidth(), 0, -oo.getWidth(), oo.getHeight(), this);
+            g.drawImage(oo, 0 + oo.getWidth(), 0, -oo.getWidth(), oo.getHeight(), this);
     }
     
 }

@@ -58,8 +58,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     final static public int DIVERGENCE_DOWN  = -2 ;
     
     //Parameters
-    static private int stepC, stepD ;
-    static private int step = 5 ;
+    static private int stepC ;
+    static private double stepD ;
+    static private double step = 1 ;
     static private int max = 35 ;
     static private int min = -10 ;
     static private int timeOut = 20 ;
@@ -69,8 +70,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     private int workingDistance ;
     
     //pour l'alternance
-    static int currentConvergenceValue ;
-    static int currentDivergenceValue ;
+    static double currentConvergenceValue ;
+    static double currentDivergenceValue ;
+    static private boolean previousBadAnswer = false ;
     
     //Gestion du temps
     final ScheduledThreadPoolExecutor executor ;
@@ -114,7 +116,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
         executor = new ScheduledThreadPoolExecutor(1);        
     }
     
-    public void setMode (int stepC, int stepD, int max, int min, int timeOut, boolean alternate, boolean jump) {
+    public void setMode (int stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump) {
         
         this.stepC = stepC ; this.stepD = stepD ;
         //Step increment
@@ -245,7 +247,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     
     public void goodAnswer () {
         String tmp = new String() ;
-                
+        previousBadAnswer = false ;        
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
@@ -318,6 +320,13 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Key
     
     public void badAnswer () {
         String tmp = new String() ;
+        double step = this.step ;
+        //Première mauvaise réponse ?
+        if (previousBadAnswer) {
+            step = 2 * step ;
+        }
+        else
+            previousBadAnswer = true ;
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());

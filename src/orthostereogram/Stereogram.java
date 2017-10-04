@@ -25,7 +25,7 @@ public class Stereogram extends JPanel {
     static private Anaglyph anaglyph ;
     public int clue ;
     static public int deltaPixelsX ;
-    static public int currentVergenceValue;
+    static public double currentVergenceValue;
     
     //needed to calculate vergence
     static Dimension screenSize ;
@@ -57,23 +57,23 @@ public class Stereogram extends JPanel {
         
     }
     
-    public int calcPixelsForVergence (int vergence) {
+    public int calcPixelsForVergence (double vergence) {
         
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
-        double pixels = ((double) ((double)vergence * (double) workingDistance / 100) /2.54f ) * (double) screenResolution ;
+        double pixels = ((double) (vergence * (double) workingDistance / 100) /2.54f ) * (double) screenResolution ;
         //System.out.println (pixels) ;
         return (int) Math.round(pixels) ;
     }
     
     //step a vergence
-    public void stepVergence (int delta) {
+    public void stepVergence (double delta) {
         currentVergenceValue = currentVergenceValue + delta ;
         deltaPixelsX = calcPixelsForVergence ( currentVergenceValue ) ;
         resize (OD.getWidth(), false) ;
     }
     
     //Just to go to a fixed vergence value
-    public void goToVergence (int value) {
+    public void goToVergence (double value) {
         currentVergenceValue = value ;
         deltaPixelsX = calcPixelsForVergence (value) ;
         resize (OD.getWidth(), false) ;

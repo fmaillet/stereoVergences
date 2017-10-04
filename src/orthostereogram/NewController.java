@@ -29,8 +29,9 @@ public class NewController extends javax.swing.JFrame {
     int numberOfScreens = 1 ;
     int screenHeight ;
     static JFrame currentFrame ;
-    GraphicsEnvironment graphicsEnv ;
-    GraphicsDevice[] screenDevices ; 
+    static GraphicsEnvironment graphicsEnv ;
+    static GraphicsDevice[] screenDevices ; 
+    static GraphicsDevice secondaryScreenDevice ;
     
     //Just to initiate ?
     SlideStereogramView slide ;
@@ -58,8 +59,7 @@ public class NewController extends javax.swing.JFrame {
         this.getContentPane().setBackground(Color.CYAN);
         this.setResizable(false);
         
-        //Screens ?
-        
+        //List of Screens ?
         try {
             graphicsEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
             screenDevices = graphicsEnv.getScreenDevices();
@@ -70,7 +70,19 @@ public class NewController extends javax.swing.JFrame {
             }
         } catch (HeadlessException e) { }
         
-        //Huateur en pixels de l'écran ?
+        //Check for secondary screen ?
+        GraphicsDevice primaryScreenDevice = graphicsEnv.getDefaultScreenDevice();
+        for (GraphicsDevice screenDevice : screenDevices) {
+            if (!primaryScreenDevice.equals(screenDevice)) {
+                secondaryScreenDevice = screenDevice;
+                break;
+            }
+        }
+        if (secondaryScreenDevice == null) {
+            secondaryScreenDevice = primaryScreenDevice;
+        }
+        
+        //Hauteur en pixels de l'écran ?
         screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
         //On affiche
         
@@ -155,7 +167,7 @@ public class NewController extends javax.swing.JFrame {
         jLabel3.setText("Min :");
 
         jMin.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jMin.setModel(new javax.swing.SpinnerNumberModel(-6, -30, 60, 1));
+        jMin.setModel(new javax.swing.SpinnerNumberModel(-4, -30, 60, 1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Initial value :");
@@ -225,7 +237,7 @@ public class NewController extends javax.swing.JFrame {
         jUnit6.setText("\\u");
 
         jStepD.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStepD.setModel(new javax.swing.SpinnerNumberModel(1, 1, 30, 1));
+        jStepD.setModel(new javax.swing.SpinnerNumberModel(0.5d, 0.0d, 30.0d, 0.25d));
 
         jStart_CD_alter.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jStart_CD_alter.setText("C <#> D");
@@ -267,7 +279,7 @@ public class NewController extends javax.swing.JFrame {
         jScreensLabel.setText("Screen :");
 
         jImageChoice.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jImageChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "3d-practise", "polytope", "art_png", "spi", "snakes" }));
+        jImageChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "3d-practise", "3dring", "polytope", "art_png", "spi", "teseract", "snakes" }));
 
         jScreens.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jScreens.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2" }));
@@ -476,14 +488,15 @@ public class NewController extends javax.swing.JFrame {
         ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(stereo);*/
+        secondaryScreenDevice.setFullScreenWindow(stereo);
         //Adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         //on affiche
-        stereo.setVisible(true);
+        //stereo.setVisible(true);
         currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CDActionPerformed
 
@@ -491,13 +504,14 @@ public class NewController extends javax.swing.JFrame {
         ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(stereo);*/
+        secondaryScreenDevice.setFullScreenWindow(stereo);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
-        stereo.setVisible(true);
+        //stereo.setVisible(true);
         currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CActionPerformed
 
@@ -505,14 +519,15 @@ public class NewController extends javax.swing.JFrame {
         ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.DIVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(stereo);*/
+        secondaryScreenDevice.setFullScreenWindow(stereo);
         //adapt
         int step = (Integer) jStepC.getValue() ; step = - step ;
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
-        stereo.setVisible(true);
+        //stereo.setVisible(true);
         currentFrame = stereo ;
     }//GEN-LAST:event_jStart_DActionPerformed
 
@@ -520,10 +535,11 @@ public class NewController extends javax.swing.JFrame {
         ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(stereo);*/
+        secondaryScreenDevice.setFullScreenWindow(stereo);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
         stereo.setVisible(true);
@@ -534,13 +550,14 @@ public class NewController extends javax.swing.JFrame {
         ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(stereo);*/
+        secondaryScreenDevice.setFullScreenWindow(stereo);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (Integer) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
+        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
         stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         stereo.setAppearence () ;
-        stereo.setVisible(true);
+        //stereo.setVisible(true);
         currentFrame = stereo ;
     }//GEN-LAST:event_jStart_CD_jumpActionPerformed
 
@@ -559,12 +576,14 @@ public class NewController extends javax.swing.JFrame {
         slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(slide);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(slide);*/
+        secondaryScreenDevice.setFullScreenWindow(slide);
         //Appearence
         //slide.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
-        slide.setVisible(true); slide.repaint();
+        //slide.setVisible(true);
+        slide.repaint();
         //set after to avoid misplacement of panels
         slide.setAppearence () ;
         currentFrame = slide ;
@@ -576,10 +595,11 @@ public class NewController extends javax.swing.JFrame {
         image = new ImageStereogramView (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(image);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
+            screenDevices[sc].setFullScreenWindow(image);*/
+        secondaryScreenDevice.setFullScreenWindow(image);
         //Appearence
-        image.setVisible(true); //image.repaint();
+        //image.setVisible(true); //image.repaint();
         image.setAppearence () ;
         currentFrame = image ;
     }//GEN-LAST:event_jStart_ImgActionPerformed

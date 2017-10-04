@@ -300,13 +300,13 @@ class OneEye extends JPanel {
             if (OrthoStereogram.BR_glasses)
                 g.drawImage(Stereogram.OD, 0,0,this);
             else
-                g.drawImage(Stereogram.OD, 0 + Stereogram.OD.getWidth(), 0, -Stereogram.OD.getWidth(), Stereogram.OD.getHeight(), this);
+                g.drawImage(Stereogram.OG, 0 + Stereogram.OG.getWidth(), 0, -Stereogram.OG.getWidth(), Stereogram.OG.getHeight(), this);
         }
         else {
             if (OrthoStereogram.BR_glasses)
                 g.drawImage(Stereogram.OG, 0,0,this);
             else
-                g.drawImage(Stereogram.OG, 0 + Stereogram.OG.getWidth(), 0, -Stereogram.OG.getWidth(), Stereogram.OG.getHeight(), this);
+                g.drawImage(Stereogram.OD, 0 + Stereogram.OD.getWidth(), 0, -Stereogram.OD.getWidth(), Stereogram.OD.getHeight(), this);
         }
     }
 }

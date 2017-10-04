@@ -6,6 +6,8 @@
 package orthostereogram;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.easyogg.OggClip;
 
 /**
@@ -14,9 +16,11 @@ import org.newdawn.easyogg.OggClip;
  */
 public class SoundThread extends Thread {
     private OggClip audio = null ;
+    private boolean ok ;
     
     
     public SoundThread (boolean ok) {
+        this.ok = ok ;
         if (ok) {
             try { audio = new OggClip(this.getClass().getResourceAsStream("correct.ogg")); }
             catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}
@@ -30,7 +34,14 @@ public class SoundThread extends Thread {
         
     }
     public void run() {
-        audio.stop();
+        
         audio.play() ;
+        while ( !audio.stopped()) {}
+        try {
+            Thread.sleep(150) ;
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SoundThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
     }
 }
