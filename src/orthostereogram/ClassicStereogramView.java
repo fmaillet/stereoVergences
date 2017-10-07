@@ -41,7 +41,7 @@ import javax.swing.JLabel;
 public class ClassicStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
     
     //Constructor
-    SoundThread audioOK, audioBAD ;
+    //SoundThread audioOK, audioBAD ;
     Anaglyph anaglyph ;
     static private Stereogram bimage  ;
     private OneEye od, og ;
@@ -85,6 +85,10 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static Dimension screenSize ;
     static int workingDistance = 70 ;
     
+    //Sounds
+    private static SoundClips sndGood = new SoundClips (1) ;
+    private static SoundClips sndBad = new SoundClips (0) ;
+    
     //Min and max are given in dioptries
     public ClassicStereogramView (int initialValue, int currentDirectionOfWork, int workingDistance) {
         //this.minPixels = calcPixelsForVergence (min) ;
@@ -113,8 +117,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         executor = new ScheduledThreadPoolExecutor(1);
         
         //New audio try
-        audioOK = new SoundThread (true) ;
-        audioBAD = new SoundThread (false) ;
+        //audioOK = new SoundThread (true) ;
+        //audioBAD = new SoundThread (false) ;
         
     }
 
@@ -228,12 +232,12 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
         if (keyCode == bimage.clue) {
-            audioOK.run() ;
+            //audioOK.run() ;
             hideCursor () ;
             goodAnswer () ;
         }
         else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT | keyCode == VK_SPACE) {
-            audioBAD.run() ;
+            //audioBAD.run() ;
             hideCursor () ;
             badAnswer () ;
         }
@@ -273,6 +277,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     
     public void goodAnswer () {
         String tmp = new String() ;
+        sndGood.run();
         previousBadAnswer = false ;        
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
@@ -347,6 +352,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     public void badAnswer () {
         String tmp = new String() ;
         double step = this.step ;
+        sndBad.run();
         //Première mauvaise réponse ?
         if (previousBadAnswer) {
             step = 2 * step ;

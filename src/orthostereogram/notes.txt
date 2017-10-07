@@ -7,11 +7,16 @@ A faire :
 - en fonction de la taille de l'écran, limiter les valeurs de vergence
 - paramétrage du grain
 
-0.5.2 (en cours)
+0.5.3 (en cours)
+- ok pour new classic stéréogram, remplace l'ancien
+- passe des fichiers sons ogg aux fichiers sons wav
+
+0.5.2 (07/10/2017)
 - tentative correction bug sound
 - divergence step set to double
 - try to display on secondary screen
 - double le retour en cas de 2nde bad answer
+- classic stereogram replaced by sliding Jpanels
 
 0.5.1 (03/10/2017)
 - NewController +grand pour le tactile
