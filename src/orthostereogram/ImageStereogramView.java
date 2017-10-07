@@ -204,8 +204,8 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         this.getContentPane().add(xpanelOG) ;
                
         //On lance les timer
-        executorVergence.scheduleAtFixedRate(() -> timeOutVergence(),6000, timeout, TimeUnit.MILLISECONDS);
-        executorMove.scheduleAtFixedRate(() -> timeOutMove(),6000, timeout / 2, TimeUnit.MILLISECONDS);
+        executorVergence.scheduleAtFixedRate(() -> timeOutVergence(),5000, timeout, TimeUnit.MILLISECONDS);
+        executorMove.scheduleAtFixedRate(() -> timeOutMove(),5000, timeout / 2, TimeUnit.MILLISECONDS);
     }
     
     public void setPositions () {

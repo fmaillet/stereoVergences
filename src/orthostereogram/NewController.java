@@ -36,6 +36,7 @@ public class NewController extends javax.swing.JFrame {
     //Just to initiate ?
     SlideStereogramView slide ;
     ImageStereogramView image ;
+    ClassicStereogramView classic ;
     
     public NewController(boolean xboxConnected) {
         setLayout(null);
@@ -81,6 +82,8 @@ public class NewController extends javax.swing.JFrame {
         if (secondaryScreenDevice == null) {
             secondaryScreenDevice = primaryScreenDevice;
         }
+        //Check for setFullScreenMode
+        if (!secondaryScreenDevice.isFullScreenSupported()) jScreens.setEnabled(false);
         
         //Hauteur en pixels de l'écran ?
         screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
@@ -141,7 +144,7 @@ public class NewController extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.cyan);
-        setPreferredSize(new java.awt.Dimension(420, 650));
+        setPreferredSize(new java.awt.Dimension(530, 650));
 
         jStart_CD.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jStart_CD.setText("C <-> D");
@@ -296,83 +299,87 @@ public class NewController extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jStart_CD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jStart_CD_alter, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
+                                .addGap(34, 34, 34)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(20, 20, 20)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jStart_CD_jump, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(277, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(22, 22, 22)
-                                        .addComponent(jLabel5)))
-                                .addGap(35, 35, 35))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addGap(18, 18, 18)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jInitial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jMin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jStepC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTimeOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jStart_C)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jStart_D)
+                                        .addGap(90, 213, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(147, 197, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
+                                .addGap(4, 4, 4)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jUnit2)
-                                    .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(17, 17, 17)
-                                        .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jUnit6, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jUnit3, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(20, 20, 20))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jUnit)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(30, 30, 30)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jStart_Slide, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                    .addComponent(jStart_Img, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(39, 39, 39)
+                                .addComponent(jRandomJumps)
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jStart_CD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jStart_CD_alter, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
-                                        .addGap(34, 34, 34)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jStart_CD_jump, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jStart_C)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jStart_D))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
+                                                .addGap(20, 20, 20)
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(22, 22, 22)
+                                                .addComponent(jLabel5)))
+                                        .addGap(35, 35, 35))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(30, 30, 30)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jStart_Slide, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-                                            .addComponent(jStart_Img, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jRandomJumps))))
+                                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4))
+                                        .addGap(18, 18, 18)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jInitial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jMin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jStepC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTimeOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(20, 20, 20)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jUnit2)
+                                            .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel9))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jUnit6))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jUnit3))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jUnit))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -391,14 +398,9 @@ public class NewController extends javax.swing.JFrame {
                                     .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(74, 74, 74)
                                     .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -485,80 +487,80 @@ public class NewController extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
-        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
             screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(stereo);
+        secondaryScreenDevice.setFullScreenWindow(classic);
         //Adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        stereo.setAppearence () ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
+        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        classic.setAppearence () ;
         //on affiche
         //stereo.setVisible(true);
-        currentFrame = stereo ;
+        currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CDActionPerformed
 
     private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
-        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
             screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(stereo);
+        secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        stereo.setAppearence () ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false) ;
+        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        classic.setAppearence () ;
         //stereo.setVisible(true);
-        currentFrame = stereo ;
+        currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CActionPerformed
 
     private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
-        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.DIVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.DIVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
             screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(stereo);
+        secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        int step = (Integer) jStepC.getValue() ; step = - step ;
-        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        stereo.setAppearence () ;
+        //double step = (double) jStepD.getValue() ; step = - step ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false) ;
+        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        classic.setAppearence () ;
         //stereo.setVisible(true);
-        currentFrame = stereo ;
+        currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_DActionPerformed
 
     private void jStart_CD_alterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_alterActionPerformed
-        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
             screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(stereo);
+        secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        stereo.setAppearence () ;
-        stereo.setVisible(true);
-        currentFrame = stereo ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false) ;
+        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        classic.setAppearence () ;
+        classic.setVisible(true);
+        currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CD_alterActionPerformed
 
     private void jStart_CD_jumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_jumpActionPerformed
-        ClassicStereogramView stereo = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
             screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(stereo);
+        secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        stereo.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
-        stereo.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        stereo.setAppearence () ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true) ;
+        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        classic.setAppearence () ;
         //stereo.setVisible(true);
-        currentFrame = stereo ;
+        currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CD_jumpActionPerformed
 
     private void jImg3DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jImg3DMouseClicked
@@ -586,7 +588,7 @@ public class NewController extends javax.swing.JFrame {
         slide.repaint();
         //set after to avoid misplacement of panels
         slide.setAppearence () ;
-        currentFrame = slide ;
+        currentFrame = slide ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_SlideActionPerformed
 
     private void jStart_ImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_ImgActionPerformed
@@ -601,7 +603,7 @@ public class NewController extends javax.swing.JFrame {
         //Appearence
         //image.setVisible(true); //image.repaint();
         image.setAppearence () ;
-        currentFrame = image ;
+        currentFrame = image ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_ImgActionPerformed
 
     static public boolean imgScale (double factor) {

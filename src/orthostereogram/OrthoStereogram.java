@@ -41,8 +41,6 @@ public class OrthoStereogram {
         } catch (Exception e) {JOptionPane.showMessageDialog(null, "Erreur init xbox (dll)!!"); }
         xboxConnected = xbox.isConnected() ;
         
-        
-        
         //Main Frame
         controller = new NewController (xboxConnected) ;
         //controller.setSize(450, 650);

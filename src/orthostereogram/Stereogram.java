@@ -79,7 +79,7 @@ public class Stereogram extends JPanel {
         resize (OD.getWidth(), false) ;
     }
     
-    public void slideToVergence (ClassicStereogramView display, int value) {
+    public void slideToVergence (OldClassicStereogramView display, int value) {
         int step ;
         if (currentVergenceValue == value) return ;
         int debut = calcPixelsForVergence (currentVergenceValue ) ;
