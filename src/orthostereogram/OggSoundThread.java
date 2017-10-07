@@ -14,12 +14,12 @@ import org.newdawn.easyogg.OggClip;
  *
  * @author Fred
  */
-public class SoundThread extends Thread {
+public class OggSoundThread extends Thread {
     private OggClip audio = null ;
     private boolean ok ;
     
     
-    public SoundThread (boolean ok) {
+    public OggSoundThread (boolean ok) {
         this.ok = ok ;
         if (ok) {
             try { audio = new OggClip(this.getClass().getResourceAsStream("correct.ogg")); }
@@ -40,7 +40,7 @@ public class SoundThread extends Thread {
         try {
             Thread.sleep(150) ;
             } catch (InterruptedException ex) {
-                Logger.getLogger(SoundThread.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OggSoundThread.class.getName()).log(Level.SEVERE, null, ex);
             }
 
     }

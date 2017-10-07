@@ -48,7 +48,8 @@ public class OldClassicStereogramView extends JFrame implements WindowListener, 
     static private Stereogram bimage  ;
     //OggClip audioOK = null ;
     //OggClip audioBAD = null ;
-    SoundThread audioOK, audioBAD ;
+    OggSoundThread audioOK;
+    OggSoundThread audioBAD;
     JLabel value ;
     
     //Constants
@@ -109,8 +110,8 @@ public class OldClassicStereogramView extends JFrame implements WindowListener, 
         catch (final IOException e) {System.out.println ("Sound loading pb: " + e.toString()) ;}*/
         
         //New audio try
-        audioOK = new SoundThread (true) ;
-        audioBAD = new SoundThread (false) ;
+        audioOK = new OggSoundThread (true) ;
+        audioBAD = new OggSoundThread (false) ;
         
         //On initialise le timeout
         executor = new ScheduledThreadPoolExecutor(1);        

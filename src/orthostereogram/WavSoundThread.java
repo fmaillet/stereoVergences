@@ -20,8 +20,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  *
  * @author Fred
  */
-public class SoundClips extends Thread {
-    public SoundClips (int t) {
+public class WavSoundThread extends Thread {
+    public WavSoundThread (int t) {
         son = t ;
     }
     

@@ -46,6 +46,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static private Stereogram bimage  ;
     private OneEye od, og ;
     private int deltaX = 0 ;
+    private int deltaY = 0 ;
     Cursor transparentCursor ;
     private JLabel info ;
     
@@ -56,6 +57,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     final static public int DIVERGENCE_DOWN  = -2 ;
     
     //Parameters
+    static private double verticality ;
     static private double stepC ;
     static private double stepD ;
     static private double step = 1 ;
@@ -86,8 +88,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static int workingDistance = 70 ;
     
     //Sounds
-    private static SoundClips sndGood = new SoundClips (1) ;
-    private static SoundClips sndBad = new SoundClips (0) ;
+    private static WavSoundThread sndGood = new WavSoundThread (1) ;
+    private static WavSoundThread sndBad = new WavSoundThread (0) ;
     
     //Min and max are given in dioptries
     public ClassicStereogramView (int initialValue, int currentDirectionOfWork, int workingDistance) {
@@ -151,17 +153,25 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.getContentPane().add(info) ;
     }
     
-    public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump) {
+    public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump, int verticality) {
         
+        //Veticalité
+        this.verticality = 0.25 * verticality ;
+        //steps
         this.stepC = stepC ; this.stepD = stepD ;
-        //Step increment
+        //Step increment selon le démarrage
         if (currentDirectionOfWork == CONVERGENCE_UP) this.step = stepC ;
         else if (currentDirectionOfWork == CONVERGENCE_DOWN) this.step = -stepC ;
         else if (currentDirectionOfWork == DIVERGENCE_UP) this.step = -stepD ;
         else this.step = stepD ;
+        
+        //Boudaries
         this.max = max ;
         this.min = min ;
+        //time out to answer
         this.timeOut = timeOut ;
+        
+        //Game mode
         this.alternate = alternate ;
         this.jump = jump ;
         currentConvergenceValue = 0 ;
@@ -182,22 +192,31 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     }
     
     public void goToVergence (double value) {
+        //Horizontal
         currentVergenceValue = value ;
         deltaX = calcPixelsForVergence (value) ;
+        //Vertical
+        deltaY = calcPixelsForVergence (verticality) ;
+        verticality = - verticality ;
+        //On recalcule un stéréogramme
         resetStereogram () ;
+        //On le positionne
         setPositions () ;
     }
     
     public void stepVergence (double delta) {
         currentVergenceValue = currentVergenceValue + delta ;
         deltaX = calcPixelsForVergence (currentVergenceValue) ;
+        //Vertical
+        deltaY = calcPixelsForVergence (verticality) ;
+        verticality = - verticality ;
         resetStereogram () ;
         setPositions () ;
     }
     
     public void setPositions () {
-        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
-        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
+        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2 - deltaY);
+        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2 + deltaY);
     }
     
     public void resetStereogram () {

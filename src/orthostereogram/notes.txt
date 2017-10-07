@@ -6,8 +6,12 @@ A faire :
 - garder la xbox sur NewController pour ne pas la perdre
 - en fonction de la taille de l'écran, limiter les valeurs de vergence
 - paramétrage du grain
+- reset stereogram in ClassicStereogramView shoud be threaded
 
-0.5.3 (en cours)
+0.6.0 (en cours)
+- rajout d'une alternance de verticalité (only ClassicStereogramView)
+
+0.5.3 (07/10.2017)
 - ok pour new classic stéréogram, remplace l'ancien
 - passe des fichiers sons ogg aux fichiers sons wav
 
