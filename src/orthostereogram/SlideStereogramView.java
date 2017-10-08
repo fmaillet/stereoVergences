@@ -15,12 +15,14 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_6;
 import static java.awt.event.KeyEvent.VK_ADD;
+import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_SUBTRACT;
+import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -44,6 +46,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     static private Stereogram bimage  ;
     private OneEye od, og ;
     private int deltaX = 0 ;
+    private int deltaY = 0 ;
     Cursor transparentCursor ;
     private JLabel info ;
     
@@ -54,14 +57,26 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     private int minPixels = -200 ;
     private int maxPixels = +400 ;
     private int timeout = 150 ;
-    private int direction = KeyEvent.VK_LEFT ;
+    private int hDirection = KeyEvent.VK_LEFT ;
+    private int vDirection = KeyEvent.VK_UP ;
+    private int minVPixels = 0 ;
+    private int maxVPixels = 0 ;
+    private boolean isThereVerticality = false ;
     
     //needed to calculate vergence
     static Dimension screenSize ;
     static int workingDistance = 70 ;
     
     //Min and max are given in dioptries
-    public SlideStereogramView (int speed, int min, int max, int workingDistance, int initialValue) {
+    public SlideStereogramView (int speed, int min, int max, int workingDistance, int initialValue, int verticality) {
+        //Veticalité
+        if (verticality != 0) {
+            isThereVerticality = true ;
+            this.minVPixels = - calcPixelsForVergence (0.25 * verticality) ;
+            this.maxVPixels = + calcPixelsForVergence (0.25 * verticality) ;
+        }
+       
+        //Bounbaries
         this.minPixels = calcPixelsForVergence (min) ;
         this.maxPixels = calcPixelsForVergence (max) ;
         this.workingDistance = workingDistance ;
@@ -108,8 +123,9 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         od = new OneEye (1);
 
         //Position
-        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
-        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
+        //od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2 - deltaX);
+        //og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2 + deltaX);
+        setPositions () ;
         this.getContentPane().add (od) ;
         this.getContentPane().add (og) ;
         od.setVisible(true);
@@ -124,10 +140,10 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         executor.scheduleAtFixedRate(() -> timeOut(),3000, timeout, TimeUnit.MILLISECONDS);
     }
     
-    public int calcPixelsForVergence (int vergence) {
+    public int calcPixelsForVergence (double vergence) {
         //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
-        double pixels = (double) ((double)vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
+        double pixels = (double) (vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
         //System.out.println (pixels) ;
         return (int) Math.round(pixels/2) ;
     }
@@ -138,15 +154,23 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     }
     
     public void setPositions () {
-        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2);
-        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2);
+        od.setLocation((this.getWidth()-od.getWidth()) / 2 - deltaX, (this.getHeight()-od.getHeight())/2 - deltaY);
+        og.setLocation((this.getWidth()-og.getWidth()) / 2 + deltaX, (this.getHeight()-og.getHeight())/2 + deltaY);
     }
     
     public void timeOut () {
+        //Horizotalité
+        if (deltaX < minPixels) hDirection = KeyEvent.VK_RIGHT ;
+        else if (deltaX > maxPixels ) hDirection = KeyEvent.VK_LEFT ;
+        //Verticalité
+        if (isThereVerticality) {
+            if (deltaY < minVPixels) vDirection = KeyEvent.VK_UP ;
+            else if (deltaY > maxVPixels) vDirection = KeyEvent.VK_DOWN ;
+            this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, vDirection, 'A'));
+        }
+        //On dispatche les events
+        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, hDirection, 'A'));
         
-        if (deltaX < minPixels) direction = KeyEvent.VK_RIGHT ;
-        else if (deltaX > maxPixels ) direction = KeyEvent.VK_LEFT ;
-        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, direction, 'A'));
     }
     
     public void hideCursor () {
@@ -172,7 +196,9 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
-        else if (keyCode == VK_SPACE) {deltaX = 0; direction = KeyEvent.VK_LEFT ;}
+        else if (keyCode == VK_UP) { deltaY++; setPositions () ; }
+        else if (keyCode == VK_DOWN) { deltaY--; setPositions () ; }
+        else if (keyCode == VK_SPACE) {deltaX = 0; deltaY = 0; hDirection = KeyEvent.VK_LEFT ; hDirection = KeyEvent.VK_UP ;}
          
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {

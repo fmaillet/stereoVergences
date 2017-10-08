@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.6.0" ;
+    public static final String VERSION = "0.6.1" ;
     public static boolean BR_glasses = true ;
     
     public static int screenResolution ;
@@ -39,7 +39,9 @@ public class OrthoStereogram {
         try {
             xbox = new XboxController((is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
             xboxConnected = xbox.isConnected() ;
-        } catch (Exception e) {JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)"); }
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)");
+        }
         
         
         //Main Frame

@@ -12,6 +12,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -61,6 +62,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
         jImgXBOX.setIcon(new ImageIcon(imgXBOX)); jImgXBOX.setText("");
         jImgXBOX.setEnabled(xboxConnected);
+        //Si on a la xbox
+        if (xboxConnected)
+            OrthoStereogram.xbox.addXboxControllerListener(this );
+        
         //Divers
         setTitle ("StéréoVergences (F. Maillet - "+OrthoStereogram.VERSION+")") ;
         this.getContentPane().setBackground(Color.CYAN);
@@ -627,7 +632,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     }//GEN-LAST:event_jImg3DMouseClicked
 
     private void jStart_SlideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_SlideActionPerformed
-        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue()) ;
+        //Check for verticality
+        int hd = jVerticality.getSelectedIndex() ;
+        //Create JFrame
+        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
@@ -775,7 +783,22 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     @Override
     public void dpad(int i, boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        /*if (bln)
+            switch (i) {
+            case 0:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
+                    break;
+            case 1: break ;
+            case 2:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
+                     break;   
+            case 3: break ;
+            case 4:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
+                     break;
+            case 5: break ;
+            case 6:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
+                     break;
+            default: break ;
+            }*/
     }
 
     @Override

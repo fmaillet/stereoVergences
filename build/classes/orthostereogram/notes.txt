@@ -10,7 +10,7 @@ A faire :
 
 0.6.1 (en cours) 
 - button calibration (nothing else)
-
+- verticalité sur le slider
 
 0.6.0 (08-10-2017)
 - rajout d'une alternance de verticalité (only ClassicStereogramView)
