@@ -436,11 +436,13 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void windowOpened(WindowEvent we) {
+        OrthoStereogram.controller.setVisible(false) ;
         hideCursor () ;
     }
 
     @Override
     public void windowClosing(WindowEvent we) {
+        OrthoStereogram.controller.setVisible(true) ;
         executor.shutdownNow() ;
     }
 

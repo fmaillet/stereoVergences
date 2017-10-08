@@ -70,4 +70,18 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jar" depends="signjar">
+    </target>
+    <target name="signjar" depends="">
+        <echo message="Signing ${dist.dir}\orthoStereogram.jar ..."/>
+        <exec executable="C:\Program Files\Java\jdk1.8.0_144\bin\jarsigner">
+            <arg value="-verbose" />
+            <arg value="-keystore" />
+	    <arg value="testKeys"/>
+	    <arg value="-storepass" />
+	    <arg value="noemie" />
+	    <arg value="${dist.dir}\orthoStereogram.jar" />
+	    <arg value="jdc" />
+        </exec>
+    </target>
 </project>

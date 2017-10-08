@@ -5,6 +5,7 @@
  */
 package orthostereogram;
 
+import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -18,7 +19,7 @@ import javax.swing.JFrame;
  *
  * @author Fred
  */
-public class NewController extends javax.swing.JFrame {
+public class NewController extends javax.swing.JFrame implements XboxControllerListener {
 
     /**
      * Creates new form NewController
@@ -51,6 +52,11 @@ public class NewController extends javax.swing.JFrame {
         else jImg3D.setIcon(new ImageIcon(imgRB));
         jImg3D.setText("");
         
+        //Calibration
+        jCalibrate.setText("<html><center>"+"Screen Size"+"<br>"+"Calibration"+"</center></html>");
+        jCalibrate.setEnabled(false) ;
+        jCalibrate.setToolTipText("pas opérationnel");
+        
         //image xbox
         Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
         jImgXBOX.setIcon(new ImageIcon(imgXBOX)); jImgXBOX.setText("");
@@ -59,6 +65,9 @@ public class NewController extends javax.swing.JFrame {
         setTitle ("StéréoVergences (F. Maillet - "+OrthoStereogram.VERSION+")") ;
         this.getContentPane().setBackground(Color.CYAN);
         this.setResizable(false);
+        
+        //Random jumps tootip
+        jRandomJumps.setToolTipText("pas opérationnel");        
         
         //List of Screens ?
         try {
@@ -70,6 +79,7 @@ public class NewController extends javax.swing.JFrame {
                 jScreens.addItem(screenDevices[i].getIDstring());
             }
         } catch (HeadlessException e) { }
+        jScreens.setToolTipText("pas opérationnel");
         
         //Check for secondary screen ?
         GraphicsDevice primaryScreenDevice = graphicsEnv.getDefaultScreenDevice();
@@ -140,6 +150,7 @@ public class NewController extends javax.swing.JFrame {
         jScreens = new javax.swing.JComboBox<>();
         jRandomJumps = new javax.swing.JRadioButton();
         jVerticality = new javax.swing.JComboBox<>();
+        jCalibrate = new javax.swing.JButton();
 
         jLabel8.setText("jLabel8");
 
@@ -301,6 +312,14 @@ public class NewController extends javax.swing.JFrame {
         jVerticality.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No Verticality", "0.25", "0.50", "0.75", "1.00" }));
 
+        jCalibrate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jCalibrate.setText("Screen size Calibration");
+        jCalibrate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCalibrateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -313,6 +332,22 @@ public class NewController extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jWorkingDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jScreensLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(9, 9, 9)
+                                        .addComponent(jScreens, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCalibrate))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -320,15 +355,15 @@ public class NewController extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(jStart_CD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(jStart_CD_alter, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
-                                                .addGap(34, 34, 34)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jStart_CD_jump, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addGroup(layout.createSequentialGroup()
                                                         .addComponent(jStart_C)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jStart_D))))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(jStart_D))
+                                                    .addComponent(jStart_CD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGap(42, 42, 42)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jStart_CD_alter, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                                                    .addComponent(jStart_CD_jump, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(4, 4, 4)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,26 +427,12 @@ public class NewController extends javax.swing.JFrame {
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jUnit))))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jWorkingDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jScreensLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jScreens, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addGap(56, 56, 56)
                                         .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(74, 74, 74)
                                         .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 90, Short.MAX_VALUE))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(0, 90, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -422,14 +443,17 @@ public class NewController extends javax.swing.JFrame {
                     .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jScreensLabel)
-                    .addComponent(jScreens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jWorkingDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jScreensLabel)
+                            .addComponent(jScreens, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jWorkingDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)))
+                    .addComponent(jCalibrate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -476,12 +500,12 @@ public class NewController extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jStart_CD)
-                    .addComponent(jStart_C)
-                    .addComponent(jStart_D))
+                    .addComponent(jStart_CD_alter))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jStart_CD_alter)
-                    .addComponent(jStart_CD_jump))
+                    .addComponent(jStart_CD_jump)
+                    .addComponent(jStart_C)
+                    .addComponent(jStart_D))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -511,9 +535,9 @@ public class NewController extends javax.swing.JFrame {
         secondaryScreenDevice.setFullScreenWindow(classic);
         //Adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
-        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
-        //on affiche
+        classic.repaint() ;
         //stereo.setVisible(true);
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CDActionPerformed
@@ -530,9 +554,9 @@ public class NewController extends javax.swing.JFrame {
         secondaryScreenDevice.setFullScreenWindow(classic);
         //send parameters
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false, hd) ;
-        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
-        //stereo.setVisible(true);
+        classic.repaint () ;
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CActionPerformed
 
@@ -549,9 +573,9 @@ public class NewController extends javax.swing.JFrame {
         //adapt
         //double step = (double) jStepD.getValue() ; step = - step ;
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
-        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
-        //stereo.setVisible(true);
+        classic.repaint () ;
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_DActionPerformed
 
@@ -567,9 +591,9 @@ public class NewController extends javax.swing.JFrame {
         secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false, hd) ;
-        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
-        classic.setVisible(true);
+        classic.repaint();
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_CD_alterActionPerformed
 
@@ -638,6 +662,10 @@ public class NewController extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jImageChoiceActionPerformed
 
+    private void jCalibrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCalibrateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCalibrateActionPerformed
+
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
         //Only odd sizes
@@ -652,6 +680,7 @@ public class NewController extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jCalibrate;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;
     private javax.swing.JLabel jImgXBOX;
@@ -693,4 +722,94 @@ public class NewController extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jVerticality;
     private javax.swing.JSpinner jWorkingDistance;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void buttonA(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonB(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonX(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void buttonY(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void back(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void start(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftShoulder(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightShoulder(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumb(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumb(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void dpad(int i, boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftTrigger(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightTrigger(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumbMagnitude(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void leftThumbDirection(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumbMagnitude(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void rightThumbDirection(double d) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void isConnected(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

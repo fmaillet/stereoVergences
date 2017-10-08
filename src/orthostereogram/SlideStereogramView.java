@@ -121,7 +121,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         this.getContentPane().add(info) ;
         
         //On lance le timer
-        executor.scheduleAtFixedRate(() -> timeOut(),4000, timeout, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> timeOut(),3000, timeout, TimeUnit.MILLISECONDS);
     }
     
     public int calcPixelsForVergence (int vergence) {

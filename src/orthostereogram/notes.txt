@@ -8,7 +8,11 @@ A faire :
 - paramétrage du grain
 - reset stereogram in ClassicStereogramView shoud be threaded
 
-0.6.0 (en cours)
+0.6.1 (en cours) 
+- button calibration (nothing else)
+
+
+0.6.0 (08-10-2017)
 - rajout d'une alternance de verticalité (only ClassicStereogramView)
 
 0.5.3 (07/10.2017)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<jnlp spec="1.0+" codebase="http://fredericmaillet.fr/" href="orthoStereogram.jnlp">
+	<information>
+		<title>orthoStereogram</title>
+		<vendor>Frederic Maillet</vendor>
+		<homepage href="http://fredericmaillet.fr/" />
+		<description>Testing App</description>
+		<icon href="IcoEye.png" />
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.8+" />
+		<jar href="orthoStereogram.jar" main="true" />
+		<jar href="lib/jaw.jar" />
+		<jar href="lib/XboxController.jar" />
+	</resources>
+	<application-desc main-class="orthostereogram.OrthoStereogram" />
+</jnlp>

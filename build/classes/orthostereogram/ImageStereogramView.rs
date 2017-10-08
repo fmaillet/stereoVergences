@@ -1,0 +1,2 @@
+orthostereogram.OneEyeBis
+orthostereogram.ImageStereogramView

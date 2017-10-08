@@ -38,8 +38,9 @@ public class OrthoStereogram {
         //On initialise la xbox
         try {
             xbox = new XboxController((is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
-        } catch (Exception e) {JOptionPane.showMessageDialog(null, "Erreur init xbox (dll)!!"); }
-        xboxConnected = xbox.isConnected() ;
+            xboxConnected = xbox.isConnected() ;
+        } catch (Exception e) {JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)"); }
+        
         
         //Main Frame
         controller = new NewController (xboxConnected) ;
