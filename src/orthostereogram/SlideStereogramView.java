@@ -112,7 +112,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         this.addMouseMotionListener(this);
         
         //Create stereogram
-        bimage = new Stereogram (NewController.imgSize, workingDistance, 0) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, true) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
         //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);

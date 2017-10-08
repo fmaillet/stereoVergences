@@ -51,6 +51,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     Cursor transparentCursor ;
     private JLabel info ;
     
+    
     //Constants
     final static public int CONVERGENCE_UP = 2  ;
     final static public int CONVERGENCE_DOWN = 1  ;
@@ -130,7 +131,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.addMouseMotionListener(this);
         
         //Create stereogram
-        bimage = new Stereogram (NewController.imgSize, workingDistance, 0) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, false) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
         //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);

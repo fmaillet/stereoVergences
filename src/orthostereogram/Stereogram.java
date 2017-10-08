@@ -27,12 +27,17 @@ public class Stereogram extends JPanel {
     static public int deltaPixelsX ;
     static public double currentVergenceValue;
     
+    //Used for slider
+    private boolean centered = false ;
+    
     //needed to calculate vergence
     static Dimension screenSize ;
     static int screenResolution;
     static int workingDistance = 70 ;
     
-    public Stereogram (int stereogramSize, int workingDistance, int initialDelta) {
+    public Stereogram (int stereogramSize, int workingDistance, int initialDelta, boolean centered) {
+        
+        this.centered = centered ;
         this.workingDistance = workingDistance ;
         
         //Check for odd size
@@ -130,7 +135,7 @@ public class Stereogram extends JPanel {
         int taille = OD.getHeight() ;
         int t = taille / 3 ;   //taille de la matrice
         int bord = 30 ;                  //bord
-        int depth = 15 ;                    //disparité
+        int depth = 20 ;                    //disparité
         //Position aléatoire du carré : haut-bas-gauche-droite
         int p ;
         if (keepClue) switch (clue) {
@@ -146,6 +151,10 @@ public class Stereogram extends JPanel {
             case 1 : dh = taille/2 - t/2 ; dc = bord;  clue = KeyEvent.VK_LEFT ; break ;    //left
             case 2 : dh = taille/2 - t/2 ; dc = taille - t - bord ; clue = KeyEvent.VK_RIGHT ; break ;    //right
             default : dh = taille - t - bord ; dc = taille/2 - t/2 ; clue = KeyEvent.VK_DOWN ; break ;   //down
+        }
+        if (centered) {
+            t = taille / 2 ;
+            dh = dc =  (taille - t) / 2 ;
         }
         //On crée le carré en relief
         for (int i=0; i<t; i++)

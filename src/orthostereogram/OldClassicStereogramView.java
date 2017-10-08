@@ -99,7 +99,7 @@ public class OldClassicStereogramView extends JFrame implements WindowListener, 
 
         
         //On crée un stéréogramme
-        bimage = new Stereogram (NewController.imgSize, workingDistance, initialDelta) ;
+        bimage = new Stereogram (NewController.imgSize, workingDistance, initialDelta, false) ;
         bimage.resetImg (false) ; 
         getContentPane().add(bimage);
         
