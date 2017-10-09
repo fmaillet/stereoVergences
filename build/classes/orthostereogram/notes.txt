@@ -1,16 +1,21 @@
 Versions :
 
 A faire :
-- implémenter la verticalité
-- bad answer : retour arrière adaptatif : 1, 2, 4 puis back to zero
-- garder la xbox sur NewController pour ne pas la perdre
-- en fonction de la taille de l'écran, limiter les valeurs de vergence
+- en fonction de la taille de l'écran, limiter les valeurs de vergence H & V
 - paramétrage du grain
 - reset stereogram in ClassicStereogramView shoud be threaded
+- stereogram avec double carré : lequel est le plus en avant
+- détail de la vergence en cours sur slider & image (C fleche valeur)
+- rappel des extrêmes
+- valeurs max obtenues par le patient
 
-0.6.1 (en cours) 
+0.6.2 (en cours)
+- slider with centered diamond instead of square
+
+0.6.1 (08-10-2017) 
 - button calibration (nothing else)
 - verticalité sur le slider
+- centrage du carré sur le slider
 
 0.6.0 (08-10-2017)
 - rajout d'une alternance de verticalité (only ClassicStereogramView)

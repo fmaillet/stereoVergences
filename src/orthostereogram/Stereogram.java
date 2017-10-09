@@ -152,18 +152,38 @@ public class Stereogram extends JPanel {
             case 2 : dh = taille/2 - t/2 ; dc = taille - t - bord ; clue = KeyEvent.VK_RIGHT ; break ;    //right
             default : dh = taille - t - bord ; dc = taille/2 - t/2 ; clue = KeyEvent.VK_DOWN ; break ;   //down
         }
+        //Si slider alors diamond
         if (centered) {
             t = taille / 2 ;
             dh = dc =  (taille - t) / 2 ;
+            //Draw a diamond
+            for (int i=0; i<t/2; i++)
+                for (int j=0; j<i; j++) {
+                    if (rand.nextBoolean()) colour = Color.BLACK ; else colour = Color.WHITE ;
+                    //Quart inf gauche
+                    OG.setRGB(taille/4 + i - depth, taille / 2 + j, colour.getRGB());
+                    OD.setRGB(taille/4 + i + depth, taille / 2 + j, colour.getRGB());
+                    //Quart ?
+                    OG.setRGB(taille/4 + i - depth, taille / 2 - j, colour.getRGB());
+                    OD.setRGB(taille/4 + i + depth, taille / 2 - j, colour.getRGB());
+                    //Quart
+                    OG.setRGB((3*taille/4) - i - depth, taille / 2 + j, colour.getRGB());
+                    OD.setRGB((3*taille/4) - i + depth, taille / 2 + j, colour.getRGB());
+                    //Quart
+                    OG.setRGB((3*taille/4) - i - depth, taille / 2 - j, colour.getRGB());
+                    OD.setRGB((3*taille/4) - i + depth, taille / 2 - j, colour.getRGB());
+                }
         }
         //On crée le carré en relief
-        for (int i=0; i<t; i++)
+        else for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
                 if (rand.nextBoolean())  colour = Color.BLACK ;
                 else colour = Color.WHITE ;
                 OG.setRGB(dc+i - depth, j+dh, colour.getRGB());
                 OD.setRGB(dc+i + depth, j+dh, colour.getRGB());
             }
+        
+        
         //On crée l'anaglyphe
         anaglyph.createStereoscopicCombinedImage (OG, OD, ana, deltaPixelsX);
         if (OrthoStereogram.BR_glasses) {
