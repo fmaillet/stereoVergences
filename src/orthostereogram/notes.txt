@@ -11,6 +11,8 @@ A faire :
 
 0.6.2 (en cours)
 - slider with centered diamond instead of square
+- entrée menu connexion serveur
+- newcontroller disabled in game mode
 
 0.6.1 (08-10-2017) 
 - button calibration (nothing else)

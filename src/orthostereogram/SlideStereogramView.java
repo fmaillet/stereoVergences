@@ -110,6 +110,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     public void setAppearence () {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
+        this.addWindowListener(this);
         
         //Create stereogram
         bimage = new Stereogram (NewController.imgSize, workingDistance, 0, true) ; //initial delta set to zero
@@ -251,11 +252,13 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowOpened(WindowEvent we) {
+        OrthoStereogram.controller.setEnabled(false) ;
         hideCursor () ;
     }
 
     @Override
     public void windowClosing(WindowEvent we) {
+        OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
 

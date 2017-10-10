@@ -129,6 +129,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     public void setAppearence () {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
+        this.addWindowListener(this);
         
         //Create stereogram
         bimage = new Stereogram (NewController.imgSize, workingDistance, 0, false) ; //initial delta set to zero
@@ -438,13 +439,13 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void windowOpened(WindowEvent we) {
-        OrthoStereogram.controller.setVisible(false) ;
+        OrthoStereogram.controller.setEnabled(false) ;
         hideCursor () ;
     }
 
     @Override
     public void windowClosing(WindowEvent we) {
-        OrthoStereogram.controller.setVisible(true) ;
+        OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
 
