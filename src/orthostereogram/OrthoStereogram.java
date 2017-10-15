@@ -7,7 +7,6 @@ package orthostereogram;
 
 import ch.aplu.xboxcontroller.XboxController;
 import java.awt.Toolkit;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,8 +14,10 @@ import javax.swing.JOptionPane;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.6.2" ;
+    public static final String VERSION = "0.6.3" ;
     public static boolean BR_glasses = true ;
+    static public UserInfo user ;
+    static public MySQLClass mySQLConnection ;
     
     public static int screenResolution ;
     public static NewController controller ;
@@ -30,7 +31,12 @@ public class OrthoStereogram {
     
     public static void main(String[] args) {
         
+        //Basic params
         screenResolution = Toolkit.getDefaultToolkit().getScreenResolution() ;
+        
+        //For connection
+        user = new UserInfo () ;
+        mySQLConnection = new MySQLClass () ;
         
         // no flickering on resize
         System.setProperty("sun.awt.noerasebackground", "true");
@@ -53,6 +59,14 @@ public class OrthoStereogram {
     
     static boolean is64bit() {
         return System.getProperty("sun.arch.data.model").equals("64");
+    }
+    
+    public static void sortir () {
+        //System.out.println ("sortie") ;
+        controller.setEnabled(false);
+        if (OrthoStereogram.user.nom != null) OrthoStereogram.mySQLConnection.rendreJeton();
+        System.exit(0);
+        
     }
     
 }

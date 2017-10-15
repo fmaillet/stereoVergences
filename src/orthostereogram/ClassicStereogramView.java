@@ -154,6 +154,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         info = new JLabel ("Allez-y...") ;
         info.setBounds(10, 10, 300, 30);
         this.getContentPane().add(info) ;
+        
+        
     }
     
     public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump, int verticality) {
@@ -439,6 +441,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void windowOpened(WindowEvent we) {
+        //System.out.println("Classic opened");
+        //this.setExtendedState(ICONIFIED);
         OrthoStereogram.controller.setEnabled(false) ;
         hideCursor () ;
     }

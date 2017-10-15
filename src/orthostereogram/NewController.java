@@ -12,14 +12,17 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  *
  * @author Fred
  */
-public class NewController extends javax.swing.JFrame implements XboxControllerListener {
+public class NewController extends javax.swing.JFrame implements XboxControllerListener, WindowListener {
 
     /**
      * Creates new form NewController
@@ -42,6 +45,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     public NewController(boolean xboxConnected) {
         setLayout(null);
         initComponents();
+        this.addWindowListener(this);
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
         jUnit6.setText("\u0394");
         
@@ -102,7 +106,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //Hauteur en pixels de l'écran ?
         screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
         //On affiche
-        
+        //this.setEnabled(false) ;
     }
 
     /**
@@ -157,9 +161,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jCalibrate = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jConnection = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         jLabel8.setText("jLabel8");
@@ -183,7 +187,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jLabel2.setText("Time Out :");
 
         jMax.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jMax.setModel(new javax.swing.SpinnerNumberModel(20, 1, 60, 5));
+        jMax.setModel(new javax.swing.SpinnerNumberModel(10, 1, 60, 5));
+        jMax.setEnabled(false);
 
         jTimeOut.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTimeOut.setModel(new javax.swing.SpinnerNumberModel(20, 0, 120, 5));
@@ -192,19 +197,22 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jLabel3.setText("Min :");
 
         jMin.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jMin.setModel(new javax.swing.SpinnerNumberModel(-4, -30, 60, 1));
+        jMin.setModel(new javax.swing.SpinnerNumberModel(-2, -30, 60, 1));
+        jMin.setEnabled(false);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Initial value :");
 
         jInitial.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jInitial.setModel(new javax.swing.SpinnerNumberModel(0, -30, 60, 1));
+        jInitial.setEnabled(false);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("Working distance :");
 
         jWorkingDistance.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jWorkingDistance.setModel(new javax.swing.SpinnerNumberModel(70, 20, 300, 10));
+        jWorkingDistance.setEnabled(false);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel7.setText("(cm)");
@@ -233,6 +241,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
         jStepC.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jStepC.setModel(new javax.swing.SpinnerNumberModel(2, 0, 30, 1));
+        jStepC.setEnabled(false);
 
         jUnit5.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jUnit5.setText("seconds");
@@ -263,6 +272,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
         jStepD.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jStepD.setModel(new javax.swing.SpinnerNumberModel(0.5d, 0.0d, 30.0d, 0.25d));
+        jStepD.setEnabled(false);
 
         jStart_CD_alter.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jStart_CD_alter.setText("C <#> D");
@@ -304,7 +314,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jScreensLabel.setText("Screen :");
 
         jImageChoice.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jImageChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "3d-practise", "3dring", "polytope", "art_png", "spi", "teseract", "snakes" }));
+        jImageChoice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "3d-practise", "3dring", "polytope", "art_png", "spi", "teseract", "poseidon" }));
         jImageChoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jImageChoiceActionPerformed(evt);
@@ -332,21 +342,27 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
         jMenu1.setText("File");
 
-        jMenuItem1.setText("Serveur internet");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jConnection.setText("Connection serveur");
+        jConnection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jConnectionActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(jConnection);
         jMenu1.add(jSeparator4);
 
-        jMenuItem2.setText("Quit");
-        jMenu1.add(jMenuItem2);
+        jQuit.setText("Quit");
+        jQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jQuitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jQuit);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Help");
+        jMenu2.setEnabled(false);
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -700,9 +716,16 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         // TODO add your handling code here:
     }//GEN-LAST:event_jCalibrateActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void jConnectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jConnectionActionPerformed
+        ConnectDialog connect = new ConnectDialog (this, true) ;
+        connect.setLocationRelativeTo(null);
+        connect.setVisible (true) ;
+        if (OrthoStereogram.user.nom != null) jConnection.setEnabled(false);
+    }//GEN-LAST:event_jConnectionActionPerformed
+
+    private void jQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jQuitActionPerformed
+        OrthoStereogram.sortir();
+    }//GEN-LAST:event_jQuitActionPerformed
 
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
@@ -716,9 +739,20 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         }
     }
     
+    //Mise à jour des limites une fois connecté
+    public void connected () {
+        //Nouvelles valeurs de base
+        jInitial.setEnabled(true);
+        jMin.setValue(new Integer(-4)); jMin.setEnabled(true);
+        jMax.setValue(new Integer(20)); jMax.setEnabled(true);
+        jStepC.setEnabled(true); jStepD.setEnabled(true);
+        jWorkingDistance.setEnabled(true);
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jCalibrate;
+    private javax.swing.JMenuItem jConnection;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;
     private javax.swing.JLabel jImgXBOX;
@@ -736,9 +770,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JSpinner jMin;
+    private javax.swing.JMenuItem jQuit;
     private javax.swing.JRadioButton jRandomJumps;
     private javax.swing.JComboBox<String> jScreens;
     private javax.swing.JLabel jScreensLabel;
@@ -869,6 +902,41 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     @Override
     public void isConnected(boolean bln) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        OrthoStereogram.sortir () ;
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

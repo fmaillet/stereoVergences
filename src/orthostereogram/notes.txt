@@ -6,10 +6,16 @@ A faire :
 - reset stereogram in ClassicStereogramView shoud be threaded
 - stereogram avec double carré : lequel est le plus en avant
 - détail de la vergence en cours sur slider & image (C fleche valeur)
-- rappel des extrêmes
-- valeurs max obtenues par le patient
+- pdt l'activité : rappel des extrêmes
+- pdt l'activité : valeurs max obtenues par le patient
+- calibrer les lunettes
 
-0.6.2 (en cours)
+0.6.3 (en cours)
+- Connection serveur ok (manque connection auto)
+- ajout d'une image (poséidon)
+- vérif ok que Controler est inactif pdt le travail
+
+0.6.2 (10/10/2017)
 - slider with centered diamond instead of square
 - entrée menu connexion serveur
 - newcontroller disabled in game mode
