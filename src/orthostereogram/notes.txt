@@ -11,9 +11,11 @@ A faire :
 - calibrer les lunettes
 
 0.6.3 (en cours)
-- Connection serveur ok (manque connection auto)
+- Connection serveur ok
+- auto connection ok
 - ajout d'une image (poséidon)
 - vérif ok que Controler est inactif pdt le travail
+- verticalité sur image
 
 0.6.2 (10/10/2017)
 - slider with centered diamond instead of square

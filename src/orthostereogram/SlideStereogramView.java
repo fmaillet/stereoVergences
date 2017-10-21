@@ -199,7 +199,10 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
         else if (keyCode == VK_UP) { deltaY++; setPositions () ; }
         else if (keyCode == VK_DOWN) { deltaY--; setPositions () ; }
-        else if (keyCode == VK_SPACE) {deltaX = 0; deltaY = 0; hDirection = KeyEvent.VK_LEFT ; hDirection = KeyEvent.VK_UP ;}
+        else if (keyCode == VK_SPACE) {
+            deltaX = 0; deltaY = 0; hDirection = KeyEvent.VK_LEFT ; vDirection = KeyEvent.VK_UP ;
+            //setPositions () ;
+        }
          
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {

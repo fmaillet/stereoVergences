@@ -49,6 +49,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
         jUnit6.setText("\u0394");
         
+        //AutoConnect
+        AutoConnect auto = new AutoConnect () ;
+        auto.start () ;
+        
         //image Lunettes 3D (inversées)
         imgRB = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
         imgBR = getToolkit().getImage(getClass().getResource("/Ressources/3d-RB.png"));
@@ -695,8 +699,11 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     private void jStart_ImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_ImgActionPerformed
         
+        //Check for verticality
+        int hd = jVerticality.getSelectedIndex() ;
+        
         String file = (String) jImageChoice.getSelectedItem() + ".png" ;
-        image = new ImageStereogramView (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue()) ;
+        image = new ImageStereogramView (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), hd) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
@@ -741,18 +748,22 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     
     //Mise à jour des limites une fois connecté
     public void connected () {
+        
+        //Titre
+        setTitle ("stereoVergences ("+OrthoStereogram.VERSION+") - Connecté au serveur : " + OrthoStereogram.user.titre + " " +OrthoStereogram.user.nom.toUpperCase() + " " + OrthoStereogram.user.prenom ) ;
         //Nouvelles valeurs de base
         jInitial.setEnabled(true);
         jMin.setValue(new Integer(-4)); jMin.setEnabled(true);
         jMax.setValue(new Integer(20)); jMax.setEnabled(true);
         jStepC.setEnabled(true); jStepD.setEnabled(true);
         jWorkingDistance.setEnabled(true);
+        jConnection.setEnabled(false);
     }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jCalibrate;
-    private javax.swing.JMenuItem jConnection;
+    public static javax.swing.JMenuItem jConnection;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;
     private javax.swing.JLabel jImgXBOX;

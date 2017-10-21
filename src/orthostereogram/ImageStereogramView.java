@@ -15,12 +15,14 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_6;
 import static java.awt.event.KeyEvent.VK_ADD;
+import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_SUBTRACT;
+import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -54,6 +56,7 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
     
     private Point center ;
     private int deltaX = 0 ;
+    private int deltaY = 0 ;
     private OneEyeBis xpanelOD, xpanelOG ;
     private JLabel info ;
     
@@ -63,13 +66,24 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
     private int minPixels = -200 ;
     private int maxPixels = +400 ;
     private int timeout = 150 ;
-    private int dirVergence = KeyEvent.VK_LEFT ;
+    private int vDirection = KeyEvent.VK_UP ;
+    private int minVPixels = 0 ;
+    private int maxVPixels = 0 ;
+    private boolean isThereVerticality = false ;
+    private int hDirection = KeyEvent.VK_LEFT ;
     private int dirMove = KeyEvent.VK_LEFT ;
     //private Point maxPixelsBoundaries ;
     //every tics
     final ScheduledThreadPoolExecutor executorVergence, executorMove ;
     
-    public ImageStereogramView (String file, int speed, int minVergence, int maxVergence, int workingDistance) {
+    public ImageStereogramView (String file, int speed, int minVergence, int maxVergence, int workingDistance, int verticality) {
+        //Veticalité
+        if (verticality != 0) {
+            isThereVerticality = true ;
+            this.minVPixels = - calcPixelsForVergence (0.25 * verticality) ;
+            this.maxVPixels = + calcPixelsForVergence (0.25 * verticality) ;
+        }
+        
         this.minVergence = minVergence ;
         this.maxVergence = maxVergence ;
         this.minPixels = calcPixelsForVergence (minVergence) ;
@@ -103,7 +117,7 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         }
     }
     
-    public int calcPixelsForVergence (int vergence) {
+    public int calcPixelsForVergence (double vergence) {
         //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
         //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
         double pixels = (double) ((double)vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
@@ -210,8 +224,8 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
     }
     
     public void setPositions () {
-        xpanelOD.setLocation(center.x - deltaX/2 - xpanelOD.getWidth()/2, center.y);
-        xpanelOG.setLocation(center.x + deltaX/2 - xpanelOG.getWidth()/2, center.y);
+        xpanelOD.setLocation(center.x - deltaX/2 - xpanelOD.getWidth()/2, center.y - deltaY);
+        xpanelOG.setLocation(center.x + deltaX/2 - xpanelOG.getWidth()/2, center.y + deltaY);
     }
     
     //code from : https://stackoverflow.com/questions/4216123/how-to-scale-a-bufferedimage
@@ -304,9 +318,16 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
 
     private void timeOutVergence () {
         
-        if (deltaX < minPixels) dirVergence = KeyEvent.VK_RIGHT ;
-        else if (deltaX > maxPixels ) dirVergence = KeyEvent.VK_LEFT ;
-        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, dirVergence, 'A'));
+        if (deltaX < minPixels) hDirection = KeyEvent.VK_RIGHT ;
+        else if (deltaX > maxPixels ) hDirection = KeyEvent.VK_LEFT ;
+        //Verticalité
+        if (isThereVerticality) {
+            if (deltaY < minVPixels) vDirection = KeyEvent.VK_UP ;
+            else if (deltaY > maxVPixels) vDirection = KeyEvent.VK_DOWN ;
+            this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, vDirection, 'A'));
+        }
+        //On dispatche
+        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, hDirection, 'A'));
     }
     
     @Override
@@ -316,11 +337,14 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
+        else if (keyCode == VK_UP) { deltaY++; setPositions () ; }
+        else if (keyCode == VK_DOWN) { deltaY--; setPositions () ; }
         else if (keyCode == VK_SPACE) {
             center.x = this.getWidth() / 2;
             center.y = (this.getHeight()-xpanelOD.getHeight())/2 ;
-            deltaX = 0;
-            dirVergence = KeyEvent.VK_LEFT ;
+            deltaX = 0; deltaY = 0 ;
+            vDirection = KeyEvent.VK_UP ;
+            hDirection = KeyEvent.VK_LEFT ;
         }
         
         //Dynamic resizing
