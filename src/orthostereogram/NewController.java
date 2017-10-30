@@ -169,6 +169,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         jLabel8.setText("jLabel8");
 
@@ -366,7 +367,20 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Help");
-        jMenu2.setEnabled(false);
+        jMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu2ActionPerformed(evt);
+            }
+        });
+
+        jMenuItem1.setText("Help");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -734,6 +748,17 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         OrthoStereogram.sortir();
     }//GEN-LAST:event_jQuitActionPerformed
 
+    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
+        
+    }//GEN-LAST:event_jMenu2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.out.println ("help") ;
+        HelpJDialog help = new HelpJDialog (this, true) ;
+        help.setLocationRelativeTo(this);
+        help.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
         //Only odd sizes
@@ -781,6 +806,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JSpinner jMin;
     private javax.swing.JMenuItem jQuit;
     private javax.swing.JRadioButton jRandomJumps;
