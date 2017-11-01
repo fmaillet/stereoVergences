@@ -10,6 +10,12 @@ A faire :
 - pdt l'activité : valeurs max obtenues par le patient
 - calibrer les lunettes
 
+0.6.5 (en cours)
+
+0.6.4 (01-11-2017)
+- Calibration primary screen ok
+- liste des écrans tient compte de isFullScreenAvailable
+
 0.6.3 (30-10-2017)
 - Connection serveur ok
 - auto connection ok

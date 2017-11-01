@@ -88,7 +88,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
             numberOfScreens = screenDevices.length;
             jScreens.removeAllItems();
             for (int i=0; i<numberOfScreens; i++) {
-                jScreens.addItem(screenDevices[i].getIDstring());
+                if (screenDevices[i].isFullScreenSupported())
+                    jScreens.addItem(screenDevices[i].getIDstring());
             }
         } catch (HeadlessException e) { }
         jScreens.setToolTipText("pas opérationnel");
@@ -337,6 +338,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jVerticality.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No Verticality", "0.25", "0.50", "0.75", "1.00" }));
 
+        jCalibrate.setBackground(new java.awt.Color(255, 51, 51));
         jCalibrate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jCalibrate.setText("Screen size Calibration");
         jCalibrate.addActionListener(new java.awt.event.ActionListener() {
@@ -734,7 +736,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     }//GEN-LAST:event_jImageChoiceActionPerformed
 
     private void jCalibrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCalibrateActionPerformed
-        // TODO add your handling code here:
+        Calibrate cal = new Calibrate (this, true) ;
+        cal.setLocationRelativeTo(this);
+        cal.setVisible(true);
     }//GEN-LAST:event_jCalibrateActionPerformed
 
     private void jConnectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jConnectionActionPerformed
@@ -753,7 +757,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        System.out.println ("help") ;
+        //System.out.println ("help") ;
         HelpJDialog help = new HelpJDialog (this, true) ;
         help.setLocationRelativeTo(this);
         help.setVisible(true);
@@ -783,11 +787,12 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jStepC.setEnabled(true); jStepD.setEnabled(true);
         jWorkingDistance.setEnabled(true);
         jConnection.setEnabled(false);
+        jCalibrate.setEnabled(true) ;
     }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jCalibrate;
+    public static javax.swing.JButton jCalibrate;
     public static javax.swing.JMenuItem jConnection;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;

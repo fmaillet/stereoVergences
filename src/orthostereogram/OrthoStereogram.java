@@ -14,7 +14,7 @@ import java.awt.Toolkit;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.6.3" ;
+    public static final String VERSION = "0.6.4" ;
     public static boolean BR_glasses = true ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;
