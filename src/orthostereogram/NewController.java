@@ -63,7 +63,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //Calibration
         jCalibrate.setText("<html><center>"+"Screen Size"+"<br>"+"Calibration"+"</center></html>");
         jCalibrate.setEnabled(false) ;
-        jCalibrate.setToolTipText("pas opérationnel");
+        jCalibrate.setToolTipText("Calibration de la taille de l'écran");
         
         //image xbox
         Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
@@ -788,6 +788,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jWorkingDistance.setEnabled(true);
         jConnection.setEnabled(false);
         jCalibrate.setEnabled(true) ;
+        //On regarde s'il existe une calibration
+        if (OrthoStereogram.mySQLConnection.getCalibration()) jCalibrate.setBackground(Color.GREEN.brighter()); 
+        
     }
     
 

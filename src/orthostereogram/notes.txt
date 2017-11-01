@@ -11,6 +11,7 @@ A faire :
 - calibrer les lunettes
 
 0.6.5 (en cours)
+- Calibration saved/get to/from server
 
 0.6.4 (01-11-2017)
 - Calibration primary screen ok

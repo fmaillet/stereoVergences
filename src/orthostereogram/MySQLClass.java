@@ -126,6 +126,48 @@ public class MySQLClass {
         }
     }
     
+    //On sauvegarde la calibration...
+    public void saveCalibration() {
+        //connect () ;
+        if (connect () != null) {
+            try {
+                transmission = connection.createStatement (ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE) ;
+                leResultat = transmission.executeQuery ("select ADELI, CALIB_STEREO from Pro where ADELI = " + OrthoStereogram.user.adeli) ;
+                if (leResultat.next()) {
+                    // On rend le jeton
+                    double jeton = leResultat.getDouble("CALIB_STEREO") ;
+                    jeton = (double) OrthoStereogram.screenResolution ;
+                    leResultat.updateDouble("CALIB_STEREO", jeton);
+                    
+                    //On met à jour
+                    leResultat.updateRow () ;
+                }
+            } catch (Exception e) {}
+            
+        }
+    }
+    
+    //On sauvegarde la calibration...
+    public boolean getCalibration() {
+        int jeton = 0 ;
+        if (connect () != null) {
+            try {
+                transmission = connection.createStatement (ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE) ;
+                leResultat = transmission.executeQuery ("select ADELI, CALIB_STEREO from Pro where ADELI = " + OrthoStereogram.user.adeli) ;
+                if (leResultat.next()) {
+                    // On rend le jeton
+                    jeton = leResultat.getInt("CALIB_STEREO") ;
+                    if (jeton > 0) {
+                        OrthoStereogram.screenResolution = jeton ;
+                    }
+                    
+                    //On met à jour
+                    //leResultat.updateRow () ;
+                }
+            } catch (Exception e) {}
+        }
+        return (jeton > 0) ;
+    }
     
 }//Fin de la classe MySQLClass
 
