@@ -16,7 +16,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 
 /**
  *
@@ -41,6 +40,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     SlideStereogramView slide ;
     ImageStereogramView image ;
     ClassicStereogramView classic ;
+    
+    //Calibration faite ?
+    boolean isCalibrated = false ;
     
     public NewController(boolean xboxConnected) {
         setLayout(null);
@@ -84,12 +86,19 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //List of Screens ?
         try {
             graphicsEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice primaryScreenDevice = graphicsEnv.getDefaultScreenDevice();
             screenDevices = graphicsEnv.getScreenDevices();
             numberOfScreens = screenDevices.length;
             jScreens.removeAllItems();
             for (int i=0; i<numberOfScreens; i++) {
-                if (screenDevices[i].isFullScreenSupported())
-                    jScreens.addItem(screenDevices[i].getIDstring());
+                if (screenDevices[i].isFullScreenSupported()) {
+                    if (primaryScreenDevice.equals(screenDevices[i])) {
+                        if (i == 0) jScreens.addItem(screenDevices[i].getIDstring());
+                        else jScreens.insertItemAt(screenDevices[i].getIDstring(), 0);
+                    }
+                    else
+                        jScreens.addItem(screenDevices[i].getIDstring());
+                }
             }
         } catch (HeadlessException e) { }
         jScreens.setToolTipText("pas opérationnel");
@@ -170,7 +179,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuSystemInfo = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jMenuHelp = new javax.swing.JMenuItem();
 
         jLabel8.setText("jLabel8");
 
@@ -328,7 +339,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         });
 
         jScreens.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jScreens.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2" }));
+        jScreens.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
 
         jRandomJumps.setBackground(java.awt.Color.cyan);
         jRandomJumps.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -375,13 +386,22 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
             }
         });
 
-        jMenuItem1.setText("Help");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuSystemInfo.setText("System info");
+        jMenuSystemInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jMenuSystemInfoActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem1);
+        jMenu2.add(jMenuSystemInfo);
+        jMenu2.add(jSeparator5);
+
+        jMenuHelp.setText("Help");
+        jMenuHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuHelpActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuHelp);
 
         jMenuBar1.add(jMenu2);
 
@@ -756,12 +776,42 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         
     }//GEN-LAST:event_jMenu2ActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jMenuHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuHelpActionPerformed
         //System.out.println ("help") ;
         HelpJDialog help = new HelpJDialog (this, true) ;
         help.setLocationRelativeTo(this);
         help.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_jMenuHelpActionPerformed
+
+    private void jMenuSystemInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSystemInfoActionPerformed
+        SystemInfoJDialog info = new SystemInfoJDialog (this, true) ;
+        
+        //System infos
+        info.jText.append("Java version : " + System.getProperty("java.version") + "\n" );
+        info.jText.append("System is : " + System.getProperty("os.name") + " (" +  System.getProperty("os.version") + " " + System.getProperty("os.arch") + ")\n") ;
+        info.jText.append("Free memory : " + Runtime.getRuntime().freeMemory() + "\n\n") ;
+        //Computed resolution
+        info.jText.append("Vergence : \n-----\n") ;
+        info.jText.append("Estimated resolution : " + Toolkit.getDefaultToolkit().getScreenResolution() + " pixels/inch\n");
+        if (isCalibrated) info.jText.append("Calibrated resolution: " + OrthoStereogram.screenResolution + " pixels/inch");
+        else info.jText.append("No Calibration available") ;
+        //Write datas
+        info.jText.append("\n\nDetected screens: " + String.valueOf(numberOfScreens));
+        for (int i=0; i<numberOfScreens; i++) {
+            info.jText.append("\n-----\n");
+            info.jText.append(String.valueOf(i) + ": ScreenName   : " + screenDevices[i].getIDstring() + "\n");
+            info.jText.append(String.valueOf(i) + ": isFullScreen : " + screenDevices[i].isFullScreenSupported() + "\n");
+            info.jText.append(String.valueOf(i) + ": resolution   : " + screenDevices[i].getDisplayMode().getWidth() + " x " + screenDevices[i].getDisplayMode().getHeight() + "\n");
+            info.jText.append(String.valueOf(i) + ": refreshRate  : " + screenDevices[i].getDisplayMode().getRefreshRate() + "\n");
+            if (graphicsEnv.getDefaultScreenDevice().equals(screenDevices[i]))
+                info.jText.append(String.valueOf(i) + ": isPrimaryScreen " + "\n") ;
+            //screenDevices[i].getDisplayMode().
+        }
+        
+        //Visible
+        info.setLocationRelativeTo(this);
+        info.setVisible(true);
+    }//GEN-LAST:event_jMenuSystemInfoActionPerformed
 
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
@@ -789,7 +839,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jConnection.setEnabled(false);
         jCalibrate.setEnabled(true) ;
         //On regarde s'il existe une calibration
-        if (OrthoStereogram.mySQLConnection.getCalibration()) jCalibrate.setBackground(Color.GREEN.brighter()); 
+        if (OrthoStereogram.mySQLConnection.getCalibration()) {
+            jCalibrate.setBackground(Color.GREEN.brighter());
+            isCalibrated = true ;
+        } 
         
     }
     
@@ -814,7 +867,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuHelp;
+    private javax.swing.JMenuItem jMenuSystemInfo;
     private javax.swing.JSpinner jMin;
     private javax.swing.JMenuItem jQuit;
     private javax.swing.JRadioButton jRandomJumps;
@@ -824,6 +878,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JComboBox<String> jSliderTimeOut;
     private javax.swing.JButton jStart_C;
     private javax.swing.JButton jStart_CD;

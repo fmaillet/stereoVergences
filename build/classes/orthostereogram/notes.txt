@@ -9,9 +9,12 @@ A faire :
 - pdt l'activité : rappel des extrêmes
 - pdt l'activité : valeurs max obtenues par le patient
 - calibrer les lunettes
+- DELAI XBOX !!
 
 0.6.5 (en cours)
 - Calibration saved/get to/from server
+- Double écran : modif liste : primary screen is first
+- dialog system info (in case of pb)
 
 0.6.4 (01-11-2017)
 - Calibration primary screen ok
