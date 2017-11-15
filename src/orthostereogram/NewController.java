@@ -617,9 +617,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         classic = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(classic);
+        
+        screenDevices[sc].setFullScreenWindow(classic);
+        //secondaryScreenDevice.setFullScreenWindow(classic);
         //Adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -636,9 +636,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(classic);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(classic);
+        //secondaryScreenDevice.setFullScreenWindow(classic);
         //send parameters
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false, hd) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -654,9 +654,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.DIVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(classic);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(classic);
+        //secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
         //double step = (double) jStepD.getValue() ; step = - step ;
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
@@ -673,9 +673,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);*/
-        secondaryScreenDevice.setFullScreenWindow(classic);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(classic);
+        //secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false, hd) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
@@ -691,12 +691,12 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(stereo);*/
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(classic);
         secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true, hd) ;
-        classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         //stereo.setVisible(true);
         currentFrame = classic ; //Necessary for imgScale
@@ -720,9 +720,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(slide);*/
-        secondaryScreenDevice.setFullScreenWindow(slide);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(slide);
+        //secondaryScreenDevice.setFullScreenWindow(slide);
         //Appearence
         //slide.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         
@@ -742,9 +742,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         image = new ImageStereogramView (file, jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), hd) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])
-            screenDevices[sc].setFullScreenWindow(image);*/
-        secondaryScreenDevice.setFullScreenWindow(image);
+        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
+        screenDevices[sc].setFullScreenWindow(image);
+        //secondaryScreenDevice.setFullScreenWindow(image);
         //Appearence
         //image.setVisible(true); //image.repaint();
         image.setAppearence () ;
@@ -813,6 +813,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         info.setVisible(true);
     }//GEN-LAST:event_jMenuSystemInfoActionPerformed
 
+    
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
         //Only odd sizes
