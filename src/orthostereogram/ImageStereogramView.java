@@ -254,14 +254,14 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowClosing(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        executorVergence.shutdownNow() ;
+        executorMove.shutdownNow() ;
     }
 
     @Override
     public void windowClosed(WindowEvent we) {
         OrthoStereogram.controller.setEnabled(true) ;
-        executorVergence.shutdownNow() ;
-        executorMove.shutdownNow() ;
+        OrthoStereogram.controller.toFront();
     }
 
     @Override
@@ -276,7 +276,8 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowActivated(WindowEvent we) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        OrthoStereogram.controller.setEnabled(false);
+        hideCursor () ;
     }
 
     @Override

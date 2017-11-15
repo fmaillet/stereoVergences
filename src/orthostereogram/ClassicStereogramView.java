@@ -80,6 +80,10 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     ScheduledFuture<?> scheduledFuture ;
     boolean keyPressedIsActive = false ;
     
+    //Delai xBox
+    final ScheduledThreadPoolExecutor executorXBox ;
+    private boolean xboxInhibit = false ;
+    
     //Boundaries
     //private int minPixels = -200 ;
     //private int maxPixels = +400 ;
@@ -117,8 +121,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
         
-        //On initialise le timeout
+        //On initialise les TimeOuts
         executor = new ScheduledThreadPoolExecutor(1);
+        executorXBox = new ScheduledThreadPoolExecutor(1);
         
         //Si on a la xbox
         if (OrthoStereogram.xboxConnected)
@@ -531,7 +536,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void dpad(int i, boolean bln) {
-        if (bln)
+        if (bln & !xboxInhibit) {
             switch (i) {
             case 0:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
                     break;
@@ -546,6 +551,13 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
                      break;
             default: break ;
             }
+            xboxInhibit = true ;
+            executorXBox.schedule(() -> xboxTimeOut(), 50, TimeUnit.MILLISECONDS) ;
+        }
+    }
+    
+    private void xboxTimeOut () {
+        xboxInhibit = false ;
     }
 
     @Override
