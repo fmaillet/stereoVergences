@@ -32,6 +32,7 @@ import java.awt.image.MemoryImageSource;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -454,6 +455,15 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void windowClosing(WindowEvent we) {
+        
+        Platform.runLater(new Runnable() {
+           @Override
+           public void run() {
+               OrthoStereogram.controller.addGraphValues(-7, +15);
+           }
+       });
+        
+        
         OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }

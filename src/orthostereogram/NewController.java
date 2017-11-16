@@ -18,6 +18,10 @@ import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -48,6 +52,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     
     //Calibration faite ?
     boolean isCalibrated = false ;
+    
+    //Graphique
+    static private XYChart.Series serie1, serie2, serie3, serie4 ;
+    static int graphIndex  = 0 ;
     
     public NewController(boolean xboxConnected) {
         setLayout(null);
@@ -128,7 +136,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //JavaFX graph ?
         this.setSize(900, this.getHeight());
         final JFXPanel fxPanel = new JFXPanel();
-        fxPanel.setBounds(450, 200, 420, 300);
+        fxPanel.setBounds(450, 200, 420, 350);
         this.add(fxPanel);
         
         Platform.runLater(new Runnable() {
@@ -146,11 +154,64 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
        
        final Group rootGroup = new Group();
        Scene scene = new Scene(rootGroup, 100, 100, javafx.scene.paint.Color.WHEAT);
-       Label labelSize = new Label("Test");
-       labelSize.setTranslateX(20) ;  labelSize.setTranslateY(20) ;
-       rootGroup.getChildren().addAll( labelSize);
+       //Label labelSize = new Label("Test");
+       //labelSize.setTranslateX(20) ;  labelSize.setTranslateY(20) ;
+       //rootGroup.getChildren().addAll( labelSize);
+       rootGroup.getChildren().add(prepareGraph());
        fxPanel.setScene(scene);
    }
+    
+    static private LineChart prepareGraph () {
+        final CategoryAxis xAxis = new CategoryAxis();
+        //xAxis.setTickUnit(1);
+        //xAxis.setMaxWidth(35);
+        //xAxis.setMinorTickCount(1);
+        //xAxis.set
+        final NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Vergence (\u0394)");
+        yAxis.setAutoRanging(true);
+        yAxis.setForceZeroInRange(false);
+        //yAxis.lookup(".axis-label").setStyle("-fx-label-side: top;");
+        
+        //Chart
+        final LineChart<String,Number> lineChart = 
+                new LineChart<String,Number>(xAxis,yAxis);
+        lineChart.setTitle("Résultats");
+        lineChart.setLayoutX(0); lineChart.setLayoutY(00);
+        lineChart.setMaxWidth(420); lineChart.setMaxHeight(350);
+        
+        //Datas
+        serie1 = new XYChart.Series();
+        serie1.setName("Min");
+        //serie1.getData().add(new XYChart.Data("1", 23));
+        //serie1.getData().add(new XYChart.Data("2", 14));
+        serie2 = new XYChart.Series();
+        serie2.setName("Max");
+        //serie2.getData().add(new XYChart.Data("1", 19));
+        //serie2.getData().add(new XYChart.Data("2", 12));
+        serie3 = new XYChart.Series();
+        serie3.setName("Test3");
+        //serie3.getData().add(new XYChart.Data("1", 10));
+        //serie3.getData().add(new XYChart.Data("2", 10));
+        serie4 = new XYChart.Series();
+        serie4.setName("Test4");
+        //serie4.getData().add(new XYChart.Data("1", 8));
+        //serie4.getData().add(new XYChart.Data("2", 9));
+        
+        lineChart.getData().addAll(serie1, serie2, serie3, serie4);
+        //lineChart.setCreateSymbols(false);
+        
+        return lineChart;
+    }
+    
+    public void addGraphValues (double min, double max) {
+        graphIndex++ ;
+        XYChart.Data<String, Number> data ;
+        data = new XYChart.Data<String, Number>(Integer.toString(graphIndex), min) ;
+        serie1.getData().add(data);
+        data = new XYChart.Data<String, Number>(Integer.toString(graphIndex), max) ;
+        serie2.getData().add(data);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -379,8 +440,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No Verticality", "0.25", "0.50", "0.75", "1.00" }));
 
         jCalibrate.setBackground(new java.awt.Color(255, 51, 51));
-        jCalibrate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jCalibrate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jCalibrate.setText("Screen size Calibration");
+        jCalibrate.setMaximumSize(new java.awt.Dimension(180, 60));
+        jCalibrate.setMinimumSize(new java.awt.Dimension(180, 60));
         jCalibrate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCalibrateActionPerformed(evt);
@@ -545,19 +608,21 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(94, 94, 94)
-                                        .addComponent(jCalibrate)))
-                                .addGap(0, 96, Short.MAX_VALUE)))
+                                        .addComponent(jCalibrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 62, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jImg3D, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jImgXBOX, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
                         .addComponent(jCalibrate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
