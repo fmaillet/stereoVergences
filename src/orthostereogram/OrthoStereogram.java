@@ -14,6 +14,12 @@ import java.io.StringWriter;
  *
  * @author Fred
  */
+import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.GLFW_CONNECTED;
+import static org.lwjgl.glfw.GLFW.GLFW_DISCONNECTED;
+import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 public class OrthoStereogram {
     
     public static final String VERSION = "0.6.5beta" ;
@@ -24,9 +30,7 @@ public class OrthoStereogram {
     public static int screenResolution ;
     public static NewController controller ;
 
-    /**
-     * @param args the command line arguments
-     */
+    
     
     
     
@@ -47,9 +51,16 @@ public class OrthoStereogram {
         System.out.println("Personal directory : "
        + RegQuery.getCurrentUserPersonalFolderPath());*/
         
+        //LWJGL Game Controllers
+        System.out.println(org.lwjgl.Version.getVersion());
+        boolean present = false ;
+        if (glfwInit())
+            present = glfwJoystickPresent (GLFW_JOYSTICK_1) ;
+        System.out.println ("Joystick 1: " + present) ;
+        System.out.println (GLFW.glfwGetJoystickName(GLFW_JOYSTICK_1) ) ;
         
         
-        
+
         //Main Frame
         controller = new NewController () ;
         //controller.setSize(450, 650);
@@ -63,12 +74,14 @@ public class OrthoStereogram {
     }
     
     public static void sortir () {
-        //System.out.println ("sortie") ;
+        
         controller.setEnabled(false);
         if (OrthoStereogram.user.nom != null) OrthoStereogram.mySQLConnection.rendreJeton();
         System.exit(0);
         
     }
+    
+    
     
 }
 
@@ -190,3 +203,4 @@ class RegQuery {
     System.out.println("CPU Speed : " + getCPUSpeed() + " Mhz");
   }
 }
+

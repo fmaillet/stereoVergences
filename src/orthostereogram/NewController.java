@@ -13,6 +13,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import static java.lang.Thread.sleep;
+import java.nio.ByteBuffer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
@@ -24,6 +26,13 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
+import static org.lwjgl.glfw.GLFW.glfwGetJoystickButtons;
+import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 /**
  *
@@ -58,6 +67,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     
     //XBOX
     static public boolean xboxConnected = false ;
+    static JoystickEvents joystickEvents ;
     
     public NewController() {
         setLayout(null);
@@ -141,6 +151,10 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         
         //Si on a la xbox
         jImgXBOX.setEnabled(xboxConnected);
+        joystickEvents = new JoystickEvents () ;
+        
+        //Joystick state change
+        //GLFW.glfwSetJoystickCallback(new  GLFW.GLFWjoystickfun 
                 
         //On redimensionne le controller
         this.setSize(900, 700);
@@ -978,6 +992,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
 
     @Override
     public void windowClosing(WindowEvent e) {
+        if (joystickEvents != null ) joystickEvents.interrupt();
         OrthoStereogram.sortir () ;
     }
 
@@ -1004,5 +1019,32 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     @Override
     public void windowDeactivated(WindowEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}
+
+class JoystickEvents extends Thread {
+    Thread t ;
+    ByteBuffer buttons ;
+    //Constructor
+    public JoystickEvents () {
+        
+        
+        t = new Thread (this, "Joystick Events") ;
+        t.start ( ) ;
+    }
+    
+    public void run () {
+        System.out.println ("init JoystickEventes") ;
+        do {
+            glfwWaitEvents();
+            if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+                buttons = GLFW.glfwGetJoystickButtons(GLFW_JOYSTICK_1);
+                System.out.println ("dpad up: " + buttons.get(10)) ;
+            }
+            else System.out.println ("xbox disconnected") ;
+            
+            try { sleep ( 200 ) ;} catch (Exception e) {}
+            //System.out.println ("loop JoystickEventes :" + numButtons) ;
+        } while (!Thread.currentThread().isInterrupted()) ;
     }
 }
