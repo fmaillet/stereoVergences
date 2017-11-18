@@ -5,7 +5,6 @@
  */
 package orthostereogram;
 
-import ch.aplu.xboxcontroller.XboxController;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;

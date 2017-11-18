@@ -5,7 +5,6 @@
  */
 package orthostereogram;
 
-import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -39,7 +38,7 @@ import javax.swing.JLabel;
  *
  * @author Fred
  */
-public class ClassicStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener, XboxControllerListener {
+public class ClassicStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
     
     //Constructor
     //SoundThread audioOK, audioBAD ;
@@ -83,10 +82,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     ScheduledFuture<?> scheduledFuture ;
     boolean keyPressedIsActive = false ;
     
-    //Delai xBox
-    final ScheduledThreadPoolExecutor executorXBox ;
-    private static boolean xboxInhibit = false ;
-    
+       
     //Boundaries
     //private int minPixels = -200 ;
     //private int maxPixels = +400 ;
@@ -108,7 +104,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.workingDistance = workingDistance ;
         this.currentVergenceValue = initialValue ;
         this.deltaX = calcPixelsForVergence (initialValue) ;
-        this.xboxInhibit = false ;
+        
         //System.out.println ("min : " + min + " max : " + max) ;
         //System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
         
@@ -126,13 +122,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         getContentPane().setBackground( Color.WHITE );
         
         //On initialise les TimeOuts
-        executor = new ScheduledThreadPoolExecutor(1);
-        executorXBox = new ScheduledThreadPoolExecutor(1);
-        
-        //Si on a la xbox
-        if (OrthoStereogram.controller.xboxConnected)
-            OrthoStereogram.controller.xbox.addXboxControllerListener(this );
-        
+        executor = new ScheduledThreadPoolExecutor(1);        
+               
     }
 
     public void setAppearence () {
@@ -518,59 +509,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         
     }
 
-    @Override
-    public void buttonA(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void buttonB(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void buttonX(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void buttonY(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void back(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void start(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftShoulder(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightShoulder(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumb(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumb(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
+    
     public void dpad(int i, boolean bln) {
-        if (bln & !xboxInhibit) {
+        if (bln) {
             switch (i) {
             case 0:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
                     break;
@@ -585,50 +526,11 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
                      break;
             default: break ;
             }
-            xboxInhibit = true ;
-            executorXBox.schedule(() -> xboxTimeOut(), 200, TimeUnit.MILLISECONDS) ;
+            
         }
     }
     
-    private void xboxTimeOut () {
-        xboxInhibit = false ;
-    }
-
-    @Override
-    public void leftTrigger(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightTrigger(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumbMagnitude(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumbDirection(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumbMagnitude(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumbDirection(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void isConnected(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+       
 }
 
 /*//Classe OD OG

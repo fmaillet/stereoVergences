@@ -5,8 +5,6 @@
  */
 package orthostereogram;
 
-import ch.aplu.xboxcontroller.XboxController;
-import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -31,7 +29,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  *
  * @author Fred
  */
-public class NewController extends javax.swing.JFrame implements XboxControllerListener, WindowListener {
+public class NewController extends javax.swing.JFrame implements WindowListener {
 
     /**
      * Creates new form NewController
@@ -59,7 +57,6 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     XYSeries xySerieMax, xySerieMin ;
     
     //XBOX
-    public static XboxController xbox ;
     static public boolean xboxConnected = false ;
     
     public NewController() {
@@ -142,19 +139,9 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     
     public void initController () {
         
-        //On initialise la xbox
-        try {
-            xbox = new XboxController((OrthoStereogram.is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
-            xboxConnected = xbox.isConnected() ;
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)");
-        }
         //Si on a la xbox
         jImgXBOX.setEnabled(xboxConnected);
-        //System.out.println ("xbox init controller") ;
-        if (xboxConnected)
-            xbox.addXboxControllerListener(this );
-        
+                
         //On redimensionne le controller
         this.setSize(900, 700);
         //Données du graphique
@@ -981,110 +968,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     private javax.swing.JSpinner jWorkingDistance;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void buttonA(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
-    @Override
-    public void buttonB(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void buttonX(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void buttonY(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void back(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void start(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftShoulder(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightShoulder(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumb(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumb(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void dpad(int i, boolean bln) {
-        
-        /*if (bln)
-            switch (i) {
-            case 0:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
-                    break;
-            case 1: break ;
-            case 2:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
-                     break;   
-            case 3: break ;
-            case 4:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
-                     break;
-            case 5: break ;
-            case 6:  currentFrame.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
-                     break;
-            default: break ;
-            }*/
-    }
-
-    @Override
-    public void leftTrigger(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightTrigger(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumbMagnitude(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void leftThumbDirection(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumbMagnitude(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void rightThumbDirection(double d) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void isConnected(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void windowOpened(WindowEvent e) {
