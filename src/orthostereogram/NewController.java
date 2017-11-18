@@ -57,7 +57,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     static private XYChart.Series serie1, serie2, serie3, serie4 ;
     static int graphIndex  = 0 ;
     
-    public NewController(boolean xboxConnected) {
+    public NewController() {
         setLayout(null);
         initComponents();
         this.addWindowListener(this);
@@ -83,10 +83,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //image xbox
         Image imgXBOX = getToolkit().getImage(getClass().getResource("/Ressources/xbox-icon64.png"));
         jImgXBOX.setIcon(new ImageIcon(imgXBOX)); jImgXBOX.setText("");
-        jImgXBOX.setEnabled(xboxConnected);
-        //Si on a la xbox
-        if (xboxConnected)
-            OrthoStereogram.xbox.addXboxControllerListener(this );
+       
+        
         
         //Divers
         setTitle ("StéréoVergences (F. Maillet - "+OrthoStereogram.VERSION+")") ;
@@ -133,85 +131,19 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //Hauteur en pixels de l'écran ?
         screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
         
-        //JavaFX graph ?
-        this.setSize(900, this.getHeight());
-        final JFXPanel fxPanel = new JFXPanel();
-        fxPanel.setBounds(450, 200, 420, 350);
-        this.add(fxPanel);
         
-        Platform.runLater(new Runnable() {
-           @Override
-           public void run() {
-               initFX(fxPanel);
-           }
-       });
        
     }
     
-    private static void initFX(JFXPanel fxPanel) {
-       // This method is invoked on JavaFX thread
-       //Scene scene = createScene();
-       
-       final Group rootGroup = new Group();
-       Scene scene = new Scene(rootGroup, 100, 100, javafx.scene.paint.Color.WHEAT);
-       //Label labelSize = new Label("Test");
-       //labelSize.setTranslateX(20) ;  labelSize.setTranslateY(20) ;
-       //rootGroup.getChildren().addAll( labelSize);
-       rootGroup.getChildren().add(prepareGraph());
-       fxPanel.setScene(scene);
-   }
-    
-    static private LineChart prepareGraph () {
-        final CategoryAxis xAxis = new CategoryAxis();
-        //xAxis.setTickUnit(1);
-        //xAxis.setMaxWidth(35);
-        //xAxis.setMinorTickCount(1);
-        //xAxis.set
-        final NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Vergence (\u0394)");
-        yAxis.setAutoRanging(true);
-        yAxis.setForceZeroInRange(false);
-        //yAxis.lookup(".axis-label").setStyle("-fx-label-side: top;");
-        
-        //Chart
-        final LineChart<String,Number> lineChart = 
-                new LineChart<String,Number>(xAxis,yAxis);
-        lineChart.setTitle("Résultats");
-        lineChart.setLayoutX(0); lineChart.setLayoutY(00);
-        lineChart.setMaxWidth(420); lineChart.setMaxHeight(350);
-        
-        //Datas
-        serie1 = new XYChart.Series();
-        serie1.setName("Min");
-        //serie1.getData().add(new XYChart.Data("1", 23));
-        //serie1.getData().add(new XYChart.Data("2", 14));
-        serie2 = new XYChart.Series();
-        serie2.setName("Max");
-        //serie2.getData().add(new XYChart.Data("1", 19));
-        //serie2.getData().add(new XYChart.Data("2", 12));
-        serie3 = new XYChart.Series();
-        serie3.setName("Test3");
-        //serie3.getData().add(new XYChart.Data("1", 10));
-        //serie3.getData().add(new XYChart.Data("2", 10));
-        serie4 = new XYChart.Series();
-        serie4.setName("Test4");
-        //serie4.getData().add(new XYChart.Data("1", 8));
-        //serie4.getData().add(new XYChart.Data("2", 9));
-        
-        lineChart.getData().addAll(serie1, serie2, serie3, serie4);
-        //lineChart.setCreateSymbols(false);
-        
-        return lineChart;
+    public void initController (boolean xboxConnected) {
+        //Si on a la xbox
+        jImgXBOX.setEnabled(xboxConnected);
+        //System.out.println ("xbox init controller") ;
+        if (xboxConnected)
+            OrthoStereogram.xbox.addXboxControllerListener(this );
     }
     
-    public void addGraphValues (double min, double max) {
-        graphIndex++ ;
-        XYChart.Data<String, Number> data ;
-        data = new XYChart.Data<String, Number>(Integer.toString(graphIndex), min) ;
-        serie1.getData().add(data);
-        data = new XYChart.Data<String, Number>(Integer.toString(graphIndex), max) ;
-        serie2.getData().add(data);
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -700,6 +632,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
         //Check for verticality
         int hd = jVerticality.getSelectedIndex() ;

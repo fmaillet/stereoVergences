@@ -59,10 +59,11 @@ public class OrthoStereogram {
         
         
         //Main Frame
-        controller = new NewController (xboxConnected) ;
+        controller = new NewController () ;
         //controller.setSize(450, 650);
         controller.setLocationRelativeTo(null);
         controller.setVisible(true);
+        controller.initController(xboxConnected);
     }
     
     static boolean is64bit() {

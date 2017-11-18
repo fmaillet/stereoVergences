@@ -82,8 +82,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     boolean keyPressedIsActive = false ;
     
     //Delai xBox
-    final ScheduledThreadPoolExecutor executorXBox ;
-    private boolean xboxInhibit = false ;
+    //final ScheduledThreadPoolExecutor executorXBox ;
+    //private static boolean xboxInhibit = false ;
     
     //Boundaries
     //private int minPixels = -200 ;
@@ -124,7 +124,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         
         //On initialise les TimeOuts
         executor = new ScheduledThreadPoolExecutor(1);
-        executorXBox = new ScheduledThreadPoolExecutor(1);
+        //executorXBox = new ScheduledThreadPoolExecutor(1);
         
         //Si on a la xbox
         if (OrthoStereogram.xboxConnected)
@@ -456,14 +456,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     @Override
     public void windowClosing(WindowEvent we) {
         
-        Platform.runLater(new Runnable() {
-           @Override
-           public void run() {
-               OrthoStereogram.controller.addGraphValues(-7, +15);
-           }
-       });
-        
-        
+               
         OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
@@ -546,7 +539,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void dpad(int i, boolean bln) {
-        if (bln & !xboxInhibit) {
+        if (bln) {
             switch (i) {
             case 0:  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
                     break;
@@ -561,14 +554,14 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
                      break;
             default: break ;
             }
-            xboxInhibit = true ;
-            executorXBox.schedule(() -> xboxTimeOut(), 50, TimeUnit.MILLISECONDS) ;
+            //xboxInhibit = true ;
+            //executorXBox.schedule(() -> xboxTimeOut(), 50, TimeUnit.MILLISECONDS) ;
         }
     }
     
-    private void xboxTimeOut () {
+    /*private void xboxTimeOut () {
         xboxInhibit = false ;
-    }
+    }*/
 
     @Override
     public void leftTrigger(double d) {
