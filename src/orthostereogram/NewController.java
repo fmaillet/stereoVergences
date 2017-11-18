@@ -14,17 +14,17 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -54,8 +54,8 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     boolean isCalibrated = false ;
     
     //Graphique
-    static private XYChart.Series serie1, serie2, serie3, serie4 ;
-    static int graphIndex  = 0 ;
+    ChartPanel chartPanel ;
+    XYSeries xySerieMax, xySerieMin ;
     
     public NewController() {
         setLayout(null);
@@ -141,6 +141,49 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
         //System.out.println ("xbox init controller") ;
         if (xboxConnected)
             OrthoStereogram.xbox.addXboxControllerListener(this );
+        
+        //On redimensionne le controller
+        this.setSize(900, 700);
+        //Données du graphique
+        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
+        xySerieMax = new XYSeries("Max");
+        xySeriesCollection.addSeries(xySerieMax);
+        xySerieMin = new XYSeries("Min");
+        xySeriesCollection.addSeries(xySerieMin);
+        //Graphique
+        JFreeChart chart = ChartFactory.createXYLineChart("Résultats", "", "", xySeriesCollection,
+            PlotOrientation.VERTICAL, true, false, false);
+        chartPanel = new ChartPanel( chart ) ;
+        chartPanel.setBounds(470, 240, 400, 350);
+        this.getContentPane().add (chartPanel) ;
+        chartPanel.setVisible(true);
+        chartPanel.setPopupMenu(null);
+        
+        //Layout du graphe
+        chart.setBackgroundPaint(Color.CYAN);
+        final XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.lightGray);
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+        domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        //Renderer
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesShapesVisible(1, true);
+        plot.setRenderer(renderer);
+        
+        //On redessine
+        this.repaint();
+    }
+    
+    public void addGraphMax (double max) {
+        int n = xySerieMax.getItemCount() ;
+        xySerieMax.add(n+1, max);
+    }
+    
+    public void addGraphMin (double min) {
+        int n = xySerieMin.getItemCount() ;
+        xySerieMin.add(n+1, min);
     }
     
     

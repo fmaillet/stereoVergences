@@ -32,7 +32,6 @@ import java.awt.image.MemoryImageSource;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -50,8 +49,11 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     private int deltaX = 0 ;
     private int deltaY = 0 ;
     Cursor transparentCursor ;
-    private JLabel info ;
+    private JLabel info, infosMax ;
     
+    //Remember min and max obtained values
+    private double obtainedMax = 0 ;
+    private double obtainedMin = 0 ;
     
     //Constants
     final static public int CONVERGENCE_UP = 2  ;
@@ -157,11 +159,22 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         od.setVisible(true);
         og.setVisible(true);
         
-        //infos
-        info = new JLabel ("Allez-y...") ;
-        info.setBounds(10, 10, 300, 30);
+        //infos courantes
+        JLabel label_1 = new JLabel ("Running :") ;
+        label_1.setBounds(10, 10, 100, 30);
+        this.getContentPane().add(label_1) ;
+        info = new JLabel ("--") ;
+        info.setBounds(20, 35, 300, 30);
+        info.setForeground(Color.GRAY);
         this.getContentPane().add(info) ;
-        
+        //Valeurs max
+        JLabel label_2 = new JLabel ("Max score :") ;
+        label_2.setBounds(10, 60, 100, 30);
+        this.getContentPane().add(label_2) ;
+        infosMax = new JLabel ("--") ;
+        infosMax.setForeground(Color.GRAY);
+        infosMax.setBounds(20, 85, 300, 30);
+        this.getContentPane().add(infosMax) ;
         
     }
     
@@ -307,10 +320,22 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     }
     
     public void goodAnswer () {
+        
+        //Pour l'affichage
         String tmp = new String() ;
+        //Son bonne réponse
         sndGood.run();
-        previousBadAnswer = false ;        
-        //Time out off
+        //On se souvient que c'est une bonne réponse
+        previousBadAnswer = false ; 
+        
+        //On sauvegarde la valeur max atteinte
+        if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
+            obtainedMax  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
+            obtainedMin  = currentVergenceValue ;
+        
+        //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
         
@@ -375,6 +400,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         
         //Mise à jour valeur courante
         info.setText(tmp+String.valueOf(currentVergenceValue)+" \u0394");
+        infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
         repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
@@ -457,7 +483,11 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     @Override
     public void windowClosing(WindowEvent we) {
         
-               
+        //Add max value to graph
+        if (max != 0) OrthoStereogram.controller.addGraphMax (obtainedMax) ;
+        if (min != 0) OrthoStereogram.controller.addGraphMin (obtainedMin) ;
+        
+        //On réactive la fenêtre
         OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
