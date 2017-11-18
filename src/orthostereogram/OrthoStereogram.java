@@ -29,8 +29,7 @@ public class OrthoStereogram {
      * @param args the command line arguments
      */
     
-    public static XboxController xbox ;
-    static public boolean xboxConnected = false ;
+    
     
     public static void main(String[] args) {
         
@@ -49,13 +48,7 @@ public class OrthoStereogram {
         System.out.println("Personal directory : "
        + RegQuery.getCurrentUserPersonalFolderPath());*/
         
-        //On initialise la xbox
-        try {
-            xbox = new XboxController((is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
-            xboxConnected = xbox.isConnected() ;
-        } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)");
-        }
+        
         
         
         //Main Frame
@@ -63,7 +56,7 @@ public class OrthoStereogram {
         //controller.setSize(450, 650);
         controller.setLocationRelativeTo(null);
         controller.setVisible(true);
-        controller.initController(xboxConnected);
+        controller.initController();
     }
     
     static boolean is64bit() {

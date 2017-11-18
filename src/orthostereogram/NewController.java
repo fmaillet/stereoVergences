@@ -5,6 +5,7 @@
  */
 package orthostereogram;
 
+import ch.aplu.xboxcontroller.XboxController;
 import ch.aplu.xboxcontroller.XboxControllerListener;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
@@ -56,6 +57,10 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
     //Graphique
     ChartPanel chartPanel ;
     XYSeries xySerieMax, xySerieMin ;
+    
+    //XBOX
+    public static XboxController xbox ;
+    static public boolean xboxConnected = false ;
     
     public NewController() {
         setLayout(null);
@@ -135,12 +140,20 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
        
     }
     
-    public void initController (boolean xboxConnected) {
+    public void initController () {
+        
+        //On initialise la xbox
+        try {
+            xbox = new XboxController((OrthoStereogram.is64bit()? "xboxcontroller64" : "xboxcontroller"), 1, 50, 50);
+            xboxConnected = xbox.isConnected() ;
+        } catch (Exception e) {
+            //JOptionPane.showMessageDialog(null, "Pas de xBox 360 reconnue !!\n(dll absente)");
+        }
         //Si on a la xbox
         jImgXBOX.setEnabled(xboxConnected);
         //System.out.println ("xbox init controller") ;
         if (xboxConnected)
-            OrthoStereogram.xbox.addXboxControllerListener(this );
+            xbox.addXboxControllerListener(this );
         
         //On redimensionne le controller
         this.setSize(900, 700);
@@ -970,7 +983,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     @Override
     public void buttonA(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -1000,7 +1013,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     @Override
     public void leftShoulder(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -1010,7 +1023,7 @@ public class NewController extends javax.swing.JFrame implements XboxControllerL
 
     @Override
     public void leftThumb(boolean bln) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

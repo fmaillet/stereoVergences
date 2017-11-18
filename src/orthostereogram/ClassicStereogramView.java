@@ -130,8 +130,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         executorXBox = new ScheduledThreadPoolExecutor(1);
         
         //Si on a la xbox
-        if (OrthoStereogram.xboxConnected)
-            OrthoStereogram.xbox.addXboxControllerListener(this );
+        if (OrthoStereogram.controller.xboxConnected)
+            OrthoStereogram.controller.xbox.addXboxControllerListener(this );
         
     }
 

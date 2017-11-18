@@ -93,9 +93,7 @@ public class OldClassicStereogramView extends JFrame implements WindowListener, 
         this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
         
-        //Si on a la xbox
-        if (OrthoStereogram.xbox.isConnected())
-            OrthoStereogram.xbox.addXboxControllerListener(this );
+        
 
         
         //On crée un stéréogramme
