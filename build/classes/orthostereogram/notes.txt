@@ -17,8 +17,7 @@ A faire :
 - Double écran : modif liste : primary screen is first
 - dialog system info (in case of pb)
 - all exercices frames dispayed using user display choice
-- tentative delay xBox (sur Classic uniquement)
-- test pour installer FX Graph
+- tentative delay xBox (sur Classic, 200ms)
 
 0.6.4 (01-11-2017)
 - Calibration primary screen ok
