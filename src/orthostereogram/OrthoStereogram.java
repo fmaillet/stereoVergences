@@ -22,7 +22,7 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.6.5beta" ;
+    public static final String VERSION = "0.7.0beta" ;
     public static boolean BR_glasses = true ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;

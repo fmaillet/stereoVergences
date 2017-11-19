@@ -9,15 +9,19 @@ A faire :
 - pdt l'activité : rappel des extrêmes
 - pdt l'activité : valeurs max obtenues par le patient
 - calibrer les lunettes
-- DELAI XBOX !!
+- check for jmonkeyengine to handle controllers vibraters
 - INTERDIRE l'appui répété sur une flèche !!!
 
-0.6.5 (en cours)
+0.7.0 (en cours)
+- inversion du sens de travail à la 3ème erreur
+
+0.6.5beta (19-11-2017)
 - Calibration saved/get to/from server
 - Double écran : modif liste : primary screen is first
 - dialog system info (in case of pb)
 - all exercices frames dispayed using user display choice
-- tentative delay xBox (sur Classic, 200ms)
+- Library lfgw to handle xbox
+- Graph of results
 
 0.6.4 (01-11-2017)
 - Calibration primary screen ok

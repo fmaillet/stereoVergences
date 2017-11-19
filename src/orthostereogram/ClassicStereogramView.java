@@ -80,7 +80,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static double currentConvergenceValue ;
     static double currentDivergenceValue ;
     static double currentVergenceValue ;
-    static private boolean previousBadAnswer = false ;
+    static private int previousBadAnswer = 0 ;
     
     //délai de réponse
     static private int timeOut = 20 ;
@@ -331,7 +331,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         //Son bonne réponse
         sndGood.run();
         //On se souvient que c'est une bonne réponse
-        previousBadAnswer = false ; 
+        previousBadAnswer = 0 ; 
         
         //On sauvegarde la valeur max atteinte
         if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
@@ -339,6 +339,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         }
         else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
             obtainedMin  = currentVergenceValue ;
+        
+        //Mise à jour du graphe
+        OrthoStereogram.controller.addGraphMax (currentVergenceValue) ;
         
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
@@ -416,11 +419,24 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         double step = this.step ;
         sndBad.run();
         //Première mauvaise réponse ?
-        if (previousBadAnswer) {
+        if (! alternate & ! jump & previousBadAnswer > 1) {
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : 
+                    currentDirectionOfWork = CONVERGENCE_DOWN ;
+                    this.step = - stepC ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    currentDirectionOfWork = DIVERGENCE_DOWN ;
+                    this.step = stepD ;
+                    break ;
+            }
+            //previousBadAnswer = 0 ;
+        }
+        else if (previousBadAnswer == 1) {
             step = 2 * step ;
         }
-        else
-            previousBadAnswer = true ;
+        
+            previousBadAnswer++ ;
         //Time out off
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
@@ -490,8 +506,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         //On arrête le thread xbox
         if (joystickEvents != null ) joystickEvents.interrupt();
         //Add max value to graph
-        if (max != 0) OrthoStereogram.controller.addGraphMax (obtainedMax) ;
-        if (min != 0) OrthoStereogram.controller.addGraphMin (obtainedMin) ;
+        //if (max != 0) OrthoStereogram.controller.addGraphMax (obtainedMax) ;
+        //if (min != 0) OrthoStereogram.controller.addGraphMin (obtainedMin) ;
         
         //On réactive la fenêtre
         OrthoStereogram.controller.setEnabled(true) ;
