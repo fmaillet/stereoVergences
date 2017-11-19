@@ -28,11 +28,17 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
+import static java.lang.Thread.sleep;
+import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
+import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
+import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 
 /**
  *
@@ -95,6 +101,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     //Sounds
     private static WavSoundThread sndGood = new WavSoundThread (1) ;
     private static WavSoundThread sndBad = new WavSoundThread (0) ;
+    
+    //XBOX
+    static JoystickEvents joystickEvents ;
     
     //Min and max are given in dioptries
     public ClassicStereogramView (int initialValue, int currentDirectionOfWork, int workingDistance) {
@@ -167,6 +176,11 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         infosMax.setBounds(20, 85, 300, 30);
         this.getContentPane().add(infosMax) ;
         
+        //On écoute la xbox
+        if (NewController.glfwInit & NewController.xboxConnected) {
+            joystickEvents = new JoystickEvents (this) ;
+            joystickEvents.start();
+        }
     }
     
     public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump, int verticality) {
@@ -473,7 +487,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void windowClosing(WindowEvent we) {
-        
+        //On arrête le thread xbox
+        if (joystickEvents != null ) joystickEvents.interrupt();
         //Add max value to graph
         if (max != 0) OrthoStereogram.controller.addGraphMax (obtainedMax) ;
         if (min != 0) OrthoStereogram.controller.addGraphMin (obtainedMin) ;
@@ -533,52 +548,58 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
        
 }
 
-/*//Classe OD OG
-class OneEye extends JPanel {
-    
-    private int eye ;
-
-    public OneEye (int eye) {
-        this.eye = eye ;
-        setVisible(false);
-        //Copie de l'image
-        //ColorModel cm = SlideStereogramView.eyes[eye].getColorModel();
-        //boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        //WritableRaster raster = SlideStereogramView.eyes[eye].copyData(null);
-        //this.vue = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-        //Taille du panel
-        if (eye == 0)
-            this.setSize(Stereogram.OD.getWidth(), Stereogram.OD.getHeight());
-        else
-            this.setSize(Stereogram.OG.getWidth(), Stereogram.OG.getHeight());
-        setOpaque(false) ;
+//Gestion de la xbox
+class JoystickEvents extends Thread {
+    private JFrame frame ;
+    ByteBuffer buttons ;
+    byte[] oldValues ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,} ;
+    //Constructor
+    public JoystickEvents (JFrame frame) {
+        this.frame = frame ;
+        this.setName("xbox events") ;
         
+        /*t = new Thread (this, "Joystick Events") ;
+        t.start ( ) ;*/
     }
     
-    public void resize () {
-         if (eye == 0)
-            this.setSize(Stereogram.OD.getWidth(), Stereogram.OD.getHeight());
-        else
-            this.setSize(Stereogram.OG.getWidth(), Stereogram.OG.getHeight());
+    public void run () {
+        boolean stop = false ;
+        do {
+            glfwWaitEvents();
+            if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+                buttons = GLFW.glfwGetJoystickButtons(GLFW_JOYSTICK_1);
+                if (oldValues[10] == 0 & buttons.get(10) == 1) {
+                    //System.out.println ("dpad up") ;
+                    frame.dispatchEvent(new KeyEvent(frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
+                }
+                else if (oldValues[11] == 0 & buttons.get(11) == 1) {
+                    //System.out.println ("dpad up") ;
+                    frame.dispatchEvent(new KeyEvent(frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
+                }
+                else if (oldValues[12] == 0 & buttons.get(12) == 1) {
+                    //System.out.println ("dpad up") ;
+                    frame.dispatchEvent(new KeyEvent(frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
+                }
+                else if (oldValues[13] == 0 & buttons.get(13) == 1) {
+                    //System.out.println ("dpad up") ;
+                    frame.dispatchEvent(new KeyEvent(frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
+                }
+                oldValues[10] = buttons.get(10) ; // UP
+                oldValues[11] = buttons.get(11) ; // RIGHT
+                oldValues[12] = buttons.get(12) ; // DOWN
+                oldValues[13] = buttons.get(13) ; // Left
+            }
+            else {
+                //System.out.println(org.lwjgl.Version.getVersion());
+                NewController.xboxConnected = glfwJoystickPresent (GLFW_JOYSTICK_1) ;
+                NewController.jImgXBOX.setEnabled(NewController.xboxConnected);
+                
+                //System.out.println (GLFW.glfwGetJoystickName(GLFW_JOYSTICK_1) ) ;
+            }
+            
+            try { Thread.sleep ( 100 ) ;} catch (InterruptedException  interruptedException) {stop = true ;}
+            //System.out.println ("loop JoystickEventes :" + numButtons) ;
+        } while (!stop) ;
+        //System.out.println ("xbox events stopped") ;
     }
-    
-    public void paint(Graphics g) {
-        //super.paintComponent(g);
-        
-        //float alpha = 0.5f ;
-        //AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alpha);
-        g.setXORMode(Color.WHITE);
-        if (eye == 0) {
-            if (OrthoStereogram.BR_glasses)
-                g.drawImage(Stereogram.OD, 0,0,this);
-            else
-                g.drawImage(Stereogram.OG, 0 + Stereogram.OG.getWidth(), 0, -Stereogram.OG.getWidth(), Stereogram.OG.getHeight(), this);
-        }
-        else {
-            if (OrthoStereogram.BR_glasses)
-                g.drawImage(Stereogram.OG, 0,0,this);
-            else
-                g.drawImage(Stereogram.OD, 0 + Stereogram.OD.getWidth(), 0, -Stereogram.OD.getWidth(), Stereogram.OD.getHeight(), this);
-        }
-    }
-}*/
+}

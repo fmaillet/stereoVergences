@@ -52,12 +52,12 @@ public class OrthoStereogram {
        + RegQuery.getCurrentUserPersonalFolderPath());*/
         
         //LWJGL Game Controllers
-        System.out.println(org.lwjgl.Version.getVersion());
+        /*System.out.println(org.lwjgl.Version.getVersion());
         boolean present = false ;
         if (glfwInit())
             present = glfwJoystickPresent (GLFW_JOYSTICK_1) ;
         System.out.println ("Joystick 1: " + present) ;
-        System.out.println (GLFW.glfwGetJoystickName(GLFW_JOYSTICK_1) ) ;
+        System.out.println (GLFW.glfwGetJoystickName(GLFW_JOYSTICK_1) ) ;*/
         
         
 
