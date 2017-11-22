@@ -1,5 +1,0 @@
-orthostereogram.JoystickEvents
-orthostereogram.OrthoStereogram
-orthostereogram.Advapi32UtilTest
-orthostereogram.RegQuery$StreamReader
-orthostereogram.RegQuery

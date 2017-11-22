@@ -113,8 +113,8 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
             for (int i=0; i<numberOfScreens; i++) {
                 if (screenDevices[i].isFullScreenSupported()) {
                     if (!primaryScreenDevice.equals(screenDevices[i])) {
-                        if (i == 0) jScreens.addItem(String.valueOf(i) + ": Projecteur");
-                        else jScreens.insertItemAt(String.valueOf(i) + ": Projecteur", 0);
+                        jScreens.addItem(String.valueOf(i) + ": Projecteur");
+                        //else jScreens.insertItemAt(String.valueOf(i) + ": Projecteur", 0);
                     }
                     else
                         jScreens.addItem(String.valueOf(i) + ": Principal");

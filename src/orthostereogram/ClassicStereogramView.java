@@ -86,8 +86,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static private int timeOut = 20 ;
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
-    boolean keyPressedIsActive = false ;
-    
+    boolean resizingIsActive = false ;
+    boolean keypressedIsActive = false ;
        
     //Boundaries
     //private int minPixels = -200 ;
@@ -276,7 +276,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
         
-        if (keyPressedIsActive) return ;
+        if (resizingIsActive | keypressedIsActive) return ;
+        
+        keypressedIsActive = true ;
         
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
@@ -293,7 +295,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
          
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
-            keyPressedIsActive = true ;
+            resizingIsActive = true ;
             if (NewController.imgScale( 0.9 )) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -302,7 +304,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             }
         }
         else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
-            keyPressedIsActive = true ;
+            resizingIsActive = true ;
             if ( NewController.imgScale( 1.1 ) ) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -311,7 +313,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             }
         }
         else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
-            keyPressedIsActive = true ;
+            resizingIsActive = true ;
             if ( NewController.imgScale( 1.1 ) ) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -321,7 +323,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         }
         
         hideCursor () ;
-        keyPressedIsActive = false;
+        resizingIsActive = false;
     }
     
     public void goodAnswer () {
@@ -480,7 +482,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
 
     @Override
     public void keyReleased(KeyEvent ke) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        keypressedIsActive = false ;
     }
 
     @Override
