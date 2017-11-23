@@ -71,8 +71,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     static private double stepC ;
     static private double stepD ;
     static private double step = 1 ;
-    static private int max = 35 ;
-    static private int min = -10 ;
+    static private double max = 35 ;
+    static private double min = -10 ;
     static private int currentDirectionOfWork = CONVERGENCE_UP ;
     static private boolean alternate = false ;
     static private boolean jump = false ;
@@ -354,7 +354,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             step = - stepC ;
             currentDirectionOfWork = CONVERGENCE_DOWN ;
         }
-        else if (currentDirectionOfWork == CONVERGENCE_DOWN & currentVergenceValue+step < 0) {
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN & currentVergenceValue+step < 0.0) {
             step = - stepD ;
             currentDirectionOfWork = DIVERGENCE_UP ;
         }
@@ -362,7 +362,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             step = stepD ;
             currentDirectionOfWork = DIVERGENCE_DOWN ;
         }
-        else if (currentDirectionOfWork == DIVERGENCE_DOWN & currentVergenceValue+step > 0) {
+        else if (currentDirectionOfWork == DIVERGENCE_DOWN & currentVergenceValue+step > 0.0) {
             step = stepC ;
             currentDirectionOfWork = CONVERGENCE_UP ;
         }

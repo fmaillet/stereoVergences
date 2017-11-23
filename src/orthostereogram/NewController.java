@@ -5,21 +5,26 @@
  */
 package orthostereogram;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.Ellipse2D;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
@@ -71,7 +76,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         initComponents();
         this.addWindowListener(this);
         jUnit.setText("\u0394");jUnit2.setText("\u0394");jUnit3.setText("\u0394");jUnit4.setText("\u0394");
-        jUnit6.setText("\u0394");
+        jUnit6.setText("\u0394"); jUnit7.setText("\u0394");
         
         //AutoConnect
         AutoConnect auto = new AutoConnect () ;
@@ -161,12 +166,12 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         this.setSize(900, 700);
         //Données du graphique
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        xySerieMax = new XYSeries("Max");
+        xySerieMax = new XYSeries("Vergence");
         xySeriesCollection.addSeries(xySerieMax);
-        xySerieMin = new XYSeries("Min");
-        xySeriesCollection.addSeries(xySerieMin);
+        //xySerieMin = new XYSeries("Min");
+        //xySeriesCollection.addSeries(xySerieMin);
         //Graphique
-        JFreeChart chart = ChartFactory.createXYLineChart("Résultats", "", "", xySeriesCollection,
+        JFreeChart chart = ChartFactory.createXYLineChart("", "", "", xySeriesCollection,
             PlotOrientation.VERTICAL, true, false, false);
         chartPanel = new ChartPanel( chart ) ;
         chartPanel.setBounds(470, 240, 400, 350);
@@ -178,13 +183,26 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         chart.setBackgroundPaint(Color.CYAN);
         final XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.lightGray);
+        //Axe zero
+        Marker rangeMarker = new ValueMarker(0.0);
+        rangeMarker.setPaint(Color.RED);
+        rangeMarker.setStroke(new BasicStroke (2.0f) );
+        plot.addRangeMarker(rangeMarker);
+        
+        //axe des Y
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        //axe des X
         NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
         domainAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        //domainAxis.setVisible(false) ;
         //Renderer
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.BLUE);
         renderer.setSeriesShapesVisible(1, true);
+        //Rectangle rect = new Rectangle(3, 3);
+        Ellipse2D circle = new Ellipse2D.Double(-2.0, -2.0, 4.0, 4.0);
+        renderer.setSeriesShape(0, circle);
         plot.setRenderer(renderer);
         
         //On redessine
@@ -253,6 +271,8 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jRandomJumps = new javax.swing.JRadioButton();
         jVerticality = new javax.swing.JComboBox<>();
         jCalibrate = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jUnit7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -432,7 +452,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jRandomJumps.setEnabled(false);
 
         jVerticality.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No Verticality", "0.25", "0.50", "0.75", "1.00" }));
+        jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0.00", "0.25", "0.50", "0.75", "1.00" }));
 
         jCalibrate.setBackground(new java.awt.Color(255, 51, 51));
         jCalibrate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -444,6 +464,12 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                 jCalibrateActionPerformed(evt);
             }
         });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel10.setText("Verticality :");
+
+        jUnit7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jUnit7.setText("\\u");
 
         jMenu1.setText("File");
 
@@ -552,12 +578,11 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(20, 20, 20)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addGap(35, 35, 35))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(53, 53, 53)))
+                                                .addGap(53, 53, 53))
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel10))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -567,32 +592,34 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jUnit2)
                                                     .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
+                                                .addComponent(jUnit7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(19, 19, 19)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel9))
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(jLabel9))
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGroup(layout.createSequentialGroup()
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jUnit3))
-                                                            .addGroup(layout.createSequentialGroup()
-                                                                .addGap(17, 17, 17)
-                                                                .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jUnit6))))
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGap(18, 18, 18)
-                                                        .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                        .addComponent(jUnit3))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addGap(17, 17, 17)
+                                                        .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                        .addComponent(jUnit6))))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGap(2, 2, 2)
-                                                .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                 .addGap(0, 62, Short.MAX_VALUE)))
                         .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
@@ -661,9 +688,12 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel5)))
-                .addGap(35, 35, 35)
-                .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jUnit7))
+                .addGap(41, 41, 41)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -944,6 +974,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     public static javax.swing.JLabel jImgXBOX;
     private javax.swing.JSpinner jInitial;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -985,6 +1016,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private javax.swing.JLabel jUnit4;
     private javax.swing.JLabel jUnit5;
     private javax.swing.JLabel jUnit6;
+    private javax.swing.JLabel jUnit7;
     private javax.swing.JComboBox<String> jVerticality;
     private javax.swing.JSpinner jWorkingDistance;
     // End of variables declaration//GEN-END:variables
