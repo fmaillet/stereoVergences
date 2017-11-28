@@ -42,7 +42,7 @@ public class HelpJDialog extends javax.swing.JDialog {
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("ctrl+ augmente la taille du sétérogramme\nctrl- diminue la taille du stéréogramme\n");
+        jTextArea1.setText("ctrl+ augmente la taille du sétérogramme\nctrl- diminue la taille du stéréogramme\n\nEspace : revient en arrière ou à zéro\nselon l'exercice");
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N

@@ -275,10 +275,10 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     @Override
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
-        
+        char c  = ke.getKeyChar() ;
         if (resizingIsActive | keypressedIsActive) return ;
         
-        keypressedIsActive = true ;
+        if (c != 'A') keypressedIsActive = true ;
         
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         

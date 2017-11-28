@@ -74,7 +74,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="ctrl+ augmente la taille du s&#xe9;t&#xe9;rogramme&#xa;ctrl- diminue la taille du st&#xe9;r&#xe9;ogramme&#xa;"/>
+            <Property name="text" type="java.lang.String" value="ctrl+ augmente la taille du s&#xe9;t&#xe9;rogramme&#xa;ctrl- diminue la taille du st&#xe9;r&#xe9;ogramme&#xa;&#xa;Espace : revient en arri&#xe8;re ou &#xe0; z&#xe9;ro&#xa;selon l&apos;exercice"/>
           </Properties>
         </Component>
       </SubComponents>
