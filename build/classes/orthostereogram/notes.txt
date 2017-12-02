@@ -14,6 +14,7 @@ A faire :
 0.7.0 (en cours)
 - inversion du sens de travail à la 3ème erreur
 - corrected long keypressed
+- accommodation frame
 
 0.6.5beta (19-11-2017)
 - Calibration saved/get to/from server

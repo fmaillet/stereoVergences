@@ -5,8 +5,11 @@
  */
 package orthostereogram;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -18,7 +21,10 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
+import java.util.Random;
+import javafx.scene.layout.Border;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  *
@@ -28,6 +34,7 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
     
     //Constructor
     Cursor transparentCursor ;
+    CuedJLabel cue[] ;
     
     public AccommodationJob () {
         
@@ -49,6 +56,17 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
+        
+        //Add 5 JLabels
+        cue = new CuedJLabel[5] ;
+        for (int i= 0; i<5; i++) {
+            cue[i] = new CuedJLabel () ;
+            cue[i].setLocation(this.getContentPane().getWidth()/2 - cue[i].getWidth()*4 + cue[i].getWidth()*2*i, this.getContentPane().getHeight()/2 - cue[i].getHeight()/2);
+            //cue[i].setBorder(new Border());
+            this.getContentPane().add(cue[i]) ;
+            cue[i].setVisible(true);
+        }
+            
         
     }
     
@@ -121,4 +139,37 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+}
+
+class CuedJLabel extends JLabel {
+    
+    //L'orientation de l'item
+    private Random rand ;
+    private int orientation  = 3 ;
+    static int size = 4 ;
+
+    //constructor
+    public CuedJLabel () {
+        rand = new Random() ;
+        this.setText("");
+        this.setSize(35,35);
+        alea () ;
+    }
+    
+    public void alea () {
+        orientation = rand.nextInt(4) ;
+    }
+    
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke( 1.0f ));
+        
+        switch (orientation) {
+            case 0 : g2.drawArc(6, 0, size, size, 30, 300); ; break ;
+            case 1 : g2.drawArc(6, 0, size, size, 120, 300); ; break ;
+            case 2 : g2.drawArc(6, 0, size, size, 210, 300); ; break ;
+            default: g2.drawArc(6, 0, size, size, 300, 300); ; break ;
+        }
+        
+    }
 }
