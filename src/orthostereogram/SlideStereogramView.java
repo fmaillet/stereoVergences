@@ -261,13 +261,14 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
 
     @Override
     public void windowClosing(WindowEvent we) {
-        OrthoStereogram.controller.setEnabled(true) ;
+        //OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
 
     @Override
     public void windowClosed(WindowEvent we) {
         OrthoStereogram.controller.setEnabled(true);
+        OrthoStereogram.controller.setVisible(true);
     }
 
     @Override

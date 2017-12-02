@@ -512,13 +512,14 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         //if (min != 0) OrthoStereogram.controller.addGraphMin (obtainedMin) ;
         
         //On réactive la fenêtre
-        OrthoStereogram.controller.setEnabled(true) ;
+        //OrthoStereogram.controller.setEnabled(true) ;
         executor.shutdownNow() ;
     }
 
     @Override
     public void windowClosed(WindowEvent we) {
         OrthoStereogram.controller.setEnabled(true);
+        OrthoStereogram.controller.setVisible(true);
     }
 
     @Override

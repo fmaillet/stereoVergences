@@ -261,7 +261,7 @@ public class ImageStereogramView extends JFrame implements WindowListener, Mouse
     @Override
     public void windowClosed(WindowEvent we) {
         OrthoStereogram.controller.setEnabled(true) ;
-        OrthoStereogram.controller.toFront();
+        OrthoStereogram.controller.setVisible (true);
     }
 
     @Override

@@ -59,6 +59,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     SlideStereogramView slide ;
     ImageStereogramView image ;
     ClassicStereogramView classic ;
+    AccommodationJob accommodation ;
     
     //Calibration faite ?
     boolean isCalibrated = false ;
@@ -273,6 +274,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jCalibrate = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jUnit7 = new javax.swing.JLabel();
+        jStart_Accommodation = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -471,6 +473,14 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jUnit7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jUnit7.setText("\\u");
 
+        jStart_Accommodation.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jStart_Accommodation.setText("Accommodation");
+        jStart_Accommodation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jStart_AccommodationActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
 
         jConnection.setText("Connection serveur");
@@ -559,7 +569,9 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                                                     .addComponent(jStart_Slide, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                                                     .addComponent(jStart_Img, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                 .addGap(39, 39, 39)
-                                                .addComponent(jRandomJumps))))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(jRandomJumps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(jStart_Accommodation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(56, 56, 56)
@@ -714,7 +726,8 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jStart_Img))
+                    .addComponent(jStart_Img)
+                    .addComponent(jStart_Accommodation))
                 .addContainerGap())
         );
 
@@ -931,6 +944,19 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         info.setVisible(true);
     }//GEN-LAST:event_jMenuSystemInfoActionPerformed
 
+    private void jStart_AccommodationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_AccommodationActionPerformed
+        
+        //Accommodation frame
+        accommodation = new AccommodationJob () ;
+
+        //Select screen to display
+        int sc = jScreens.getSelectedIndex() ;
+        screenDevices[sc].setFullScreenWindow(accommodation);
+        //On adapte l'apparence
+        accommodation.setAppearence () ;
+        currentFrame = accommodation ; //Necessary for imgScale
+    }//GEN-LAST:event_jStart_AccommodationActionPerformed
+
     
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
@@ -1000,6 +1026,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JComboBox<String> jSliderTimeOut;
+    private javax.swing.JButton jStart_Accommodation;
     private javax.swing.JButton jStart_C;
     private javax.swing.JButton jStart_CD;
     private javax.swing.JButton jStart_CD_alter;
