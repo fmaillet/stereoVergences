@@ -14,7 +14,12 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -35,6 +40,9 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
     //Constructor
     Cursor transparentCursor ;
     CuedJLabel cue[] ;
+    
+    private static WavSoundThread sndGood = new WavSoundThread (1) ;
+    private static WavSoundThread sndBad = new WavSoundThread (0) ;
     
     public AccommodationJob () {
         
@@ -60,7 +68,7 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         //Add 5 JLabels
         cue = new CuedJLabel[5] ;
         for (int i= 0; i<5; i++) {
-            cue[i] = new CuedJLabel () ;
+            cue[i] = new CuedJLabel (9) ;
             cue[i].setLocation(this.getContentPane().getWidth()/2 - cue[i].getWidth()*4 + cue[i].getWidth()*2*i, this.getContentPane().getHeight()/2 - cue[i].getHeight()/2);
             //cue[i].setBorder(new Border());
             this.getContentPane().add(cue[i]) ;
@@ -132,6 +140,26 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         int keyCode = ke.getKeyCode();
         
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        
+        if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
+            int index ;
+
+            for (index=0; index<5; index++)
+                if (cue[index].isVisible()) break ;
+
+            if (index <= 4) {
+                if (cue[index].check(keyCode)) sndGood.run();
+                else sndBad.run() ;
+            }
+            //On a tout fait : on réinitialise
+            if (index == 4)
+                for (int i=0; i<5; i++) {
+                    cue[i].alea () ;
+                    cue[i].setVisible(true);
+                }
+            //Sinon, on cache
+            
+        }
     }
 
     @Override
@@ -145,11 +173,13 @@ class CuedJLabel extends JLabel {
     
     //L'orientation de l'item
     private Random rand ;
-    private int orientation  = 3 ;
+    private int orientation  = VK_RIGHT ;
     static int size = 4 ;
-
+    
     //constructor
-    public CuedJLabel () {
+    public CuedJLabel (int size) {
+        
+        this.size = size ;
         rand = new Random() ;
         this.setText("");
         this.setSize(35,35);
@@ -157,7 +187,25 @@ class CuedJLabel extends JLabel {
     }
     
     public void alea () {
-        orientation = rand.nextInt(4) ;
+        //orientation = rand.nextInt(4) ;
+        switch (rand.nextInt(4)) {
+            case 0 : orientation = VK_RIGHT ; break ;
+            case 1 : orientation = VK_UP ; break ;
+            case 2 : orientation = VK_LEFT ; break ;
+            case 3 : orientation = VK_DOWN ; break ;
+        }
+        repaint () ;
+    }
+    
+    public void resize (int size) {
+        this.size = size ;
+        repaint () ;
+    }
+    
+    public boolean check (int orientationAnswer) {
+        setVisible (false) ;
+        if (orientationAnswer == orientation) return true;
+        else return false ;
     }
     
     public void paint(Graphics g) {
@@ -165,10 +213,10 @@ class CuedJLabel extends JLabel {
         g2.setStroke(new BasicStroke( 1.0f ));
         
         switch (orientation) {
-            case 0 : g2.drawArc(6, 0, size, size, 30, 300); ; break ;
-            case 1 : g2.drawArc(6, 0, size, size, 120, 300); ; break ;
-            case 2 : g2.drawArc(6, 0, size, size, 210, 300); ; break ;
-            default: g2.drawArc(6, 0, size, size, 300, 300); ; break ;
+            case VK_RIGHT : g2.drawArc(6, 0, size, size, 30, 300); ; break ;
+            case VK_UP : g2.drawArc(6, 0, size, size, 120, 300); ; break ;
+            case VK_LEFT : g2.drawArc(6, 0, size, size, 210, 300); ; break ;
+            case VK_DOWN : g2.drawArc(6, 0, size, size, 300, 300); ; break ;
         }
         
     }
