@@ -33,6 +33,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import org.lwjgl.glfw.GLFW;
@@ -105,6 +106,10 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     //XBOX
     static JoystickEvents joystickEvents ;
     
+    //Trphés
+    JLabel trophy[] ;
+    int trophyNumber = 0 ;
+    
     //Min and max are given in dioptries
     public ClassicStereogramView (int initialValue, int currentDirectionOfWork, int workingDistance) {
         //this.minPixels = calcPixelsForVergence (min) ;
@@ -175,6 +180,16 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         infosMax.setForeground(Color.GRAY);
         infosMax.setBounds(20, 85, 300, 30);
         this.getContentPane().add(infosMax) ;
+        
+        //Create trophy
+        trophy = new JLabel[5] ;
+        for (int i=0; i<5; i++) {
+            trophy[i] = new JLabel() ;
+            trophy[i].setIcon(new ImageIcon(NewController.tinyTrophy));
+            trophy[i].setBounds(20, 160 + (i * 85), 64, 64);
+            this.getContentPane().add(trophy[i]) ;
+            trophy[i].setEnabled(false);
+        }
         
         //On écoute la xbox
         if (NewController.glfwInit & NewController.xboxConnected) {
@@ -412,6 +427,12 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         info.setText(tmp+String.valueOf(currentVergenceValue)+" \u0394");
         infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
         repaint () ;
+        
+        //A-t-on fait un cycle ? oui, on affiche un trophé
+        if (currentVergenceValue == 0 && obtainedMax == max && obtainedMin == min) {
+            trophy[trophyNumber].setEnabled(true);
+            if (trophyNumber<4) trophyNumber++ ;
+        }
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }

@@ -18,7 +18,6 @@ import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
-import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -27,7 +26,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
 import java.util.Random;
-import javafx.scene.layout.Border;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -58,6 +56,11 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         getContentPane().setBackground( Color.WHITE );
+        
+        //infos courantes
+        JLabel label_1 = new JLabel ("(Experimental)") ;
+        label_1.setBounds(10, 10, 100, 30);
+        this.getContentPane().add(label_1) ;
     }
     
     public void setAppearence () {
@@ -175,6 +178,7 @@ class CuedJLabel extends JLabel {
     private Random rand ;
     private int orientation  = VK_RIGHT ;
     static int size = 4 ;
+    static Color color = Color.RED ;
     
     //constructor
     public CuedJLabel (int size) {
@@ -194,6 +198,9 @@ class CuedJLabel extends JLabel {
             case 2 : orientation = VK_LEFT ; break ;
             case 3 : orientation = VK_DOWN ; break ;
         }
+        //On change la couleur
+        if (color == Color.RED) color = Color.CYAN ;
+        else color = Color.RED ;
         repaint () ;
     }
     
@@ -211,6 +218,7 @@ class CuedJLabel extends JLabel {
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke( 1.0f ));
+        g2.setColor(color);
         
         switch (orientation) {
             case VK_RIGHT : g2.drawArc(6, 0, size, size, 30, 300); ; break ;

@@ -11,7 +11,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -47,7 +46,9 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
      */
     
     Image imgBR, imgRB ;
-    static public int imgSize = 600 ; //only odd sizes are allowed for stereograms
+    static public Image tinyTrophy ;
+    static final  int DEFAULT_IMG_SIZE = 600 ;
+    static public int imgSize = DEFAULT_IMG_SIZE ; //only odd sizes are allowed for stereograms
     int numberOfScreens = 1 ;
     int screenHeight ;
     static public JFrame currentFrame ;
@@ -82,6 +83,9 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         //AutoConnect
         AutoConnect auto = new AutoConnect () ;
         auto.start () ;
+        
+        //Image du trophé
+        tinyTrophy = getToolkit().getImage(getClass().getResource("/Ressources/trophy-small.png"));
         
         //image Lunettes 3D (inversées)
         imgRB = getToolkit().getImage(getClass().getResource("/Ressources/3d-BR.png"));
@@ -739,12 +743,15 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
         //Check for verticality
         int hd = jVerticality.getSelectedIndex() ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
-        
+        //On ajuste la taille du stéréogramme si besoin
+        if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
+        //Create JFrame
+        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
+        //On affiche
         screenDevices[sc].setFullScreenWindow(classic);
+        
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //Adapt
         classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;

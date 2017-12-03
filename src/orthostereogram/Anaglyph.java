@@ -60,6 +60,8 @@ public class Anaglyph {
         //Bande gauche
         rightRGB[0] = rightRGB[1] = rightRGB[2] = 255;
         convertToGrayscale(rightRGB);
+        combinedRGB[1] = rightRGB[1];
+        combinedRGB[2] = rightRGB[2];
         for (int x=0; x<deltaX; x++) {
             for (int y=0; y<height; y++) {
                 if (x>=width) combined.getRaster().setPixel(x, y, rightRGB);
@@ -68,8 +70,7 @@ public class Anaglyph {
                     convertToGrayscale(leftRGB);
 
                     combinedRGB[0] = leftRGB[0];
-                    combinedRGB[1] = rightRGB[1];
-                    combinedRGB[2] = rightRGB[2];
+                    //combinedRGB[1] et [2] wont change
                     combined.getRaster().setPixel(x, y, combinedRGB);
                 }
             }
@@ -77,14 +78,15 @@ public class Anaglyph {
         //Bande droite
         leftRGB[0] = leftRGB[1] = leftRGB[2] = 255;
         convertToGrayscale(leftRGB);
+        combinedRGB[0] = leftRGB[0];
         for (int x=0; x<deltaX; x++) {
             for (int y=0; y<height; y++) {
                 if (x>=width) combined.getRaster().setPixel(width+deltaX - x - 1, y, leftRGB);
                 else {
                     right.getRaster().getPixel(width-x-1, y, rightRGB);
-
                     convertToGrayscale(rightRGB);
-                    combinedRGB[0] = leftRGB[0];
+                    
+                    //combinedRGB[0] wont change
                     combinedRGB[1] = rightRGB[1];
                     combinedRGB[2] = rightRGB[2];
                     combined.getRaster().setPixel(width+deltaX - x - 1, y, combinedRGB);
@@ -118,21 +120,22 @@ public class Anaglyph {
         //Bande gauche
         rightRGB[0] = rightRGB[1] = rightRGB[2] = 255;
         convertToGrayscale(rightRGB);
+        combinedRGB[1] = rightRGB[1];
+        combinedRGB[2] = rightRGB[2];
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
                 left.getRaster().getPixel(x, y, leftRGB);
                 convertToGrayscale(leftRGB);
 
                 combinedRGB[0] = leftRGB[0];
-                combinedRGB[1] = rightRGB[1];
-                combinedRGB[2] = rightRGB[2];
+                
                 left.getRaster().setPixel(x, y, combinedRGB);
             }
         }
         
     }
     
-    //Juste l'image rouge
+    //Juste l'image bleue
     public static void createStereoscopicBlueImage(BufferedImage right) {
         //BufferedImage ana = new BufferedImage(left.getWidth(), left.getHeight(), BufferedImage.TYPE_INT_RGB);
         int width = right.getWidth();
@@ -146,12 +149,12 @@ public class Anaglyph {
         //Bande gauche
         leftRGB[0] = leftRGB[1] = leftRGB[2] = 255;
         convertToGrayscale(leftRGB);
+        combinedRGB[0] = leftRGB[0];
         for (int x=0; x<width; x++) {
             for (int y=0; y<height; y++) {
                 right.getRaster().getPixel(x, y, rightRGB);
-                convertToGrayscale(leftRGB);
+                convertToGrayscale(rightRGB);
 
-                combinedRGB[0] = leftRGB[0];
                 combinedRGB[1] = rightRGB[1];
                 combinedRGB[2] = rightRGB[2];
                 right.getRaster().setPixel(x, y, combinedRGB);

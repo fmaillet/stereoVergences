@@ -26,6 +26,7 @@ public class Stereogram extends JPanel {
     public int clue ;
     static public int deltaPixelsX ;
     static public double currentVergenceValue;
+    Random rand = new Random() ;
     
     //Used for slider
     private boolean centered = false ;
@@ -120,19 +121,19 @@ public class Stereogram extends JPanel {
     //Reset the stereogram content
     //if keepclue= true then same clue
     public void resetImg (boolean keepClue) {
-        Random rand = new Random() ;
-        Color colour ;
+        
+        int couleurRGB = 0 ;
         
         //On rempli de valeurs aléatoires identiques OD=OG
-        for (int i= 0; i<OD.getWidth(); i++)
-            for (int j=0; j<OD.getHeight(); j++) {
-                if (rand.nextBoolean())  colour = Color.BLACK ;
-                else colour = Color.WHITE ;
-                OD.setRGB(i, j, colour.getRGB());
-                OG.setRGB(i, j, colour.getRGB());
+        int taille = OD.getHeight() ;
+        for (int i= 0; i<taille; i++)
+            for (int j=0; j<taille; j++) {
+                if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                else couleurRGB = Color.WHITE.getRGB() ;
+                OD.setRGB(i, j, couleurRGB);
+                OG.setRGB(i, j, couleurRGB);
             }
         //Paramètres
-        int taille = OD.getHeight() ;
         int t = taille / 3 ;   //taille de la matrice
         int bord = 30 ;                  //bord
         int depth = 20 ;                    //disparité
@@ -156,31 +157,32 @@ public class Stereogram extends JPanel {
         if (centered) {
             t = taille / 2 ;
             dh = dc =  (taille - t) / 2 ;
+            int c = 0 ;
             //Draw a diamond
             for (int i=0; i<t/2; i++)
                 for (int j=0; j<i; j++) {
-                    if (rand.nextBoolean()) colour = Color.BLACK ; else colour = Color.WHITE ;
+                    if (rand.nextBoolean()) couleurRGB = Color.BLACK.getRGB() ; else couleurRGB = Color.WHITE.getRGB() ;
                     //Quart inf gauche
-                    OG.setRGB(taille/4 + i - depth, taille / 2 + j, colour.getRGB());
-                    OD.setRGB(taille/4 + i + depth, taille / 2 + j, colour.getRGB());
+                    OG.setRGB(taille/4 + i - depth, taille / 2 + j, couleurRGB);
+                    OD.setRGB(taille/4 + i + depth, taille / 2 + j, couleurRGB);
                     //Quart ?
-                    OG.setRGB(taille/4 + i - depth, taille / 2 - j, colour.getRGB());
-                    OD.setRGB(taille/4 + i + depth, taille / 2 - j, colour.getRGB());
+                    OG.setRGB(taille/4 + i - depth, taille / 2 - j, couleurRGB);
+                    OD.setRGB(taille/4 + i + depth, taille / 2 - j, couleurRGB);
                     //Quart
-                    OG.setRGB((3*taille/4) - i - depth, taille / 2 + j, colour.getRGB());
-                    OD.setRGB((3*taille/4) - i + depth, taille / 2 + j, colour.getRGB());
+                    OG.setRGB((3*taille/4) - i - depth, taille / 2 + j, couleurRGB);
+                    OD.setRGB((3*taille/4) - i + depth, taille / 2 + j, couleurRGB);
                     //Quart
-                    OG.setRGB((3*taille/4) - i - depth, taille / 2 - j, colour.getRGB());
-                    OD.setRGB((3*taille/4) - i + depth, taille / 2 - j, colour.getRGB());
+                    OG.setRGB((3*taille/4) - i - depth, taille / 2 - j, couleurRGB);
+                    OD.setRGB((3*taille/4) - i + depth, taille / 2 - j, couleurRGB);
                 }
         }
         //On crée le carré en relief
         else for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
-                if (rand.nextBoolean())  colour = Color.BLACK ;
-                else colour = Color.WHITE ;
-                OG.setRGB(dc+i - depth, j+dh, colour.getRGB());
-                OD.setRGB(dc+i + depth, j+dh, colour.getRGB());
+                if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                else couleurRGB = Color.WHITE.getRGB() ;
+                OG.setRGB(dc+i - depth, j+dh, couleurRGB);
+                OD.setRGB(dc+i + depth, j+dh, couleurRGB);
             }
         
         

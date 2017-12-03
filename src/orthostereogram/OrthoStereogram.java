@@ -14,15 +14,9 @@ import java.io.StringWriter;
  *
  * @author Fred
  */
-import org.lwjgl.glfw.GLFW;
-import static org.lwjgl.glfw.GLFW.GLFW_CONNECTED;
-import static org.lwjgl.glfw.GLFW.GLFW_DISCONNECTED;
-import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.7.0beta" ;
+    public static final String VERSION = "0.7.0" ;
     public static boolean BR_glasses = true ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;

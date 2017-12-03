@@ -7,14 +7,18 @@ A faire :
 - stereogram avec double carré : lequel est le plus en avant
 - détail de la vergence en cours sur slider & image (C fleche valeur)
 - pdt l'activité : rappel des extrêmes
-- pdt l'activité : valeurs max obtenues par le patient
 - calibrer les lunettes
 - check for jmonkeyengine to handle controllers vibraters
 
-0.7.0 (en cours)
+0.7.1 (en cours)
+
+0.7.0 (03-12-2017)
 - inversion du sens de travail à la 3ème erreur
 - corrected long keypressed
-- accommodation frame
+- accommodation frame and check answer
+- corrected blue image color bug
+- enhanced class stereogram resetImg function (couleurRGB)
+- when changing screen : check for selected screen size and adjust current stereogram size if needed (only in CD mode)
 
 0.6.5beta (19-11-2017)
 - Calibration saved/get to/from server
