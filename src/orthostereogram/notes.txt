@@ -13,6 +13,7 @@ A faire :
 0.7.1 (en cours)
 - correction bug ctrl +
 - add accommodation size & ctrl +/- resizing
+- add reset graph button
 
 0.7.0 (03-12-2017)
 - inversion du sens de travail à la 3ème erreur
