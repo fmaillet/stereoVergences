@@ -38,11 +38,14 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
     //Constructor
     Cursor transparentCursor ;
     CuedJLabel cue[] ;
+    int itemSize = 9 ;
     
     private static WavSoundThread sndGood = new WavSoundThread (1) ;
     private static WavSoundThread sndBad = new WavSoundThread (0) ;
     
-    public AccommodationJob () {
+    public AccommodationJob (int itemSize) {
+        
+        this.itemSize= itemSize; 
         
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
@@ -71,7 +74,7 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         //Add 5 JLabels
         cue = new CuedJLabel[5] ;
         for (int i= 0; i<5; i++) {
-            cue[i] = new CuedJLabel (9) ;
+            cue[i] = new CuedJLabel (itemSize) ;
             cue[i].setLocation(this.getContentPane().getWidth()/2 - cue[i].getWidth()*4 + cue[i].getWidth()*2*i, this.getContentPane().getHeight()/2 - cue[i].getHeight()/2);
             //cue[i].setBorder(new Border());
             this.getContentPane().add(cue[i]) ;
