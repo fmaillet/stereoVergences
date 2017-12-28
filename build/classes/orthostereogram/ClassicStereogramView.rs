@@ -1,2 +1,0 @@
-orthostereogram.JoystickEvents
-orthostereogram.ClassicStereogramView

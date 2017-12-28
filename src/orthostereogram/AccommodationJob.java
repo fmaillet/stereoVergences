@@ -14,10 +14,14 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_6;
+import static java.awt.event.KeyEvent.VK_ADD;
 import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -61,8 +65,8 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         getContentPane().setBackground( Color.WHITE );
         
         //infos courantes
-        JLabel label_1 = new JLabel ("(Experimental)") ;
-        label_1.setBounds(10, 10, 100, 30);
+        JLabel label_1 = new JLabel ("(ctrl +/- to change size)") ;
+        label_1.setBounds(10, 10, 150, 30);
         this.getContentPane().add(label_1) ;
     }
     
@@ -87,6 +91,12 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
     public void hideCursor () {
         
         setCursor(transparentCursor);
+    }
+    
+    private void resizeAllCues (int size) {
+        for (int i=0; i< cue.length; i++) {
+            cue[i].resize(size) ;
+        }
     }
 
     @Override
@@ -147,7 +157,21 @@ public class AccommodationJob extends JFrame implements WindowListener, MouseMot
         
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         
-        if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
+        //CTRL -
+        if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
+            if (this.itemSize > 3) resizeAllCues(--this.itemSize) ;
+        }
+        //CTRL -
+        else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
+            if (this.itemSize < 12) resizeAllCues(++this.itemSize) ;
+        }
+        //CTRL -
+        else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
+            if (this.itemSize < 12) resizeAllCues(++this.itemSize) ;
+        }
+        
+        //Flèches ?
+        else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT) {
             int index ;
 
             for (index=0; index<5; index++)
