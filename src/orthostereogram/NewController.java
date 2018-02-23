@@ -47,7 +47,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     
     Image imgBR, imgRB ;
     static public Image tinyTrophy ;
-    static final  int DEFAULT_IMG_SIZE = 600 ;
+    static int DEFAULT_IMG_SIZE = 600 ;
     static public int imgSize = DEFAULT_IMG_SIZE ; //only odd sizes are allowed for stereograms
     int numberOfScreens = 1 ;
     int screenHeight ;
@@ -149,9 +149,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         
         //Hauteur en pixels de l'écran ?
         screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height ;
-        
-        
-       
+ 
     }
     
     public void initController () {
@@ -212,6 +210,11 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         
         //On redessine
         this.repaint();
+        //Default screen size
+        int sc = jScreens.getSelectedIndex() ;
+        DEFAULT_IMG_SIZE = (int) (screenDevices[sc].getDisplayMode().getHeight() * 0.80) ;
+        if ( (DEFAULT_IMG_SIZE & 1) != 0 )  DEFAULT_IMG_SIZE--  ; // only odd values
+        this.imgSize = DEFAULT_IMG_SIZE ;
     }
     
     public void addGraphMax (double max) {
@@ -455,6 +458,11 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
 
         jScreens.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jScreens.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1" }));
+        jScreens.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jScreensPropertyChange(evt);
+            }
+        });
 
         jRandomJumps.setBackground(java.awt.Color.cyan);
         jRandomJumps.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1001,6 +1009,15 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private void jResetGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jResetGraphActionPerformed
         xySerieMax.clear();
     }//GEN-LAST:event_jResetGraphActionPerformed
+
+    private void jScreensPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jScreensPropertyChange
+        //Default screen size
+        int sc = jScreens.getSelectedIndex() ;
+        if (screenDevices == null) return ;
+        DEFAULT_IMG_SIZE = (int) (screenDevices[sc].getDisplayMode().getHeight() * 0.80) ;
+        if ( (DEFAULT_IMG_SIZE & 1) != 0 )  DEFAULT_IMG_SIZE--  ; // only odd values
+        this.imgSize = DEFAULT_IMG_SIZE ;
+    }//GEN-LAST:event_jScreensPropertyChange
 
     
     static public boolean imgScale (double factor) {
