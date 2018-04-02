@@ -28,7 +28,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
-import static java.lang.Thread.sleep;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -108,6 +107,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     
     //Trphés
     JLabel trophy[] ;
+    final int NB_TROPHY = 6 ;
     int trophyNumber = 0 ;
     
     //Min and max are given in dioptries
@@ -182,8 +182,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.getContentPane().add(infosMax) ;
         
         //Create trophy
-        trophy = new JLabel[5] ;
-        for (int i=0; i<5; i++) {
+        trophy = new JLabel[NB_TROPHY] ;
+        for (int i=0; i<NB_TROPHY; i++) {
             trophy[i] = new JLabel() ;
             trophy[i].setIcon(new ImageIcon(NewController.tinyTrophy));
             trophy[i].setBounds(20, 160 + (i * 85), 64, 64);
@@ -211,8 +211,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         else this.step = stepD ;
         
         //Boudaries
-        this.max = max ;
-        this.min = min ;
+        
+        this.max = Math.floor(max / stepC ) * stepC ;
+        this.min = Math.floor(min / stepD ) * stepD ;
         //time out to answer
         this.timeOut = timeOut ;
         
@@ -431,7 +432,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         //A-t-on fait un cycle ? oui, on affiche un trophé
         if (currentVergenceValue == 0 && obtainedMax == max && obtainedMin == min) {
             trophy[trophyNumber].setEnabled(true);
-            if (trophyNumber<4) trophyNumber++ ;
+            if (trophyNumber<NB_TROPHY-1) trophyNumber++ ;
         }
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);

@@ -14,6 +14,7 @@ A faire :
 - add accommodation size & ctrl +/- resizing
 - add reset graph button
 - default stereogram size set to 80% of height screen
+- adjust min&max according to steps (modulo) in order to boundaries to be reached
 
 0.7.0 (03-12-2017)
 - inversion du sens de travail à la 3ème erreur

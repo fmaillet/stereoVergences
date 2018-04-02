@@ -37,7 +37,7 @@ public class AutoConnect extends Thread {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date dt = new java.util.Date();
         try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+            //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
             DriverManager.setLoginTimeout(5);
             laConnection = DriverManager.getConnection ("jdbc:mysql://fredericmaillet.fr/fmaillet_professionnels", "fmaillet_fredo", "mastercog");
             if (laConnection != null) {
@@ -61,6 +61,7 @@ public class AutoConnect extends Thread {
                     Date d = sdf.parse(dateLimite);
                     if (! d.after(dt)) //
                         break ;
+                    System.out.println ("date limite : " + d) ;
                 } catch (ParseException e) {}
                 
                 //Récupérer les données
