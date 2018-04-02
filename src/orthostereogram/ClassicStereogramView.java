@@ -119,6 +119,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.currentVergenceValue = initialValue ;
         this.deltaX = calcPixelsForVergence (initialValue) ;
         
+        this.setAlwaysOnTop(true);
+        
         //System.out.println ("min : " + min + " max : " + max) ;
         //System.out.println ("min : " + this.minPixels + " max : " + this.maxPixels) ;
         
@@ -364,8 +366,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             obtainedMin  = currentVergenceValue ;
         
         
-        //Mise à jour du graphe
-        OrthoStereogram.controller.addGraphMax (currentVergenceValue) ;
+        
         
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
@@ -433,6 +434,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         //Mise à jour valeur courante
         info.setText(tmp+String.valueOf(currentVergenceValue)+" \u0394");
         infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
+        //Mise à jour du graphe
+        OrthoStereogram.controller.addGraphMax (currentVergenceValue) ;
         repaint () ;
         
         //A-t-on fait un cycle ? oui, on affiche un trophé

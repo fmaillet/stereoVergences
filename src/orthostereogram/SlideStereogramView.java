@@ -200,7 +200,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         int keyCode = ke.getKeyCode();
         
         //Random jumps
-        if (rand.nextInt(20) == 0) {
+        if (OrthoStereogram.controller.jRandomJumps.isSelected() & rand.nextInt(25) == 0) {
             if (keyCode == VK_LEFT) deltaX = deltaX + 10 ;
             else if (keyCode == VK_RIGHT) deltaX = deltaX - 10 ;
         }

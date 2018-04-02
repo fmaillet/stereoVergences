@@ -39,7 +39,7 @@ import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
  *
  * @author Fred
  */
-public class NewController extends javax.swing.JFrame implements WindowListener {
+public class NewController extends JFrame implements WindowListener {
 
     /**
      * Creates new form NewController
@@ -74,6 +74,8 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     static boolean glfwInit = false ;
     
     public NewController() {
+        
+        Toolkit.getDefaultToolkit().setDynamicLayout(false); 
         setLayout(null);
         initComponents();
         this.addWindowListener(this);
@@ -182,6 +184,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         chartPanel.setVisible(true);
         chartPanel.setPopupMenu(null);
         
+        
         //Layout du graphe
         chart.setBackgroundPaint(Color.CYAN);
         final XYPlot plot = chart.getXYPlot();
@@ -210,6 +213,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         
         //On redessine
         this.repaint();
+        this.setAlwaysOnTop(false);
         //Default screen size
         int sc = jScreens.getSelectedIndex() ;
         DEFAULT_IMG_SIZE = (int) (screenDevices[sc].getDisplayMode().getHeight() * 0.80) ;
@@ -1088,7 +1092,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private javax.swing.JMenuItem jMenuSystemInfo;
     private javax.swing.JSpinner jMin;
     private javax.swing.JMenuItem jQuit;
-    private javax.swing.JRadioButton jRandomJumps;
+    public static javax.swing.JRadioButton jRandomJumps;
     private javax.swing.JButton jResetGraph;
     private javax.swing.JComboBox<String> jScreens;
     private javax.swing.JLabel jScreensLabel;
