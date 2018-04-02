@@ -16,7 +16,7 @@ import java.io.StringWriter;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.7.1beta" ;
+    public static final String VERSION = "0.7.1" ;
     public static boolean BR_glasses = true ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;

@@ -9,7 +9,9 @@ A faire :
 - calibrer les lunettes
 - check for jmonkeyengine to handle controllers vibraters
 
-0.7.1 (en cours)
+0.7.2 (en cours)
+
+0.7.1 (02/04/2018)
 - correction bug ctrl +
 - add accommodation size & ctrl +/- resizing
 - add reset graph button
@@ -17,6 +19,7 @@ A faire :
 - adjust min&max according to steps (modulo) in order to boundaries to be reached
 - corrected min&max obtained in "alternate" job => trophy works !
 - slider : keypressedactive corrected
+- slider : random jumps (simple implementation)
 
 0.7.0 (03-12-2017)
 - inversion du sens de travail à la 3ème erreur

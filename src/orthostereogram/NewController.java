@@ -468,7 +468,6 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jRandomJumps.setBackground(java.awt.Color.cyan);
         jRandomJumps.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jRandomJumps.setText("Random Jumps");
-        jRandomJumps.setEnabled(false);
 
         jVerticality.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0.00", "0.25", "0.50", "0.75", "1.00" }));

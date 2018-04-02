@@ -1,2 +1,0 @@
-orthostereogram.CuedJLabel
-orthostereogram.AccommodationJob

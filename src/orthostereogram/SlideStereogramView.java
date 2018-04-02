@@ -29,6 +29,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.MemoryImageSource;
+import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
@@ -54,6 +55,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     final ScheduledThreadPoolExecutor executor ;
     boolean randomJumps = false ;
     boolean keypressedIsActive = false ;
+    Random rand = new Random () ;
     
     //Boundaries
     private int minPixels = -200 ;
@@ -192,10 +194,16 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     
     @Override
     public void keyPressed(KeyEvent ke) {
-        //On est déjà en train de travailelr !
+        //On est déjà en train de travailler !
         if (keypressedIsActive) return ;
         //Quel code ?
         int keyCode = ke.getKeyCode();
+        
+        //Random jumps
+        if (rand.nextInt(20) == 0) {
+            if (keyCode == VK_LEFT) deltaX = deltaX + 10 ;
+            else if (keyCode == VK_RIGHT) deltaX = deltaX - 10 ;
+        }
         
         //Echap : on sort
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
