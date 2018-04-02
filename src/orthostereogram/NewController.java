@@ -60,6 +60,7 @@ public class NewController extends JFrame implements WindowListener {
     SlideStereogramView slide ;
     ImageStereogramView image ;
     ClassicStereogramView classic ;
+    DoubleStereogram doubleSt ;
     AccommodationJob accommodation ;
     
     //Calibration faite ?
@@ -290,6 +291,7 @@ public class NewController extends JFrame implements WindowListener {
         jLabel11 = new javax.swing.JLabel();
         jResetGraph = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
+        jExperimental = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -521,6 +523,14 @@ public class NewController extends JFrame implements WindowListener {
         jLabel12.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel12.setText("Faire porter deux sphères opposées (comme -1/+2 ou +2/-3) selon les puissances désirées");
 
+        jExperimental.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jExperimental.setText("Experimental");
+        jExperimental.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jExperimentalActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
 
         jConnection.setText("Connection serveur");
@@ -599,8 +609,10 @@ public class NewController extends JFrame implements WindowListener {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jStart_Slide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jStart_Img, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
-                                .addComponent(jRandomJumps, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jRandomJumps, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jExperimental, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addComponent(jLabel4)
@@ -696,7 +708,7 @@ public class NewController extends JFrame implements WindowListener {
                 .addComponent(jStart_Accommodation)
                 .addGap(26, 26, 26)
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -775,7 +787,8 @@ public class NewController extends JFrame implements WindowListener {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jStart_Img)
-                            .addComponent(jStart_CD_jump))))
+                            .addComponent(jStart_CD_jump)
+                            .addComponent(jExperimental))))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1029,6 +1042,22 @@ public class NewController extends JFrame implements WindowListener {
         this.imgSize = DEFAULT_IMG_SIZE ;
     }//GEN-LAST:event_jScreensPropertyChange
 
+    private void jExperimentalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jExperimentalActionPerformed
+        //Select screen to display
+        int sc = jScreens.getSelectedIndex() ;
+        //On ajuste la taille du stéréogramme si besoin
+        if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
+        //On ajuste la taille du stéréogramme si besoin
+        if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
+        //La fenetre
+        doubleSt = new DoubleStereogram (imgSize) ;
+        
+        //On affiche
+        screenDevices[sc].setFullScreenWindow(doubleSt);
+        doubleSt.setAppearence();
+        currentFrame = classic ; //Necessary for imgScale
+    }//GEN-LAST:event_jExperimentalActionPerformed
+
     
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
@@ -1068,6 +1097,7 @@ public class NewController extends JFrame implements WindowListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton jCalibrate;
     public static javax.swing.JMenuItem jConnection;
+    private javax.swing.JButton jExperimental;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;
     public static javax.swing.JLabel jImgXBOX;

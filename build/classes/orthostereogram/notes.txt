@@ -10,6 +10,8 @@ A faire :
 - check for jmonkeyengine to handle controllers vibraters
 
 0.7.2 (en cours)
+- plot bugging arround when working ?
+- begin DoubleStereogram
 
 0.7.1 (02/04/2018)
 - correction bug ctrl +

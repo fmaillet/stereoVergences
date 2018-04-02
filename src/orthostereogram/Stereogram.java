@@ -44,7 +44,7 @@ public class Stereogram extends JPanel {
         //Check for odd size
         if ( (stereogramSize & 1) != 0 )  {
             stereogramSize-- ;
-            System.out.println ("Beware !! stereogram even size !! (corrected...)") ;
+            //System.out.println ("Beware !! stereogram even size !! (corrected...)") ;
         } 
         
         //Just to be able to calculate pixels vs vergence demand

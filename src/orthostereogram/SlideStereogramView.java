@@ -354,5 +354,8 @@ class OneEye extends JPanel {
             else
                 g.drawImage(Stereogram.OD, 0 + Stereogram.OD.getWidth(), 0, -Stereogram.OD.getWidth(), Stereogram.OD.getHeight(), this);
         }
+        
+        //System.out.println (Stereogram.OD.getRGB(0, 0));
+        
     }
 }

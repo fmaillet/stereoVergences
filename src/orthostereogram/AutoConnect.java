@@ -61,7 +61,7 @@ public class AutoConnect extends Thread {
                     Date d = sdf.parse(dateLimite);
                     if (! d.after(dt)) //
                         break ;
-                    System.out.println ("date limite : " + d) ;
+                    //System.out.println ("date limite : " + d) ;
                 } catch (ParseException e) {}
                 
                 //Récupérer les données
