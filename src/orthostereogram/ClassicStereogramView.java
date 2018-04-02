@@ -222,6 +222,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.jump = jump ;
         currentConvergenceValue = 0 ;
         currentDivergenceValue = 0 ;
+        obtainedMin = obtainedMax = 0 ;
     }
     
     public int calcPixelsForVergence (double vergence) {
@@ -352,11 +353,16 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         previousBadAnswer = 0 ; 
         
         //On sauvegarde la valeur max atteinte
-        if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
+        if (alternate) {
+            if (currentVergenceValue > obtainedMax) obtainedMax  = currentVergenceValue ;
+            else if (currentVergenceValue < obtainedMin) obtainedMin  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
             obtainedMax  = currentVergenceValue ;
         }
         else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
             obtainedMin  = currentVergenceValue ;
+        
         
         //Mise à jour du graphe
         OrthoStereogram.controller.addGraphMax (currentVergenceValue) ;

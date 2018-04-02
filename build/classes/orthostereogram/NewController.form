@@ -253,6 +253,8 @@
               <Component id="jSize_acc" min="-2" pref="55" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
               <Component id="jStart_Accommodation" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <Component id="jLabel12" min="-2" pref="528" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -361,8 +363,9 @@
                   <Component id="jStart_Accommodation" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jSize_acc" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="separate" pref="27" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -843,6 +846,14 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jResetGraphActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel12">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="2"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Faire porter deux sph&#xe8;res oppos&#xe9;es (comme -1/+2 ou +2/-3) selon les puissances d&#xe9;sir&#xe9;es"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

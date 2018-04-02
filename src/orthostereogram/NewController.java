@@ -285,6 +285,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         jSize_acc = new javax.swing.JSpinner();
         jLabel11 = new javax.swing.JLabel();
         jResetGraph = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -514,6 +515,9 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
             }
         });
 
+        jLabel12.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
+        jLabel12.setText("Faire porter deux sphères opposées (comme -1/+2 ou +2/-3) selon les puissances désirées");
+
         jMenu1.setText("File");
 
         jConnection.setText("Connection serveur");
@@ -687,6 +691,8 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                 .addComponent(jSize_acc, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
                 .addComponent(jStart_Accommodation)
+                .addGap(26, 26, 26)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -773,8 +779,9 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jStart_Accommodation)
                     .addComponent(jSize_acc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
-                .addGap(18, 18, 18))
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12))
+                .addGap(18, 27, Short.MAX_VALUE))
         );
 
         pack();
@@ -904,7 +911,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
         //slide.setVisible(true);
         slide.repaint();
         //set after to avoid misplacement of panels
-        slide.setAppearence () ;
+        slide.setAppearence (jRandomJumps.isSelected()) ;
         currentFrame = slide ; //Necessary for imgScale
     }//GEN-LAST:event_jStart_SlideActionPerformed
 
@@ -1065,6 +1072,7 @@ public class NewController extends javax.swing.JFrame implements WindowListener 
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

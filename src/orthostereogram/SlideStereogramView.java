@@ -52,6 +52,8 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     
     //every tics
     final ScheduledThreadPoolExecutor executor ;
+    boolean randomJumps = false ;
+    boolean keypressedIsActive = false ;
     
     //Boundaries
     private int minPixels = -200 ;
@@ -107,10 +109,11 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         }
     }
 
-    public void setAppearence () {
+    public void setAppearence (boolean randomJumps) {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
+        this.randomJumps = randomJumps ;
         
         //Create stereogram
         bimage = new Stereogram (NewController.imgSize, workingDistance, 0, true) ; //initial delta set to zero
@@ -189,12 +192,14 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
     
     @Override
     public void keyPressed(KeyEvent ke) {
+        //On est déjà en train de travailelr !
+        if (keypressedIsActive) return ;
+        //Quel code ?
         int keyCode = ke.getKeyCode();
-        boolean isActive = false ;
         
-        if (isActive) return ;
-        
+        //Echap : on sort
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        //On ajuste la direction :
         else if (keyCode == VK_LEFT) { deltaX--; setPositions () ; }
         else if (keyCode == VK_RIGHT) { deltaX++; setPositions () ; }
         else if (keyCode == VK_UP) { deltaY++; setPositions () ; }
@@ -206,7 +211,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
          
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
-            isActive = true ;
+            keypressedIsActive = true ;
             if (NewController.imgScale( 0.9 )) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -215,7 +220,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
             }
         }
         else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
-            isActive = true ;
+            keypressedIsActive = true ;
             if ( NewController.imgScale( 1.1 ) ) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -224,7 +229,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
             }
         }
         else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
-            isActive = true ;
+            keypressedIsActive = true ;
             if ( NewController.imgScale( 1.1 ) ) {
                 bimage.resize(NewController.imgSize, true);
                 od.resize(); anaglyph.createStereoscopicBlueImage (bimage.OD) ;
@@ -234,7 +239,7 @@ public class SlideStereogramView extends JFrame implements WindowListener, Mouse
         }
         
         hideCursor () ;
-        isActive = false;
+        keypressedIsActive = false;
         info.setText(String.format("%+2.1f",calcVergenceForPixels(deltaX)));
     }
 

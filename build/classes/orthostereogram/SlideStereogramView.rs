@@ -1,3 +1,0 @@
-orthostereogram.OneEyebis
-orthostereogram.SlideStereogramView
-orthostereogram.OneEye
