@@ -346,6 +346,9 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     }
     
     public void goodAnswer () {
+        //On arrête le Time out
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
         
         //Pour l'affichage
         String tmp = new String() ;
@@ -364,13 +367,6 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         }
         else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
             obtainedMin  = currentVergenceValue ;
-        
-        
-        
-        
-        //On arrête le Time out
-        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
-        executor.remove(() -> timeOut());
         
         //On change le step aux bornes selon la direction de travail
         if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue+step > max) {
@@ -450,6 +446,10 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     public void badAnswer () {
         String tmp = new String() ;
         double step = this.step ;
+        //Time out off
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
+        //Mauvaise réponse...
         sndBad.run();
         //Première mauvaise réponse ?
         if (! alternate & ! jump & previousBadAnswer > 1) {
@@ -470,9 +470,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         }
         
             previousBadAnswer++ ;
-        //Time out off
-        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
-        executor.remove(() -> timeOut());
+        
         //Si on alterne
         if (jump)
             switch (currentDirectionOfWork) {

@@ -476,7 +476,7 @@ public class NewController extends JFrame implements WindowListener {
         jRandomJumps.setText("Random Jumps");
 
         jVerticality.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0.00", "0.25", "0.50", "0.75", "1.00" }));
+        jVerticality.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0.00", "0.25", "0.50", "0.75", "1.00", "1.25", "1.50" }));
 
         jCalibrate.setBackground(new java.awt.Color(255, 51, 51));
         jCalibrate.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -524,6 +524,7 @@ public class NewController extends JFrame implements WindowListener {
         jLabel12.setText("Faire porter deux sphères opposées (comme -1/+2 ou +2/-3) selon les puissances désirées");
 
         jExperimental.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jExperimental.setForeground(java.awt.Color.red);
         jExperimental.setText("Experimental");
         jExperimental.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

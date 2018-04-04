@@ -12,7 +12,11 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_DOWN;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -22,6 +26,9 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.util.Random;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,12 +41,22 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
 
     //General
     Cursor transparentCursor ;
-    int size ;
+    int size, clue ;
+    Random rand = new Random ();
     
     //Infos display
     JLabel info ;
     //Stéréogramme anaglyphe
     static Eye OD, OG ;
+    
+    //Gestion Time Out réponse
+    final ScheduledThreadPoolExecutor executor ;
+    ScheduledFuture<?> scheduledFuture ;
+    static private int timeOut = 20 ;
+    
+    //Sounds
+    private static WavSoundThread sndGood = new WavSoundThread (1) ;
+    private static WavSoundThread sndBad = new WavSoundThread (0) ;
     
     
     public DoubleStereogram (int stereogramSize) {
@@ -60,6 +77,9 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         getContentPane().setBackground( Color.WHITE );
         this.setAlwaysOnTop(true);
         this.setVisible(true);
+        
+        //On initialise les TimeOuts
+        executor = new ScheduledThreadPoolExecutor(1);
     }
     
     public void setAppearence () {
@@ -73,10 +93,25 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On ajoute les yeux
         OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
         OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
-        ResetStereogram rs = new ResetStereogram (OD.img, OG.img ) ; rs.run();
+        resetStereogram () ;
         this.getContentPane().add(OD) ; OD.repaint();
         this.getContentPane().add(OG) ; OG.repaint();
         repaint () ;
+    }
+    
+    private void resetStereogram () {
+        //On choisi une orientation
+        int p = rand.nextInt(4) ;
+        
+        //On lance la mise à jour du stéréogram
+        ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p ) ; rs.run();
+        //On se souvient de la clue
+        switch (p) {
+            case 0 : clue = KeyEvent.VK_UP ; break ;    //up
+            case 1 : clue = KeyEvent.VK_LEFT ; break ;    //left
+            case 2 : clue = KeyEvent.VK_RIGHT ; break ;    //right
+            default : clue = KeyEvent.VK_DOWN ; break ;   //down
+        }
     }
     
     
@@ -150,17 +185,50 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     @Override
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
-        ResetStereogram rs ;
-        
+                
         //Echap : on sort
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         //Flèches
-        if (keyCode == VK_UP) {
+        else if (keyCode == clue) {
             
-            rs = new ResetStereogram (OD.img, OG.img ) ;
-            rs.run();
-            repaint () ;
+            goodAnswer () ;
         }
+        else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT | keyCode == VK_SPACE) {
+            
+            badAnswer () ;
+        }
+    }
+    
+    public void timeOut () {
+        this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_SPACE, 'A'));
+    }
+    
+    public void goodAnswer () {
+        //On arrête le Time out
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
+        //On joue de la musique
+        sndGood.run();
+        
+        //On affiche un nouveau stéréogramme
+        resetStereogram () ;
+        repaint () ;
+        //On relance le timer
+        scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
+    }
+    
+    public void badAnswer () {
+        //On arrête le Time out
+        if (scheduledFuture != null) scheduledFuture.cancel (true) ;
+        executor.remove(() -> timeOut());
+        //On joue de la musique
+        sndBad.run();
+        
+        //On affiche un nouveau stéréogramme
+        resetStereogram () ;
+        repaint () ;
+        //On relance le timer
+        scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
 
     @Override
@@ -213,13 +281,15 @@ class Eye extends JPanel {
 class ResetStereogram implements Runnable {
     BufferedImage od, og ;
     Random rand = new Random ();
-    Thread t ;
+    //Thread t ;
     int r = -16711681 ;
     int c = -65536 ;
+    int p = 0 ;
     
-    public ResetStereogram (BufferedImage od, BufferedImage og) {
+    public ResetStereogram (BufferedImage od, BufferedImage og, int p) {
         this.od = od;
         this.og = og ;
+        this.p = p ;
         rand.setSeed(System.currentTimeMillis());
         //t = new Thread (this, "resetStereogram") ;
         //t.start ( ) ;
@@ -244,14 +314,14 @@ class ResetStereogram implements Runnable {
         int t = size / 3 ; // taille du carré
         int bord = 30 ;    //distance du bord
         int depth = 20 ;   //disparité
-        int p = rand.nextInt(4) ;
+        
         //Position du carré
-        int dh, dc, clue ;
+        int dh, dc ;
         switch (p) {
-            case 0 : dh = bord ; dc = size/2 - t/2 ; clue = KeyEvent.VK_UP ; break ;    //up
-            case 1 : dh = size/2 - t/2 ; dc = bord;  clue = KeyEvent.VK_LEFT ; break ;    //left
-            case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; clue = KeyEvent.VK_RIGHT ; break ;    //right
-            default : dh = size - t - bord ; dc = size/2 - t/2 ; clue = KeyEvent.VK_DOWN ; break ;   //down
+            case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+            case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+            case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+            default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
         for (int i=0; i<t; i++)
