@@ -1044,6 +1044,8 @@ public class NewController extends JFrame implements WindowListener {
     }//GEN-LAST:event_jScreensPropertyChange
 
     private void jExperimentalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jExperimentalActionPerformed
+        //Check for verticality
+        int hd = jVerticality.getSelectedIndex() ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         //On ajuste la taille du stéréogramme si besoin
@@ -1051,7 +1053,7 @@ public class NewController extends JFrame implements WindowListener {
         //On ajuste la taille du stéréogramme si besoin
         if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
         //La fenetre
-        doubleSt = new DoubleStereogram (imgSize) ;
+        doubleSt = new DoubleStereogram (imgSize, (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd) ;
         
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);

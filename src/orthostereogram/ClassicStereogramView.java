@@ -439,6 +439,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
             trophy[trophyNumber].setEnabled(true);
             if (trophyNumber<NB_TROPHY-1) trophyNumber++ ;
         }
+        
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }

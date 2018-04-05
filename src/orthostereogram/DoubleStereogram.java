@@ -58,9 +58,17 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     private static WavSoundThread sndGood = new WavSoundThread (1) ;
     private static WavSoundThread sndBad = new WavSoundThread (0) ;
     
+    //Paramètres orthotiques
+    private double verticality ;
+    private int workingDistance ;
+    private int initVergence ;
     
-    public DoubleStereogram (int stereogramSize) {
+    
+    public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality) {
         this.size = size ;
+        this.workingDistance = workingDistance ;
+        this.verticality = 0.25 * verticality ; //résultat en dioptries
+        this.initVergence = initVergence ;
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
         Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));
@@ -112,8 +120,22 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             case 2 : clue = KeyEvent.VK_RIGHT ; break ;    //right
             default : clue = KeyEvent.VK_DOWN ; break ;   //down
         }
+        //On positionne les "yeux" :
+        int deltaX = calcPixelsForVergence (initVergence) ;
+        int deltaY = calcPixelsForVergence (verticality) ;
+        OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
+        OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
+        //Pour le prochain, on inverse la verticalité
+        verticality = - verticality ;
     }
     
+    public int calcPixelsForVergence (double vergence) {
+        //System.out.println (vergence + " " + workingDistance + " " + OrthoStereogram.screenResolution) ;
+        //double pixels = (((double)vergence * workingDistance /100) / 2.54) / (double) screenResolution ;
+        double pixels = (double) (vergence * (double) workingDistance / 254f ) * (double) OrthoStereogram.screenResolution ;
+        //System.out.println (pixels) ;
+        return (int) Math.round(pixels/2) ;
+    }
     
     public void hideCursor () {
         setCursor(transparentCursor);
@@ -125,10 +147,10 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         hideCursor () ;
         
         //infos courantes
-        JLabel label_1 = new JLabel ("Running :") ;
+        JLabel label_1 = new JLabel ("Expérimental (marche avec verre rouge sur OG uniquement)") ;
         label_1.setBounds(10, 10, 100, 30);
         this.getContentPane().add(label_1) ;
-        info = new JLabel ("--") ;
+        info = new JLabel ("Choisir le carré le plus proche de vous...") ;
         info.setBounds(20, 35, 300, 30);
         info.setForeground(Color.GRAY);
         this.getContentPane().add(info) ;
@@ -284,17 +306,17 @@ class ResetStereogram implements Runnable {
     //Thread t ;
     int r = -16711681 ;
     int c = -65536 ;
-    int p = 0 ;
+    int position = 0 ;
     
-    public ResetStereogram (BufferedImage od, BufferedImage og, int p) {
+    public ResetStereogram (BufferedImage od, BufferedImage og, int position) {
         this.od = od;
         this.og = og ;
-        this.p = p ;
+        this.position = position ;
         rand.setSeed(System.currentTimeMillis());
         //t = new Thread (this, "resetStereogram") ;
         //t.start ( ) ;
     }
-
+    
     @Override
     public void run() {
         
@@ -313,17 +335,40 @@ class ResetStereogram implements Runnable {
         //paramètres du carré
         int t = size / 3 ; // taille du carré
         int bord = 30 ;    //distance du bord
-        int depth = 20 ;   //disparité
+        int depth = 5 ;   //disparité
         
         //Position du carré
         int dh, dc ;
-        switch (p) {
+        switch (position) {
             case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
             case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
             case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
             default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
+        for (int i=0; i<t; i++)
+            for (int j=0; j<t; j++) {
+                b = rand.nextBoolean() ;
+                //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                //else couleurRGB = Color.WHITE.getRGB() ;
+                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : c));
+                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : r));
+            }
+        //On en choisi un second
+        switch (position) {
+            case 0 : position = 3; break ;
+            case 1 : position = 2 ; break ;
+            case 2 : position = 1 ; break ;
+            default : position = 0 ; break ;
+        }
+        switch (position) {
+            case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+            case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+            case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+            default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
+        }
+        //On crée le carré
+        depth = depth - 1 ;
         for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
                 b = rand.nextBoolean() ;
