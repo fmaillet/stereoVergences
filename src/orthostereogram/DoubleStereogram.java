@@ -120,6 +120,11 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             case 2 : clue = KeyEvent.VK_RIGHT ; break ;    //right
             default : clue = KeyEvent.VK_DOWN ; break ;   //down
         }
+        //On corrige l'indice en fct des lunettes
+        if (OrthoStereogram.BR_glasses) {
+            if (clue == KeyEvent.VK_RIGHT) clue = KeyEvent.VK_LEFT ;
+            else if (clue == KeyEvent.VK_LEFT) clue = KeyEvent.VK_RIGHT ;
+        }
         //On positionne les "yeux" :
         int deltaX = calcPixelsForVergence (initVergence) ;
         int deltaY = calcPixelsForVergence (verticality) ;
@@ -294,8 +299,12 @@ class Eye extends JPanel {
     public void paint(Graphics g) {
         super.paintComponent(g);
         g.setXORMode(Color.WHITE);
-        g.drawImage(img, 0,0,this);
         
+        //g.drawImage(img, 0,0,this);
+        if (!OrthoStereogram.BR_glasses)
+                g.drawImage(img, 0,0,this);
+            else
+                g.drawImage(img, 0 + size, 0, -size, size, this);
     }
     
 }

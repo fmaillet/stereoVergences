@@ -92,9 +92,9 @@ public class Stereogram extends JPanel {
         int fin   = calcPixelsForVergence (value ) ;
         //Calcul d'un step en pixels
         step = (fin - debut) / 10 ;
-        System.out.println (step) ;
+        //System.out.println (step) ;
         for (int i = debut; i>fin; i=i+step) {
-            System.out.println (i) ;
+            //System.out.println (i) ;
             ana.flush(); ana = null ;
             ana = new BufferedImage(OD.getWidth() + Math.abs(i), OD.getWidth(), BufferedImage.TYPE_INT_RGB);
             anaglyph.createStereoscopicCombinedImage (OG, OD, ana, i);
