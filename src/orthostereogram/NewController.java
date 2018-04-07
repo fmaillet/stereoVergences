@@ -1053,7 +1053,7 @@ public class NewController extends JFrame implements WindowListener {
         //On ajuste la taille du stéréogramme si besoin
         if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
         //La fenetre
-        doubleSt = new DoubleStereogram (imgSize, (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd) ;
+        doubleSt = new DoubleStereogram (imgSize, (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd, (int) jStepC.getValue(), (double) jStepD.getValue()) ;
         
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);

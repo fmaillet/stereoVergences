@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JPanel;
@@ -26,7 +27,7 @@ public class Stereogram extends JPanel {
     public int clue ;
     static public int deltaPixelsX ;
     static public double currentVergenceValue;
-    Random rand = new Random() ;
+    SecureRandom rand = new SecureRandom() ;
     
     //Used for slider
     private boolean centered = false ;

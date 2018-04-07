@@ -40,7 +40,7 @@ import javax.swing.JPanel;
  *
  * @author Fred
  */
-public class SlideStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
+public final class SlideStereogramView extends JFrame implements WindowListener, MouseMotionListener, KeyListener {
     
     //Constructor
     Anaglyph anaglyph ;

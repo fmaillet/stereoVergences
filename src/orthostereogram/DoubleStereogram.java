@@ -25,6 +25,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -42,7 +43,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     //General
     Cursor transparentCursor ;
     int size, clue ;
-    Random rand = new Random ();
+    SecureRandom rand = new SecureRandom ();
     
     //Infos display
     JLabel info ;
@@ -62,13 +63,16 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     private double verticality ;
     private int workingDistance ;
     private int initVergence ;
+    private double stepC, stepD ;
     
     
-    public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality) {
-        this.size = size ;
+    public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
+        this.size = stereogramSize ;
         this.workingDistance = workingDistance ;
         this.verticality = 0.25 * verticality ; //résultat en dioptries
         this.initVergence = initVergence ;
+        this.stepC = (double) stepC ;
+        this.stepD = stepD ;
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
         Image image = Toolkit.getDefaultToolkit().createImage(new MemoryImageSource(16, 16, pixels, 0, 16));

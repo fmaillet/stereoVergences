@@ -12,6 +12,7 @@ A faire :
 0.7.2 (en cours)
 - plot bugging arround when working ?
 - begin DoubleStereogram
+- Random to SecureRandom to get the clue (better random series)
 
 0.7.1 (02/04/2018)
 - correction bug ctrl +
