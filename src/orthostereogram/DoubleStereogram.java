@@ -43,7 +43,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     //General
     Cursor transparentCursor ;
     int size, clue ;
-    SecureRandom rand = new SecureRandom ();
+    SecureRandom securRand = new SecureRandom ();
     
     //Infos display
     JLabel info ;
@@ -62,16 +62,25 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     //Paramètres orthotiques
     private double verticality ;
     private int workingDistance ;
-    private int initVergence ;
-    private double stepC, stepD ;
+    //private int initVergence ;
+    private double stepC, stepD, step ;
+    private double maxRequired, minRequired ;
+    private double currentVergenceValue ;
+    
+    //Constants
+    final static public int CONVERGENCE_UP = 2  ;
+    final static public int CONVERGENCE_DOWN = 1  ;
+    final static public int DIVERGENCE_UP  = -1 ;
+    final static public int DIVERGENCE_DOWN  = -2 ;
+    static private int currentDirectionOfWork = CONVERGENCE_UP ;
     
     
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
         this.size = stereogramSize ;
         this.workingDistance = workingDistance ;
         this.verticality = 0.25 * verticality ; //résultat en dioptries
-        this.initVergence = initVergence ;
-        this.stepC = (double) stepC ;
+        this.currentVergenceValue = initVergence ;
+        step = this.stepC = (double) stepC ;
         this.stepD = stepD ;
         //Trasnparent cursor
         int[] pixels = new int[16 * 16];
@@ -94,13 +103,16 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor = new ScheduledThreadPoolExecutor(1);
     }
     
-    public void setAppearence () {
+    public void setAppearence (int max, int min, int timeOut, int typeExercice) {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
         
-        int deltaX = 50 ;
-        int deltaY = 10 ;
+        this.maxRequired = max;
+        this.minRequired = min ;
+        
+        int deltaX = calcPixelsForVergence (currentVergenceValue) ;
+        int deltaY = calcPixelsForVergence (verticality) ;
         
         //On ajoute les yeux
         OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
@@ -113,7 +125,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     
     private void resetStereogram () {
         //On choisi une orientation
-        int p = rand.nextInt(4) ;
+        int p = securRand.nextInt(4) ;
         
         //On lance la mise à jour du stéréogram
         ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p ) ; rs.run();
@@ -130,7 +142,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             else if (clue == KeyEvent.VK_LEFT) clue = KeyEvent.VK_RIGHT ;
         }
         //On positionne les "yeux" :
-        int deltaX = calcPixelsForVergence (initVergence) ;
+        int deltaX = calcPixelsForVergence (currentVergenceValue) ;
         int deltaY = calcPixelsForVergence (verticality) ;
         OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
         OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
@@ -241,6 +253,27 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On joue de la musique
         sndGood.run();
         
+        //Si l'on est au max, on change de direction de travail
+        if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue+step > maxRequired  ) {
+            step = -stepC ;
+            currentDirectionOfWork = CONVERGENCE_DOWN ;
+        }
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN & currentVergenceValue+step < 0  ) {
+            step = -stepD ;
+            currentDirectionOfWork = DIVERGENCE_UP ;
+        }
+        else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue+step < minRequired  ) {
+            step = stepD ;
+            currentDirectionOfWork = DIVERGENCE_DOWN ;
+        }
+        else if (currentDirectionOfWork == DIVERGENCE_DOWN & currentVergenceValue+step > 0  ) {
+            step = stepC ;
+            currentDirectionOfWork = CONVERGENCE_UP ;
+        }
+        
+        //nouvelle valeur de vergence
+        currentVergenceValue = currentVergenceValue + step ;
+        
         //On affiche un nouveau stéréogramme
         resetStereogram () ;
         repaint () ;
@@ -320,31 +353,31 @@ class ResetStereogram implements Runnable {
     int r = -16711681 ;
     int c = -65536 ;
     int position = 0 ;
+    int size ;
+    
     
     public ResetStereogram (BufferedImage od, BufferedImage og, int position) {
         this.od = od;
         this.og = og ;
         this.position = position ;
-        rand.setSeed(System.currentTimeMillis());
-        //t = new Thread (this, "resetStereogram") ;
-        //t.start ( ) ;
+                
+        size = od.getHeight() ;
     }
     
     @Override
     public void run() {
+        //long begin = System.currentTimeMillis() ;
         
-        int size = od.getHeight() ;
         
         boolean b ;
         //On rempli de valeurs aléatoires identiques OD=OG
         for (int i= 0; i<size; i++)
             for (int j=0; j<size; j++) {
                 b = rand.nextBoolean() ;
-                /*if (rand.nextBoolean())  couleurRGB = (isRight ? c : r ); 
-                else couleurRGB = Color.WHITE.getRGB() ;*/
                 od.setRGB(i, j, (b ? Color.WHITE.getRGB() : c));
                 og.setRGB(i, j, (b ? Color.WHITE.getRGB() : r));
             }
+        
         //paramètres du carré
         int t = size / 3 ; // taille du carré
         int bord = 30 ;    //distance du bord
@@ -367,7 +400,7 @@ class ResetStereogram implements Runnable {
                 od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : c));
                 og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : r));
             }
-        //On en choisi un second
+        //On en place un à l'opposé
         switch (position) {
             case 0 : position = 3; break ;
             case 1 : position = 2 ; break ;
@@ -390,5 +423,9 @@ class ResetStereogram implements Runnable {
                 od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : c));
                 og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : r));
             }
+        //On a fini
+        //System.out.println ( System.currentTimeMillis() - begin ) ;
     }
+    
+    
 }

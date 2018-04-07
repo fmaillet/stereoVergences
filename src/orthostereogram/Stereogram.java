@@ -27,7 +27,8 @@ public class Stereogram extends JPanel {
     public int clue ;
     static public int deltaPixelsX ;
     static public double currentVergenceValue;
-    SecureRandom rand = new SecureRandom() ;
+    SecureRandom securRand = new SecureRandom() ;
+    Random rand = new Random () ;
     
     //Used for slider
     private boolean centered = false ;
@@ -146,7 +147,7 @@ public class Stereogram extends JPanel {
             case KeyEvent.VK_RIGHT : if (OrthoStereogram.BR_glasses) p = 2 ; else p = 1 ; break ;
             default : p = 3 ; break ;
         }
-        else p = rand.nextInt(4) ;
+        else p = securRand.nextInt(4) ;
         int dh, dc ;
         switch (p) {
             case 0 : dh = bord ; dc = taille/2 - t/2 ; clue = KeyEvent.VK_UP ; break ;    //up

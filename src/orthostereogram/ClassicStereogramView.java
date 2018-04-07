@@ -612,6 +612,7 @@ class JoystickEvents extends Thread {
     }
     
     public void run () {
+        
         boolean stop = false ;
         do {
             glfwWaitEvents();
@@ -649,6 +650,6 @@ class JoystickEvents extends Thread {
             try { Thread.sleep ( 100 ) ;} catch (InterruptedException  interruptedException) {stop = true ;}
             //System.out.println ("loop JoystickEventes :" + numButtons) ;
         } while (!stop) ;
-        //System.out.println ("xbox events stopped") ;
+        
     }
 }

@@ -1057,7 +1057,7 @@ public class NewController extends JFrame implements WindowListener {
         
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);
-        doubleSt.setAppearence();
+        doubleSt.setAppearence((Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), 0);
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jExperimentalActionPerformed
 
