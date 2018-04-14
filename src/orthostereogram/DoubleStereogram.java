@@ -33,6 +33,9 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import static orthostereogram.ClassicStereogramView.CONVERGENCE_DOWN;
+import static orthostereogram.ClassicStereogramView.CONVERGENCE_UP;
+import static orthostereogram.ClassicStereogramView.DIVERGENCE_UP;
 
 /**
  *
@@ -72,7 +75,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int CONVERGENCE_DOWN = 1  ;
     final static public int DIVERGENCE_UP  = -1 ;
     final static public int DIVERGENCE_DOWN  = -2 ;
-    static private int currentDirectionOfWork = CONVERGENCE_UP ;
+    static private int currentDirectionOfWork ;
     
     
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
@@ -110,6 +113,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         
         this.maxRequired = max;
         this.minRequired = min ;
+        currentDirectionOfWork = CONVERGENCE_UP ;
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
         int deltaY = calcPixelsForVergence (verticality) ;
@@ -137,15 +141,22 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             default : clue = KeyEvent.VK_DOWN ; break ;   //down
         }
         //On corrige l'indice en fct des lunettes
-        if (OrthoStereogram.BR_glasses) {
+        /*if (OrthoStereogram.BR_glasses) {
             if (clue == KeyEvent.VK_RIGHT) clue = KeyEvent.VK_LEFT ;
             else if (clue == KeyEvent.VK_LEFT) clue = KeyEvent.VK_RIGHT ;
-        }
+        }*/
         //On positionne les "yeux" :
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
         int deltaY = calcPixelsForVergence (verticality) ;
-        OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
-        OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
+        if (true) {
+            OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
+            OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
+        }
+        else {
+            OG.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OG.setVisible(true);
+            OD.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OD.setVisible(true);
+        }
+            
         //Pour le prochain, on inverse la verticalité
         verticality = - verticality ;
     }
@@ -168,10 +179,10 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         hideCursor () ;
         
         //infos courantes
-        JLabel label_1 = new JLabel ("Expérimental (marche avec verre rouge sur OG uniquement)") ;
+        JLabel label_1 = new JLabel ("En cours :") ;
         label_1.setBounds(10, 10, 100, 30);
         this.getContentPane().add(label_1) ;
-        info = new JLabel ("Choisir le carré le plus proche de vous...") ;
+        info = new JLabel ("--") ;
         info.setBounds(20, 35, 300, 30);
         info.setForeground(Color.GRAY);
         this.getContentPane().add(info) ;
@@ -247,6 +258,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     }
     
     public void goodAnswer () {
+        String str = new String() ;
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
@@ -277,6 +289,12 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On affiche un nouveau stéréogramme
         resetStereogram () ;
         repaint () ;
+        //Mise à jour valeur courante
+        if (currentDirectionOfWork == CONVERGENCE_UP) str = "C\u2191 " ;
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN) str = "C\u2193 " ;
+        else if (currentDirectionOfWork == DIVERGENCE_UP) str = "D\u2191 " ;
+        else str = "D\u2193 " ;
+        info.setText(str+String.valueOf(currentVergenceValue)+" \u0394");
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
@@ -287,6 +305,16 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor.remove(() -> timeOut());
         //On joue de la musique
         sndBad.run();
+        
+        //Si on est à zéro, on restera à zéro
+        if (currentVergenceValue != 0) {
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP   : if (currentVergenceValue > 0) currentVergenceValue = currentVergenceValue - step ; break ;
+                case CONVERGENCE_DOWN : if (currentVergenceValue > 0) currentVergenceValue = currentVergenceValue + step ; break ;
+                case DIVERGENCE_UP    : if (currentVergenceValue < 0) currentVergenceValue = currentVergenceValue - step ; break ;
+                case DIVERGENCE_DOWN  : if (currentVergenceValue < 0) currentVergenceValue = currentVergenceValue + step ; break ;
+            }
+        }
         
         //On affiche un nouveau stéréogramme
         resetStereogram () ;
@@ -336,12 +364,23 @@ class Eye extends JPanel {
     public void paint(Graphics g) {
         super.paintComponent(g);
         g.setXORMode(Color.WHITE);
-        
-        //g.drawImage(img, 0,0,this);
-        if (!OrthoStereogram.BR_glasses)
+        g.drawImage(img, 0,0,this);
+        /*if ( !isRight ) g.drawImage(img, 0,0,this);
+        else g.drawImage(img, 0 + size, 0, -size, size, this);
+            
+        /*if (isRight) {
+            if (!OrthoStereogram.BR_glasses)
                 g.drawImage(img, 0,0,this);
             else
                 g.drawImage(img, 0 + size, 0, -size, size, this);
+        }
+        else {
+            if (!OrthoStereogram.BR_glasses)
+                g.drawImage(img, 0,0,this);
+            else
+                
+            g.drawImage(img, 0 + size, 0, -size, size, this);
+        }*/
     }
     
 }
@@ -356,10 +395,15 @@ class ResetStereogram implements Runnable {
     int size ;
     
     
-    public ResetStereogram (BufferedImage od, BufferedImage og, int position) {
+    public ResetStereogram (BufferedImage od, BufferedImage og, int position) { //position = position du petit carré
         this.od = od;
         this.og = og ;
         this.position = position ;
+        if (!OrthoStereogram.BR_glasses) {
+            int t = c ;
+            c = r ;
+            r = t ;
+        }
                 
         size = od.getHeight() ;
     }
@@ -374,8 +418,8 @@ class ResetStereogram implements Runnable {
         for (int i= 0; i<size; i++)
             for (int j=0; j<size; j++) {
                 b = rand.nextBoolean() ;
-                od.setRGB(i, j, (b ? Color.WHITE.getRGB() : c));
-                og.setRGB(i, j, (b ? Color.WHITE.getRGB() : r));
+                od.setRGB(i, j, (b ? Color.WHITE.getRGB() : r));
+                og.setRGB(i, j, (b ? Color.WHITE.getRGB() : c));
             }
         
         //paramètres du carré
@@ -397,8 +441,8 @@ class ResetStereogram implements Runnable {
                 b = rand.nextBoolean() ;
                 //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
                 //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : c));
-                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : r));
+                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : r));
+                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : c));
             }
         //On en place un à l'opposé
         switch (position) {
@@ -414,14 +458,14 @@ class ResetStereogram implements Runnable {
             default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
-        depth = depth - 1 ;
+        depth = depth - 2 ;
         for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
                 b = rand.nextBoolean() ;
                 //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
                 //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : c));
-                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : r));
+                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : r));
+                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : c));
             }
         //On a fini
         //System.out.println ( System.currentTimeMillis() - begin ) ;
