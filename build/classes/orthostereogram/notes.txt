@@ -10,6 +10,7 @@ A faire :
 - check for jmonkeyengine to handle controllers vibraters
 
 0.7.3 (en cours)
+- dbleSt : type of game (en cours)
 
 0.7.2 (14-04-2018)
 - plot bugging arround when working ?

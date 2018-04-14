@@ -135,7 +135,7 @@ public class Calibrate extends javax.swing.JDialog {
         
         OrthoStereogram.screenResolution = (int) ((LINE_WIDTH / dim) * 2.54) ;
         //System.out.println ("New Estimated: " + OrthoStereogram.screenResolution) ;
-        NewController.jCalibrate.setBackground(Color.GREEN.brighter());
+        
         //On sauvegarde dans la base de données
         OrthoStereogram.mySQLConnection.saveCalibration();
         dispose () ;

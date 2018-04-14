@@ -48,6 +48,12 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     int size, clue ;
     SecureRandom securRand = new SecureRandom ();
     
+    //Type de jeu :
+    private static int game ;
+    final static public int GAME_SIMPLE = 0  ;
+    final static public int GAME_DOUBLE = 1  ;
+    final static public int GAME_2PLAYERS = 2  ;
+    
     //Infos display
     JLabel info ;
     //Stéréogramme anaglyphe
@@ -107,11 +113,12 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor = new ScheduledThreadPoolExecutor(1);
     }
     
-    public void setAppearence (int max, int min, int timeOut, int typeExercice, int disparity) {
+    public void setAppearence (int game, int max, int min, int timeOut, int typeExercice, int disparity) {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
         
+        this.game = game ;
         this.maxRequired = max;
         this.minRequired = min ;
         currentDirectionOfWork = CONVERGENCE_UP ;
@@ -138,7 +145,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         int p = securRand.nextInt(4) ;
         
         //On lance la mise à jour du stéréogram
-        ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p, disparity ) ; rs.run();
+        ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p, disparity, game ) ; rs.run();
         //On se souvient de la clue
         switch (p) {
             case 0 : clue = KeyEvent.VK_UP ; break ;    //up
@@ -399,14 +406,17 @@ class ResetStereogram implements Runnable {
     int c = -65536 ;
     int position = 0 ;
     int size ;
-    int disparity ;
+    int disparity ; // depht from back
+    int game ;      //game type
     
     
-    public ResetStereogram (BufferedImage od, BufferedImage og, int position, int disparity) { //position = position du petit carré
+    public ResetStereogram (BufferedImage od, BufferedImage og, int position, int disparity, int game) { //position = position du petit carré
         this.od = od;
         this.og = og ;
         this.position = position ;
         this.disparity = disparity ;
+        this.game = game ;
+        //Quel type de lunettes ?
         if (!OrthoStereogram.BR_glasses) {
             int t = c ;
             c = r ;
@@ -452,7 +462,9 @@ class ResetStereogram implements Runnable {
                 od.setRGB(dc+i - disparity, j+dh, (b ? Color.WHITE.getRGB() : r));
                 og.setRGB(dc+i + disparity, j+dh, (b ? Color.WHITE.getRGB() : c));
             }
-        //On en place un à l'opposé
+        //s'il n'y a qu'un carré on sort
+        if (game == 0) return ;
+        //sinon on dessine un deuxième carré
         switch (position) {
             case 0 : position = 3; break ;
             case 1 : position = 2 ; break ;

@@ -16,7 +16,7 @@ import java.io.StringWriter;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.7.3" ;
+    public static final String VERSION = "0.7.2" ;
     public static boolean BR_glasses = true ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;
@@ -38,7 +38,7 @@ public class OrthoStereogram {
         mySQLConnection = new MySQLClass () ;
         
         // no flickering on resize
-        System.setProperty("sun.awt.noerasebackground", "true");
+        //System.setProperty("sun.awt.noerasebackground", "true");
         
         /*//Check registry
         System.out.println("CPU Name : " + RegQuery.getCPUName());
