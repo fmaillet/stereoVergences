@@ -69,6 +69,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     private double stepC, stepD, step ;
     private double maxRequired, minRequired ;
     private double currentVergenceValue ;
+    private static int disparity ;
     
     //Constants
     final static public int CONVERGENCE_UP = 2  ;
@@ -106,7 +107,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor = new ScheduledThreadPoolExecutor(1);
     }
     
-    public void setAppearence (int max, int min, int timeOut, int typeExercice) {
+    public void setAppearence (int max, int min, int timeOut, int typeExercice, int disparity) {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
@@ -114,6 +115,11 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         this.maxRequired = max;
         this.minRequired = min ;
         currentDirectionOfWork = CONVERGENCE_UP ;
+        this.disparity = disparity ;
+        
+        //Boudaries
+        this.maxRequired = Math.floor(max / stepC ) * stepC ;
+        this.minRequired = Math.floor(min / stepD ) * stepD ;
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
         int deltaY = calcPixelsForVergence (verticality) ;
@@ -132,7 +138,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         int p = securRand.nextInt(4) ;
         
         //On lance la mise à jour du stéréogram
-        ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p ) ; rs.run();
+        ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p, disparity ) ; rs.run();
         //On se souvient de la clue
         switch (p) {
             case 0 : clue = KeyEvent.VK_UP ; break ;    //up
@@ -393,12 +399,14 @@ class ResetStereogram implements Runnable {
     int c = -65536 ;
     int position = 0 ;
     int size ;
+    int disparity ;
     
     
-    public ResetStereogram (BufferedImage od, BufferedImage og, int position) { //position = position du petit carré
+    public ResetStereogram (BufferedImage od, BufferedImage og, int position, int disparity) { //position = position du petit carré
         this.od = od;
         this.og = og ;
         this.position = position ;
+        this.disparity = disparity ;
         if (!OrthoStereogram.BR_glasses) {
             int t = c ;
             c = r ;
@@ -425,7 +433,7 @@ class ResetStereogram implements Runnable {
         //paramètres du carré
         int t = size / 3 ; // taille du carré
         int bord = 30 ;    //distance du bord
-        int depth = 5 ;   //disparité
+        
         
         //Position du carré
         int dh, dc ;
@@ -441,8 +449,8 @@ class ResetStereogram implements Runnable {
                 b = rand.nextBoolean() ;
                 //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
                 //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : r));
-                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : c));
+                od.setRGB(dc+i - disparity, j+dh, (b ? Color.WHITE.getRGB() : r));
+                og.setRGB(dc+i + disparity, j+dh, (b ? Color.WHITE.getRGB() : c));
             }
         //On en place un à l'opposé
         switch (position) {
@@ -458,14 +466,14 @@ class ResetStereogram implements Runnable {
             default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
-        depth = depth - 2 ;
+        disparity = disparity - 2 ;
         for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
                 b = rand.nextBoolean() ;
                 //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
                 //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - depth, j+dh, (b ? Color.WHITE.getRGB() : r));
-                og.setRGB(dc+i + depth, j+dh, (b ? Color.WHITE.getRGB() : c));
+                od.setRGB(dc+i - disparity, j+dh, (b ? Color.WHITE.getRGB() : r));
+                og.setRGB(dc+i + disparity, j+dh, (b ? Color.WHITE.getRGB() : c));
             }
         //On a fini
         //System.out.println ( System.currentTimeMillis() - begin ) ;

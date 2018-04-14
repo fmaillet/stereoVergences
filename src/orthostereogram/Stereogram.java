@@ -29,6 +29,7 @@ public class Stereogram extends JPanel {
     static public double currentVergenceValue;
     SecureRandom securRand = new SecureRandom() ;
     Random rand = new Random () ;
+    private static int disparity ;
     
     //Used for slider
     private boolean centered = false ;
@@ -38,8 +39,8 @@ public class Stereogram extends JPanel {
     static int screenResolution;
     static int workingDistance = 70 ;
     
-    public Stereogram (int stereogramSize, int workingDistance, int initialDelta, boolean centered) {
-        
+    public Stereogram (int stereogramSize, int workingDistance, int initialDelta, boolean centered, int disparity ) {
+        this.disparity = disparity ;
         this.centered = centered ;
         this.workingDistance = workingDistance ;
         
@@ -138,7 +139,7 @@ public class Stereogram extends JPanel {
         //Paramètres
         int t = taille / 3 ;   //taille de la matrice
         int bord = 30 ;                  //bord
-        int depth = 20 ;                    //disparité
+        
         //Position aléatoire du carré : haut-bas-gauche-droite
         int p ;
         if (keepClue) switch (clue) {
@@ -165,17 +166,17 @@ public class Stereogram extends JPanel {
                 for (int j=0; j<i; j++) {
                     if (rand.nextBoolean()) couleurRGB = Color.BLACK.getRGB() ; else couleurRGB = Color.WHITE.getRGB() ;
                     //Quart inf gauche
-                    OG.setRGB(taille/4 + i - depth, taille / 2 + j, couleurRGB);
-                    OD.setRGB(taille/4 + i + depth, taille / 2 + j, couleurRGB);
+                    OG.setRGB(taille/4 + i - disparity, taille / 2 + j, couleurRGB);
+                    OD.setRGB(taille/4 + i + disparity, taille / 2 + j, couleurRGB);
                     //Quart ?
-                    OG.setRGB(taille/4 + i - depth, taille / 2 - j, couleurRGB);
-                    OD.setRGB(taille/4 + i + depth, taille / 2 - j, couleurRGB);
+                    OG.setRGB(taille/4 + i - disparity, taille / 2 - j, couleurRGB);
+                    OD.setRGB(taille/4 + i + disparity, taille / 2 - j, couleurRGB);
                     //Quart
-                    OG.setRGB((3*taille/4) - i - depth, taille / 2 + j, couleurRGB);
-                    OD.setRGB((3*taille/4) - i + depth, taille / 2 + j, couleurRGB);
+                    OG.setRGB((3*taille/4) - i - disparity, taille / 2 + j, couleurRGB);
+                    OD.setRGB((3*taille/4) - i + disparity, taille / 2 + j, couleurRGB);
                     //Quart
-                    OG.setRGB((3*taille/4) - i - depth, taille / 2 - j, couleurRGB);
-                    OD.setRGB((3*taille/4) - i + depth, taille / 2 - j, couleurRGB);
+                    OG.setRGB((3*taille/4) - i - disparity, taille / 2 - j, couleurRGB);
+                    OD.setRGB((3*taille/4) - i + disparity, taille / 2 - j, couleurRGB);
                 }
         }
         //On crée le carré en relief
@@ -183,8 +184,8 @@ public class Stereogram extends JPanel {
             for (int j=0; j<t; j++) {
                 if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
                 else couleurRGB = Color.WHITE.getRGB() ;
-                OG.setRGB(dc+i - depth, j+dh, couleurRGB);
-                OD.setRGB(dc+i + depth, j+dh, couleurRGB);
+                OG.setRGB(dc+i - disparity, j+dh, couleurRGB);
+                OD.setRGB(dc+i + disparity, j+dh, couleurRGB);
             }
         
         

@@ -67,6 +67,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     final static public int DIVERGENCE_DOWN  = -2 ;
     
     //Parameters
+    static private int disparity ;
     static private double verticality ;
     static private double stepC ;
     static private double stepD ;
@@ -148,7 +149,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         this.addWindowListener(this);
         
         //Create stereogram
-        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, false) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, false, disparity) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
         //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -200,8 +201,8 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         }
     }
     
-    public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump, int verticality) {
-        
+    public void setMode (double stepC, double stepD, int max, int min, int timeOut, boolean alternate, boolean jump, int verticality, int disparity) {
+        this.disparity = disparity ;
         //Veticalité
         this.verticality = 0.25 * verticality ;
         //steps
@@ -213,7 +214,6 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
         else this.step = stepD ;
         
         //Boudaries
-        
         this.max = Math.floor(max / stepC ) * stepC ;
         this.min = Math.floor(min / stepD ) * stepD ;
         //time out to answer

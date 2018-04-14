@@ -66,13 +66,16 @@ public final class SlideStereogramView extends JFrame implements WindowListener,
     private int minVPixels = 0 ;
     private int maxVPixels = 0 ;
     private boolean isThereVerticality = false ;
+    private int disparity ;
     
     //needed to calculate vergence
     static Dimension screenSize ;
     static int workingDistance = 70 ;
     
     //Min and max are given in dioptries
-    public SlideStereogramView (int speed, int min, int max, int workingDistance, int initialValue, int verticality) {
+    public SlideStereogramView (int speed, int min, int max, int workingDistance, int initialValue, int verticality, int disparity) {
+        this.disparity = disparity ;
+
         //Veticalité
         if (verticality != 0) {
             isThereVerticality = true ;
@@ -118,7 +121,7 @@ public final class SlideStereogramView extends JFrame implements WindowListener,
         this.randomJumps = randomJumps ;
         
         //Create stereogram
-        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, true) ; //initial delta set to zero
+        bimage = new Stereogram (NewController.imgSize, workingDistance, 0, true, disparity) ; //initial delta set to zero
         bimage.resetImg (false) ;
         //Anaglyph
         //BufferedImage ana = new BufferedImage(bimage.OD.getWidth(), bimage.OD.getHeight(), BufferedImage.TYPE_INT_RGB);

@@ -292,6 +292,9 @@ public class NewController extends JFrame implements WindowListener {
         jResetGraph = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         jExperimental = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        jDisparity = new javax.swing.JSpinner();
+        jUnit8 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -532,6 +535,15 @@ public class NewController extends JFrame implements WindowListener {
             }
         });
 
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel13.setText("Disparity :");
+
+        jDisparity.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jDisparity.setModel(new javax.swing.SpinnerNumberModel(15, 5, 30, 1));
+
+        jUnit8.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jUnit8.setText("pixels");
+
         jMenu1.setText("File");
 
         jConnection.setText("Connection serveur");
@@ -642,34 +654,39 @@ public class NewController extends JFrame implements WindowListener {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jUnit2)
                                     .addComponent(jUnit4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel9))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jUnit3))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jUnit6))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jUnit7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jMax, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jUnit3))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(17, 17, 17)
-                                        .addComponent(jStepD, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jUnit6))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jUnit5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16)
+                                .addComponent(jDisparity, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jUnit8, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(56, 56, 56)
@@ -766,8 +783,11 @@ public class NewController extends JFrame implements WindowListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jVerticality, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jUnit7))
-                .addGap(41, 41, 41)
+                    .addComponent(jUnit7)
+                    .addComponent(jLabel13)
+                    .addComponent(jDisparity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jUnit8))
+                .addGap(40, 40, 40)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -820,7 +840,7 @@ public class NewController extends JFrame implements WindowListener {
         
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //Adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         classic.repaint() ;
@@ -839,7 +859,7 @@ public class NewController extends JFrame implements WindowListener {
         screenDevices[sc].setFullScreenWindow(classic);
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //send parameters
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false, hd) ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         classic.repaint () ;
@@ -858,7 +878,7 @@ public class NewController extends JFrame implements WindowListener {
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
         //double step = (double) jStepD.getValue() ; step = - step ;
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd) ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         classic.repaint () ;
@@ -876,7 +896,7 @@ public class NewController extends JFrame implements WindowListener {
         screenDevices[sc].setFullScreenWindow(classic);
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false, hd) ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false, hd, (Integer) jDisparity.getValue()) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         classic.repaint();
@@ -894,7 +914,7 @@ public class NewController extends JFrame implements WindowListener {
         screenDevices[sc].setFullScreenWindow(classic);
         //secondaryScreenDevice.setFullScreenWindow(classic);
         //adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true, hd) ;
+        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true, hd, (Integer) jDisparity.getValue()) ;
         //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         classic.setAppearence () ;
         //stereo.setVisible(true);
@@ -916,7 +936,7 @@ public class NewController extends JFrame implements WindowListener {
         //Check for verticality
         int hd = jVerticality.getSelectedIndex() ;
         //Create JFrame
-        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd) ;
+        slide = new SlideStereogramView (jSliderTimeOut.getSelectedIndex(), (Integer) jMin.getValue(), (Integer) jMax.getValue(), (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd, (Integer) jDisparity.getValue()) ;
         //Select screen to display
         int sc = jScreens.getSelectedIndex() ;
         /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
@@ -1057,7 +1077,7 @@ public class NewController extends JFrame implements WindowListener {
         
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);
-        doubleSt.setAppearence((Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), 0);
+        doubleSt.setAppearence((Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), 0, (Integer) jDisparity.getValue());
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jExperimentalActionPerformed
 
@@ -1100,6 +1120,7 @@ public class NewController extends JFrame implements WindowListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JButton jCalibrate;
     public static javax.swing.JMenuItem jConnection;
+    private javax.swing.JSpinner jDisparity;
     private javax.swing.JButton jExperimental;
     private javax.swing.JComboBox<String> jImageChoice;
     private javax.swing.JLabel jImg3D;
@@ -1109,6 +1130,7 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1154,6 +1176,7 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JLabel jUnit5;
     private javax.swing.JLabel jUnit6;
     private javax.swing.JLabel jUnit7;
+    private javax.swing.JLabel jUnit8;
     private javax.swing.JComboBox<String> jVerticality;
     private javax.swing.JSpinner jWorkingDistance;
     // End of variables declaration//GEN-END:variables
