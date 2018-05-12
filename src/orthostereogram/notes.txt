@@ -9,6 +9,9 @@ A faire :
 - calibrer les lunettes
 - check for jmonkeyengine to handle controllers vibraters
 
+## Infos sur l'ajustement anagliph :
+http://stereo.jpn.org/eng/stphmkr/help/stereo_04.htm
+
 0.7.3 (en cours)
 - dbleSt : type of game (en cours)
 

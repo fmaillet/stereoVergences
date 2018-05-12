@@ -106,7 +106,7 @@ public class ClassicStereogramView extends JFrame implements WindowListener, Mou
     //XBOX
     static JoystickEvents joystickEvents ;
     
-    //Trphés
+    //Trophés
     JLabel trophy[] ;
     final int NB_TROPHY = 6 ;
     int trophyNumber = 0 ;

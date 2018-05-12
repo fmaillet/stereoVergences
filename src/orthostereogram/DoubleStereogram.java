@@ -30,12 +30,10 @@ import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static orthostereogram.ClassicStereogramView.CONVERGENCE_DOWN;
-import static orthostereogram.ClassicStereogramView.CONVERGENCE_UP;
-import static orthostereogram.ClassicStereogramView.DIVERGENCE_UP;
 
 /**
  *
@@ -55,7 +53,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int GAME_2PLAYERS = 2  ;
     
     //Infos display
-    JLabel info ;
+    JLabel info, infosMax ;
     //Stéréogramme anaglyphe
     static Eye OD, OG ;
     
@@ -76,6 +74,9 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     private double maxRequired, minRequired ;
     private double currentVergenceValue ;
     private static int disparity ;
+    //Remember min and max obtained values
+    private double obtainedMax = 0 ;
+    private double obtainedMin = 0 ;
     
     //Constants
     final static public int CONVERGENCE_UP = 2  ;
@@ -83,6 +84,14 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int DIVERGENCE_UP  = -1 ;
     final static public int DIVERGENCE_DOWN  = -2 ;
     static private int currentDirectionOfWork ;
+    
+    //XBOX
+    static JoystickEvents joystickEvents ;
+    
+    //Trophés
+    JLabel trophy[] ;
+    final int NB_TROPHY = 6 ;
+    int trophyNumber = 0 ;
     
     
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
@@ -113,7 +122,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor = new ScheduledThreadPoolExecutor(1);
     }
     
-    public void setAppearence (int game, int max, int min, int timeOut, int typeExercice, int disparity) {
+    public void setAppearence (int game, int max, int min, int timeOut, int typeExercice, int disparity, boolean alternate, boolean jump) {
         this.addKeyListener(this);
         this.addMouseMotionListener(this);
         this.addWindowListener(this);
@@ -130,6 +139,24 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
         int deltaY = calcPixelsForVergence (verticality) ;
+        
+        //Create trophy
+        if (NewController.jTrophy.isSelected()) {
+            trophy = new JLabel[NB_TROPHY] ;
+            for (int i=0; i<NB_TROPHY; i++) {
+                trophy[i] = new JLabel() ;
+                trophy[i].setIcon(new ImageIcon(NewController.tinyTrophy));
+                trophy[i].setBounds(20, 160 + (i * 85), 64, 64);
+                this.getContentPane().add(trophy[i]) ;
+                trophy[i].setEnabled(false);
+            }
+        }
+        
+        //On écoute la xbox
+        if (NewController.glfwInit & NewController.xboxConnected) {
+            joystickEvents = new JoystickEvents (this) ;
+            joystickEvents.start();
+        }
         
         //On ajoute les yeux
         OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
@@ -199,6 +226,14 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         info.setBounds(20, 35, 300, 30);
         info.setForeground(Color.GRAY);
         this.getContentPane().add(info) ;
+        //Valeurs max
+        JLabel label_2 = new JLabel ("Max score :") ;
+        label_2.setBounds(10, 60, 100, 30);
+        this.getContentPane().add(label_2) ;
+        infosMax = new JLabel ("--") ;
+        infosMax.setForeground(Color.GRAY);
+        infosMax.setBounds(20, 85, 300, 30);
+        this.getContentPane().add(infosMax) ;
     }
     
     
@@ -278,6 +313,18 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On joue de la musique
         sndGood.run();
         
+        //On sauvegarde la valeur max atteinte
+        boolean alternate = false ;
+        if (alternate) {
+            if (currentVergenceValue > obtainedMax) obtainedMax  = currentVergenceValue ;
+            else if (currentVergenceValue < obtainedMin) obtainedMin  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
+            obtainedMax  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
+            obtainedMin  = currentVergenceValue ;
+        
         //Si l'on est au max, on change de direction de travail
         if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue+step > maxRequired  ) {
             step = -stepC ;
@@ -308,6 +355,16 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         else if (currentDirectionOfWork == DIVERGENCE_UP) str = "D\u2191 " ;
         else str = "D\u2193 " ;
         info.setText(str+String.valueOf(currentVergenceValue)+" \u0394");
+        infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
+        
+        //A-t-on fait un cycle ? oui, on affiche un trophé
+        if (trophy != null) {
+            if (currentVergenceValue == 0 && obtainedMax == maxRequired && obtainedMin == minRequired) {
+                trophy[trophyNumber].setEnabled(true);
+                if (trophyNumber<NB_TROPHY-1) trophyNumber++ ;
+            }
+        }
+        
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
@@ -478,7 +535,7 @@ class ResetStereogram implements Runnable {
             default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
-        disparity = disparity - 2 ;
+        disparity = disparity - (Integer) NewController.jDeltaDisparity.getValue() ;
         for (int i=0; i<t; i++)
             for (int j=0; j<t; j++) {
                 b = rand.nextBoolean() ;
