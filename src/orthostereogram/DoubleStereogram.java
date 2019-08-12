@@ -30,6 +30,7 @@ import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -55,7 +56,10 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int GAME_2PLAYERS = 2  ;
     
     //Infos display
-    JLabel info ;
+    JLabel info, infosMax ;
+    //Remember min and max obtained values
+    private double obtainedMax = 0 ;
+    private double obtainedMin = 0 ;
     //Stéréogramme anaglyphe
     static Eye OD, OG ;
     
@@ -76,6 +80,19 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     private double maxRequired, minRequired ;
     private double currentVergenceValue ;
     private static int disparity ;
+    private static int typeExercice ;
+    //pour l'alternance
+    static double currentConvergenceValue ;
+    static double currentDivergenceValue ;
+    static private int previousBadAnswer = 0 ;
+    
+    //Trphés
+    JLabel trophy[] ;
+    final int NB_TROPHY = 8 ;
+    int trophyNumber = 0 ;
+    
+    static private boolean alternate = false ;
+    static private boolean jump = false ;
     
     //Constants
     final static public int CONVERGENCE_UP = 2  ;
@@ -84,6 +101,11 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int DIVERGENCE_DOWN  = -2 ;
     static private int currentDirectionOfWork ;
     
+    final static public int EXO_CD_PROG  = 0 ;
+    final static public int EXO_C_PROG   = 1 ;
+    final static public int EXO_D_PROG   = 2 ;
+    final static public int EXO_CD_ALTER = 3 ;
+    final static public int EXO_CD_JUMP  = 4 ;
     
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
         this.size = stereogramSize ;
@@ -124,8 +146,22 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         currentDirectionOfWork = CONVERGENCE_UP ;
         this.disparity = disparity ;
         
+        obtainedMin = obtainedMax = 0 ;
+        currentConvergenceValue = currentDivergenceValue = 0 ;
+        
+        //Type d'exercice
+        this.typeExercice = typeExercice;
+        switch (this.typeExercice) {
+            case EXO_CD_PROG: alternate = jump = false; break; //CD prog.
+            case EXO_C_PROG: alternate = jump = false; min = 0 ; break; //C prog.
+            case EXO_D_PROG: alternate = jump = false; max  = 0; currentDirectionOfWork = CONVERGENCE_DOWN ; step = -stepC ; break; //D prog.
+            case EXO_CD_ALTER: alternate = true; jump = false; break;
+            case EXO_CD_JUMP: alternate = false; jump = true;  break;
+        }
+        
+        
         //Boudaries
-        this.maxRequired = Math.floor(max / stepC ) * stepC ;
+        this.maxRequired = Math.floor(max / stepC ) * stepC ; System.out.println(this.maxRequired);
         this.minRequired = Math.floor(min / stepD ) * stepD ;
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
@@ -182,6 +218,23 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         return (int) Math.round(pixels/2) ;
     }
     
+    public void goToVergence (double value) {
+        //Horizontal
+        currentVergenceValue = value ;
+        //verticality = - verticality ;
+        //On recalcule un stéréogramme
+        resetStereogram () ;
+        //On le positionne
+        //setPositions () ;
+    }
+    
+    public void stepVergence (double delta) {
+        currentVergenceValue = currentVergenceValue + delta ;
+        //verticality = - verticality ;
+        resetStereogram () ;
+        //setPositions () ;
+    }
+    
     public void hideCursor () {
         setCursor(transparentCursor);
     }
@@ -199,6 +252,24 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         info.setBounds(20, 35, 300, 30);
         info.setForeground(Color.GRAY);
         this.getContentPane().add(info) ;
+        //Valeurs max
+        JLabel label_2 = new JLabel ("Max score :") ;
+        label_2.setBounds(10, 60, 100, 30);
+        this.getContentPane().add(label_2) ;
+        infosMax = new JLabel ("--") ;
+        infosMax.setForeground(Color.GRAY);
+        infosMax.setBounds(20, 85, 300, 30);
+        this.getContentPane().add(infosMax) ;
+        //Create trophy
+        trophy = new JLabel[NB_TROPHY] ;
+        for (int i=0; i<NB_TROPHY; i++) {
+            trophy[i] = new JLabel() ;
+            trophy[i].setIcon(new ImageIcon(NewController.tinyTrophy));
+            trophy[i].setBounds(20, 160 + (i * 85), 64, 64);
+            this.getContentPane().add(trophy[i]) ;
+            trophy[i].setEnabled(false);
+            if (jump) trophy[i].setVisible(false);
+        }
     }
     
     
@@ -278,10 +349,25 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On joue de la musique
         sndGood.run();
         
+        //On sauvegarde la valeur max atteinte
+        if (alternate) {
+            if (currentVergenceValue > obtainedMax) obtainedMax  = currentVergenceValue ;
+            else if (currentVergenceValue < obtainedMin) obtainedMin  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue > obtainedMax) {
+            obtainedMax  = currentVergenceValue ;
+        }
+        else if (currentDirectionOfWork == DIVERGENCE_UP & currentVergenceValue < obtainedMin)
+            obtainedMin  = currentVergenceValue ;
+        
         //Si l'on est au max, on change de direction de travail
         if (currentDirectionOfWork == CONVERGENCE_UP & currentVergenceValue+step > maxRequired  ) {
             step = -stepC ;
             currentDirectionOfWork = CONVERGENCE_DOWN ;
+        }
+        else if (currentDirectionOfWork == CONVERGENCE_DOWN & currentVergenceValue+step < minRequired  ) {
+            step = stepC ;
+            currentDirectionOfWork = CONVERGENCE_UP ;
         }
         else if (currentDirectionOfWork == CONVERGENCE_DOWN & currentVergenceValue+step < 0  ) {
             step = -stepD ;
@@ -291,23 +377,72 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             step = stepD ;
             currentDirectionOfWork = DIVERGENCE_DOWN ;
         }
+        else if (currentDirectionOfWork == DIVERGENCE_DOWN & currentVergenceValue+step > maxRequired  ) {
+            step = -stepD ;
+            currentDirectionOfWork = DIVERGENCE_UP ;
+        }
         else if (currentDirectionOfWork == DIVERGENCE_DOWN & currentVergenceValue+step > 0  ) {
             step = stepC ;
             currentDirectionOfWork = CONVERGENCE_UP ;
         }
         
-        //nouvelle valeur de vergence
-        currentVergenceValue = currentVergenceValue + step ;
+        //Si on alterne :
+        if (alternate)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP :
+                    currentConvergenceValue = currentConvergenceValue + stepC ;
+                    if (currentConvergenceValue > maxRequired) { currentConvergenceValue = maxRequired ; step = stepC = - stepC ; }
+                    else if (currentConvergenceValue < 0) { currentConvergenceValue = 0 ; step = stepC = - stepC ;}
+                    break;
+                case DIVERGENCE_UP :
+                    currentDivergenceValue = currentDivergenceValue - stepD ;
+                    if (currentDivergenceValue < minRequired) { currentDivergenceValue = minRequired ; step = stepD = - stepD ; }
+                    else if (currentDivergenceValue > 0) { currentDivergenceValue = 0 ; step = stepD = - stepD ;}
+                    break ;
+            }
         
-        //On affiche un nouveau stéréogramme
-        resetStereogram () ;
-        repaint () ;
         //Mise à jour valeur courante
         if (currentDirectionOfWork == CONVERGENCE_UP) str = "C\u2191 " ;
         else if (currentDirectionOfWork == CONVERGENCE_DOWN) str = "C\u2193 " ;
         else if (currentDirectionOfWork == DIVERGENCE_UP) str = "D\u2191 " ;
         else str = "D\u2193 " ;
+        
+        //Step on
+        if (jump)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : 
+                    goToVergence(maxRequired);
+                    currentDirectionOfWork = DIVERGENCE_UP ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    goToVergence(minRequired);
+                    currentDirectionOfWork = CONVERGENCE_UP ;
+                    break ;
+            }
+        else if (alternate & currentDirectionOfWork == CONVERGENCE_UP) {
+            goToVergence(currentConvergenceValue);
+            currentDirectionOfWork = DIVERGENCE_UP ;
+        }
+        else if (alternate & currentDirectionOfWork == DIVERGENCE_UP) {
+            goToVergence(currentDivergenceValue);
+            currentDirectionOfWork = CONVERGENCE_UP ;
+        }
+        else    stepVergence (step) ;
+        
+        //On affiche un nouveau stéréogramme
+        //resetStereogram () ;
+        repaint () ;
+        
         info.setText(str+String.valueOf(currentVergenceValue)+" \u0394");
+        infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
+        //Mise à jour du graphe
+        OrthoStereogram.controller.addGraphMax (currentVergenceValue) ;
+        repaint () ;
+        //A-t-on fait un cycle ? oui, on affiche un trophé
+        if (currentVergenceValue == 0 && obtainedMax == maxRequired && obtainedMin == minRequired) {
+            trophy[trophyNumber].setEnabled(true);
+            if (trophyNumber<NB_TROPHY-1) trophyNumber++ ;
+        }
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }

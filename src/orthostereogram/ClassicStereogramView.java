@@ -40,6 +40,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
 import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 import static org.lwjgl.glfw.GLFW.glfwWaitEvents;
 
+
 /**
  *
  * @author Fred

@@ -89,7 +89,7 @@
 	<delete file="${store.dir}/temp_final.jar"/>
     
         <echo message="Signing ${dist.dir}\AllInOneJar.jar ..."/>
-        <exec executable="C:\Program Files\Java\jdk1.8.0_144\bin\jarsigner">
+        <exec executable="C:\Program Files\Java\jdk1.8.0_221\bin\jarsigner">
             <arg value="-verbose" />
             <arg value="-keystore" />
 	    <arg value="testKeys"/>

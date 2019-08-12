@@ -41,8 +41,9 @@ public class HelpJDialog extends javax.swing.JDialog {
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Times New Roman", 0, 11)); // NOI18N
         jTextArea1.setRows(5);
-        jTextArea1.setText("ctrl+ augmente la taille du sétérogramme\nctrl- diminue la taille du stéréogramme\n\nEspace : revient en arrière ou à zéro\nselon l'exercice");
+        jTextArea1.setText("Stimuli:\n--------\n-) un carré : déterminer la position (haut, bas, gauche, droite) du carré en relief. La disparité par rapport au fond peut être modifiée.\n-) 2 carrés : déterminer la position du carré en relief qui apparaît comme le plus proche. La disparité par rapport au fond peut être\nmodifiée, mais la disparité entre les deux carrés est fixe (et faible...)\n\nActivité:\n---------\n<CD prog.> la convergence puis la divergence évoluent progressivement entre les valeurs min et max indiquées.\nLes \"steps\" sont modifiables.\n<C prog.> idem, mais uniquement en convergence.\n<D prog.> idem, mais uniquement en divergence.\n<CD alterne> alterne convergence et divergence, mais de manière progressive.\n<CD jump> alterne entre les valeurs max de convergence et de divergence.\n\nContrôle du stéréogramme :\n--------------------------\nctrl+ augmente la taille du sétérogramme\nctrl- diminue la taille du stéréogramme\n\nEspace : revient en arrière ou à zéro\nselon l'exercice");
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -59,7 +60,7 @@ public class HelpJDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -77,8 +78,8 @@ public class HelpJDialog extends javax.swing.JDialog {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

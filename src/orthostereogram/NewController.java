@@ -154,12 +154,13 @@ public class NewController extends JFrame implements WindowListener {
     public void initController () {
         
         //Si on a la xbox
-        try {
+        //Removed beacause of missing dll blocked the rest of the controller init
+        /*try {
             if (glfwInit = glfwInit()) {
                 xboxConnected = glfwJoystickPresent (GLFW_JOYSTICK_1) ;
                 jImgXBOX.setEnabled(xboxConnected);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {}*/
         
         //Joystick state change
         //GLFW.glfwSetJoystickCallback(new  GLFW.GLFWjoystickfun 
@@ -177,8 +178,10 @@ public class NewController extends JFrame implements WindowListener {
             PlotOrientation.VERTICAL, true, false, false);
         chartPanel = new ChartPanel( chart ) ;
         chartPanel.setBounds(470, 85, 400, 350);
+        
         this.getContentPane().add (chartPanel) ;
         chartPanel.setVisible(true);
+        
         chartPanel.setPopupMenu(null);
         
         
@@ -209,7 +212,7 @@ public class NewController extends JFrame implements WindowListener {
         plot.setRenderer(renderer);
         
         //On redessine
-        this.repaint();
+        //this.repaint();
         this.setAlwaysOnTop(false);
         //Default screen size
         int sc = jScreens.getSelectedIndex() ;
@@ -240,7 +243,6 @@ public class NewController extends JFrame implements WindowListener {
     private void initComponents() {
 
         jLabel8 = new javax.swing.JLabel();
-        jStart_CD = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jMax = new javax.swing.JSpinner();
@@ -263,13 +265,9 @@ public class NewController extends JFrame implements WindowListener {
         jUnit5 = new javax.swing.JLabel();
         jImgXBOX = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        jStart_C = new javax.swing.JButton();
-        jStart_D = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jUnit6 = new javax.swing.JLabel();
         jStepD = new javax.swing.JSpinner();
-        jStart_CD_alter = new javax.swing.JButton();
-        jStart_CD_jump = new javax.swing.JButton();
         jStart_Slide = new javax.swing.JButton();
         jSliderTimeOut = new javax.swing.JComboBox<>();
         jSeparator3 = new javax.swing.JSeparator();
@@ -295,6 +293,8 @@ public class NewController extends JFrame implements WindowListener {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        jStims = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
         jActivity = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -312,15 +312,6 @@ public class NewController extends JFrame implements WindowListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.cyan);
         setMinimumSize(new java.awt.Dimension(900, 700));
-
-        jStart_CD.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStart_CD.setText("C <-> D");
-        jStart_CD.setToolTipText("Convergence-Divergence");
-        jStart_CD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStart_CDActionPerformed(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Max :");
@@ -391,24 +382,6 @@ public class NewController extends JFrame implements WindowListener {
 
         jImgXBOX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ressources/xbox-icon64.png"))); // NOI18N
 
-        jStart_C.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStart_C.setText(" < C >");
-        jStart_C.setToolTipText("Convergence");
-        jStart_C.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStart_CActionPerformed(evt);
-            }
-        });
-
-        jStart_D.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStart_D.setText(" < D >");
-        jStart_D.setToolTipText("Divergence");
-        jStart_D.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStart_DActionPerformed(evt);
-            }
-        });
-
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel9.setText("Step (D) :");
 
@@ -419,25 +392,7 @@ public class NewController extends JFrame implements WindowListener {
         jStepD.setModel(new javax.swing.SpinnerNumberModel(0.5d, 0.25d, 5.0d, 0.25d));
         jStepD.setEnabled(false);
 
-        jStart_CD_alter.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStart_CD_alter.setText("C <#> D");
-        jStart_CD_alter.setToolTipText("Alterne progressif C-D");
-        jStart_CD_alter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStart_CD_alterActionPerformed(evt);
-            }
-        });
-
-        jStart_CD_jump.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jStart_CD_jump.setText("C # D");
-        jStart_CD_jump.setToolTipText("Altern fixed C-D");
-        jStart_CD_jump.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jStart_CD_jumpActionPerformed(evt);
-            }
-        });
-
-        jStart_Slide.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jStart_Slide.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jStart_Slide.setText("Auto Slider");
         jStart_Slide.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -517,9 +472,8 @@ public class NewController extends JFrame implements WindowListener {
         jLabel12.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel12.setText("Faire porter deux sphères opposées (comme -1/+2 ou +2/-3) selon les puissances désirées");
 
-        jExperimental.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jExperimental.setForeground(java.awt.Color.red);
-        jExperimental.setText("Experimental");
+        jExperimental.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jExperimental.setText("Vergences");
         jExperimental.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jExperimentalActionPerformed(evt);
@@ -541,9 +495,20 @@ public class NewController extends JFrame implements WindowListener {
 
         jLabel15.setText("Joueur 2 :");
 
-        jLabel16.setText("Activity :");
+        jLabel16.setText("Stims :");
 
-        jActivity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Un carré", "Deux carrés" }));
+        jStims.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Un carré", "Deux carrés" }));
+        jStims.setToolTipText("Number of stims");
+        jStims.setEnabled(false);
+        jStims.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jStimsActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Activity :");
+
+        jActivity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CD (prog.)", "C   (prog.)", "D   (prog.)", "CD (alterne)", "CD (jump)" }));
         jActivity.setToolTipText("Activiy game");
         jActivity.setEnabled(false);
         jActivity.addActionListener(new java.awt.event.ActionListener() {
@@ -647,33 +612,34 @@ public class NewController extends JFrame implements WindowListener {
                 .addGap(38, 38, 38))
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel16)
                         .addGap(18, 18, 18)
-                        .addComponent(jActivity, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jStims, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jExperimental, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jStart_C)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jStart_D))
-                    .addComponent(jStart_CD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jStart_CD_alter, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                    .addComponent(jStart_CD_jump, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(115, 115, 115)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jStart_Slide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jStart_Img, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRandomJumps, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jExperimental, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(92, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel17)
+                        .addGap(18, 18, 18)
+                        .addComponent(jActivity, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(525, 525, 525))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(256, 256, 256)
+                                .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jStart_Img, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jRandomJumps, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -830,30 +796,21 @@ public class NewController extends JFrame implements WindowListener {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
+                    .addComponent(jStims, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17)
                     .addComponent(jActivity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jStart_CD)
-                            .addComponent(jStart_CD_alter))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jStart_C)
-                            .addComponent(jStart_D)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jStart_Slide)
-                            .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jRandomJumps))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jStart_Img)
-                            .addComponent(jStart_CD_jump)
-                            .addComponent(jExperimental))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jStart_Slide)
+                    .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRandomJumps)
+                    .addComponent(jExperimental))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jStart_Img))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -870,101 +827,6 @@ public class NewController extends JFrame implements WindowListener {
 
     
     
-    private void jStart_CDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CDActionPerformed
-        //Check for verticality
-        int hd = jVerticality.getSelectedIndex() ;
-        //Select screen to display
-        int sc = jScreens.getSelectedIndex() ;
-        //On ajuste la taille du stéréogramme si besoin
-        if (screenDevices[sc].getDisplayMode().getHeight() < this.imgSize) this.imgSize = DEFAULT_IMG_SIZE ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), ClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
-        //On affiche
-        screenDevices[sc].setFullScreenWindow(classic);
-        
-        //secondaryScreenDevice.setFullScreenWindow(classic);
-        //Adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
-        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        classic.setAppearence () ;
-        classic.repaint() ;
-        //stereo.setVisible(true);
-        currentFrame = classic ; //Necessary for imgScale
-    }//GEN-LAST:event_jStart_CDActionPerformed
-
-    private void jStart_CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CActionPerformed
-        //Check for verticality
-        int hd = jVerticality.getSelectedIndex() ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
-        //Select screen to display
-        int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
-        screenDevices[sc].setFullScreenWindow(classic);
-        //secondaryScreenDevice.setFullScreenWindow(classic);
-        //send parameters
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), 0, (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
-        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        classic.setAppearence () ;
-        classic.repaint () ;
-        currentFrame = classic ; //Necessary for imgScale
-    }//GEN-LAST:event_jStart_CActionPerformed
-
-    private void jStart_DActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_DActionPerformed
-        //Check for verticality
-        int hd = jVerticality.getSelectedIndex() ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.DIVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
-        //Select screen to display
-        int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
-        screenDevices[sc].setFullScreenWindow(classic);
-        //secondaryScreenDevice.setFullScreenWindow(classic);
-        //adapt
-        //double step = (double) jStepD.getValue() ; step = - step ;
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), 0, (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, false, hd, (Integer) jDisparity.getValue()) ;
-        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        classic.setAppearence () ;
-        classic.repaint () ;
-        currentFrame = classic ; //Necessary for imgScale
-    }//GEN-LAST:event_jStart_DActionPerformed
-
-    private void jStart_CD_alterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_alterActionPerformed
-        //Check for verticality
-        int hd = jVerticality.getSelectedIndex() ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
-        //Select screen to display
-        int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
-        screenDevices[sc].setFullScreenWindow(classic);
-        //secondaryScreenDevice.setFullScreenWindow(classic);
-        //adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), true, false, hd, (Integer) jDisparity.getValue()) ;
-        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        classic.setAppearence () ;
-        classic.repaint();
-        currentFrame = classic ; //Necessary for imgScale
-    }//GEN-LAST:event_jStart_CD_alterActionPerformed
-
-    private void jStart_CD_jumpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStart_CD_jumpActionPerformed
-        //Check for verticality
-        int hd = jVerticality.getSelectedIndex() ;
-        //Create JFrame
-        classic = new ClassicStereogramView ((Integer) jInitial.getValue(), OldClassicStereogramView.CONVERGENCE_UP, (Integer) jWorkingDistance.getValue()) ;
-        //Select screen to display
-        int sc = jScreens.getSelectedIndex() ;
-        /*if (graphicsEnv.getDefaultScreenDevice() != screenDevices[sc])*/
-        screenDevices[sc].setFullScreenWindow(classic);
-        //secondaryScreenDevice.setFullScreenWindow(classic);
-        //adapt
-        classic.setMode ((Integer) jStepC.getValue(), (double) jStepD.getValue(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), false, true, hd, (Integer) jDisparity.getValue()) ;
-        //classic.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        classic.setAppearence () ;
-        //stereo.setVisible(true);
-        currentFrame = classic ; //Necessary for imgScale
-    }//GEN-LAST:event_jStart_CD_jumpActionPerformed
-
     private void jImg3DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jImg3DMouseClicked
         if (OrthoStereogram.BR_glasses) {
             OrthoStereogram.BR_glasses = false;
@@ -1115,7 +977,7 @@ public class NewController extends JFrame implements WindowListener {
         
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);
-        doubleSt.setAppearence(jActivity.getSelectedIndex(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), 0, (Integer) jDisparity.getValue());
+        doubleSt.setAppearence(jStims.getSelectedIndex(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), jActivity.getSelectedIndex(), (Integer) jDisparity.getValue());
         currentFrame = classic ; //Necessary for imgScale
     }//GEN-LAST:event_jExperimentalActionPerformed
 
@@ -1124,6 +986,10 @@ public class NewController extends JFrame implements WindowListener {
         cal.setLocationRelativeTo(this);
         cal.setVisible(true);
     }//GEN-LAST:event_jMenuCalibrationActionPerformed
+
+    private void jStimsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jStimsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jStimsActionPerformed
 
     private void jActivityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jActivityActionPerformed
         // TODO add your handling code here:
@@ -1155,6 +1021,7 @@ public class NewController extends JFrame implements WindowListener {
         jWorkingDistance.setEnabled(true);
         jConnection.setEnabled(false);
         jMenuCalibration.setEnabled(true) ;
+        jStims.setEnabled(true);
         jActivity.setEnabled(true);
         jSize_acc.setEnabled(true);
         //On regarde s'il existe une calibration
@@ -1184,6 +1051,7 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1214,15 +1082,11 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JSpinner jSize_acc;
     private javax.swing.JComboBox<String> jSliderTimeOut;
     private javax.swing.JButton jStart_Accommodation;
-    private javax.swing.JButton jStart_C;
-    private javax.swing.JButton jStart_CD;
-    private javax.swing.JButton jStart_CD_alter;
-    private javax.swing.JButton jStart_CD_jump;
-    private javax.swing.JButton jStart_D;
     private javax.swing.JButton jStart_Img;
     private javax.swing.JButton jStart_Slide;
     private javax.swing.JSpinner jStepC;
     private javax.swing.JSpinner jStepD;
+    private javax.swing.JComboBox<String> jStims;
     private javax.swing.JSpinner jTimeOut;
     private javax.swing.JLabel jUnit;
     private javax.swing.JLabel jUnit2;

@@ -9,6 +9,8 @@ A faire :
 - calibrer les lunettes
 - check for jmonkeyengine to handle controllers vibraters
 
+- voir jamepad to control gamepad's : https://github.com/williamahartman/Jamepad
+
 0.7.3 (en cours)
 - dbleSt : type of game (en cours)
 
