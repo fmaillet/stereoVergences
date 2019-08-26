@@ -12,11 +12,15 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import static java.awt.event.KeyEvent.VK_6;
+import static java.awt.event.KeyEvent.VK_ADD;
 import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_EQUALS;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
+import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import static java.awt.event.KeyEvent.VK_UP;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -67,6 +71,9 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final ScheduledThreadPoolExecutor executor ;
     ScheduledFuture<?> scheduledFuture ;
     static private int timeOut = 20 ;
+    //Dynamic resizing
+    boolean resizingIsActive = false ;
+    boolean keypressedIsActive = false ;
     
     //Sounds
     private static WavSoundThread sndGood = new WavSoundThread (1) ;
@@ -170,15 +177,25 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //On ajoute les yeux
         OD.setLocation ((this.getWidth()-OD.size) / 2 - deltaX, (this.getHeight()-OD.size)/2 - deltaY) ; OD.setVisible(true);
         OG.setLocation ((this.getWidth()-OG.size) / 2 + deltaX, (this.getHeight()-OG.size)/2 + deltaY)  ; OG.setVisible(true);
-        resetStereogram () ;
+        resetStereogram (false) ;
         this.getContentPane().add(OD) ; OD.repaint();
         this.getContentPane().add(OG) ; OG.repaint();
         repaint () ;
     }
     
-    private void resetStereogram () {
+    private void resetStereogram (boolean keepClue) {
         //On choisi une orientation
-        int p = securRand.nextInt(4) ;
+        int p;
+        if (!keepClue)
+            p = securRand.nextInt(4) ;
+        else {
+            switch (clue) {
+                case KeyEvent.VK_UP : p = 0; break;
+                case KeyEvent.VK_LEFT : p = 1; break;
+                case KeyEvent.VK_RIGHT : p = 2; break;
+                default : p = 3; break;
+            }
+        }
         
         //On lance la mise à jour du stéréogram
         ResetStereogram rs = new ResetStereogram (OD.img, OG.img, p, disparity, game ) ; rs.run();
@@ -223,7 +240,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         currentVergenceValue = value ;
         //verticality = - verticality ;
         //On recalcule un stéréogramme
-        resetStereogram () ;
+        resetStereogram (false) ;
         //On le positionne
         //setPositions () ;
     }
@@ -231,7 +248,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     public void stepVergence (double delta) {
         currentVergenceValue = currentVergenceValue + delta ;
         //verticality = - verticality ;
-        resetStereogram () ;
+        resetStereogram (false) ;
         //setPositions () ;
     }
     
@@ -323,7 +340,10 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     @Override
     public void keyPressed(KeyEvent ke) {
         int keyCode = ke.getKeyCode();
-                
+        char c  = ke.getKeyChar() ;
+        if (resizingIsActive | keypressedIsActive) return ;
+        if (c != 'A' & !ke.isControlDown() & ! ke.isShiftDown()) keypressedIsActive = true ;
+        
         //Echap : on sort
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         //Flèches
@@ -332,9 +352,36 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             goodAnswer () ;
         }
         else if (keyCode == VK_UP | keyCode == VK_DOWN | keyCode == VK_LEFT | keyCode == VK_RIGHT | keyCode == VK_SPACE) {
-            
             badAnswer () ;
         }
+        
+        //Dynamic resizing
+        if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
+            resizingIsActive = true ;
+            if (NewController.imgScale( 0.9 )) {
+                OD.resize(NewController.imgSize);
+                OG.resize(NewController.imgSize);
+                resetStereogram (true) ;
+            }
+        }
+        else if (keyCode == VK_ADD & ke.isControlDown() & ! ke.isShiftDown()) {
+            resizingIsActive = true ;
+            if ( NewController.imgScale( 1.1 ) ) {
+                OD.resize(NewController.imgSize);
+                OG.resize(NewController.imgSize);
+                resetStereogram (true) ;
+            }
+        }
+        else if (keyCode == VK_EQUALS & ke.isControlDown() & ke.isShiftDown()) {
+            resizingIsActive = true ;
+            if ( NewController.imgScale( 1.1 ) ) {
+                OD.resize(NewController.imgSize);
+                OG.resize(NewController.imgSize);
+                resetStereogram (true) ;
+            }
+        }
+        
+        resizingIsActive = false;
     }
     
     public void timeOut () {
@@ -465,7 +512,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         }
         
         //On affiche un nouveau stéréogramme
-        resetStereogram () ;
+        resetStereogram (false) ;
         repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
@@ -474,6 +521,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     @Override
     public void keyReleased(KeyEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        keypressedIsActive = false ;
     }
     
 }
@@ -482,9 +530,6 @@ class Eye extends JPanel {
     static boolean isRight ;
     public BufferedImage img ;
     static int size ;
-    
-    
-    
     
     public Eye (int size, boolean isRight) {
         //Constantes
@@ -496,6 +541,12 @@ class Eye extends JPanel {
 
         this.setOpaque(false);
         
+    }
+    
+    public void resize(int newSize) {
+        this.size = newSize ;
+        this.setSize(newSize, newSize);
+        img = new BufferedImage(newSize, newSize, BufferedImage.TYPE_INT_RGB);
     }
     
     /*public void resetStereogram () {
@@ -625,6 +676,4 @@ class ResetStereogram implements Runnable {
         //On a fini
         //System.out.println ( System.currentTimeMillis() - begin ) ;
     }
-    
-    
 }

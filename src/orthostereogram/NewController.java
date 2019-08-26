@@ -15,8 +15,18 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.Ellipse2D;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -31,8 +41,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.lwjgl.glfw.GLFW;
 import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
 import static org.lwjgl.glfw.GLFW.glfwGetJoystickName;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwJoystickPresent;
 
 
 /**
@@ -296,6 +304,7 @@ public class NewController extends JFrame implements WindowListener {
         jStims = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
         jActivity = new javax.swing.JComboBox<>();
+        j3DExperimental = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jConnection = new javax.swing.JMenuItem();
@@ -517,6 +526,13 @@ public class NewController extends JFrame implements WindowListener {
             }
         });
 
+        j3DExperimental.setText("3D expérimental");
+        j3DExperimental.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j3DExperimentalActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("File");
 
         jConnection.setText("Connection serveur");
@@ -626,20 +642,21 @@ public class NewController extends JFrame implements WindowListener {
                         .addComponent(jActivity, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(525, 525, 525))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(256, 256, 256)
-                                .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(jStart_Img, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jRandomJumps, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSliderTimeOut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jStart_Slide, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jRandomJumps, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(256, 256, 256)
+                        .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(jStart_Img, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(j3DExperimental)
+                        .addGap(46, 46, 46))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -810,7 +827,8 @@ public class NewController extends JFrame implements WindowListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jImageChoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jStart_Img))
+                    .addComponent(jStart_Img)
+                    .addComponent(j3DExperimental))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -819,7 +837,7 @@ public class NewController extends JFrame implements WindowListener {
                     .addComponent(jSize_acc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12))
-                .addGap(18, 29, Short.MAX_VALUE))
+                .addGap(18, 28, Short.MAX_VALUE))
         );
 
         pack();
@@ -978,7 +996,7 @@ public class NewController extends JFrame implements WindowListener {
         //On affiche
         screenDevices[sc].setFullScreenWindow(doubleSt);
         doubleSt.setAppearence(jStims.getSelectedIndex(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), jActivity.getSelectedIndex(), (Integer) jDisparity.getValue());
-        currentFrame = classic ; //Necessary for imgScale
+        currentFrame = doubleSt ; //Necessary for imgScale
     }//GEN-LAST:event_jExperimentalActionPerformed
 
     private void jMenuCalibrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuCalibrationActionPerformed
@@ -995,6 +1013,76 @@ public class NewController extends JFrame implements WindowListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jActivityActionPerformed
 
+    private void j3DExperimentalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j3DExperimentalActionPerformed
+       // This method is invoked on the EDT thread
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                initAndShowGUI();
+            }
+        });
+    }//GEN-LAST:event_j3DExperimentalActionPerformed
+
+    
+    private static void initAndShowGUI() {
+        // This method is invoked on the EDT thread
+        JFrame frame = new JFrame("Swing and JavaFX");
+        final JFXPanel fxPanel = new JFXPanel();
+        frame.add(fxPanel);
+        frame.setSize(500, 500);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                initFX(fxPanel);
+            }
+       });
+    }
+
+    private static void initFX(JFXPanel fxPanel) {
+        // This method is invoked on the JavaFX thread
+        Scene scene = createScene();
+        fxPanel.setScene(scene);
+    }
+
+    private static Scene createScene() {
+        Group  root  =  new  Group();
+        Scene  scene  =  new  Scene(root, javafx.scene.paint.Color.ALICEBLUE);
+        Text  text  =  new  Text();
+        
+        text.setX(40);
+        text.setY(100);
+        text.setFont(new Font(25));
+        text.setText("Welcome JavaFX!");
+
+        root.getChildren().add(text);
+        
+        PhongMaterial phongMaterial = new PhongMaterial();
+        phongMaterial.setDiffuseColor(javafx.scene.paint.Color.DARKRED);
+        phongMaterial.setSpecularColor(javafx.scene.paint.Color.RED);
+        
+        //Creating an object of the class Box 
+        Box box = new Box();
+        box.setLayoutX(150);
+        box.setLayoutY(250);
+        box.setWidth(100.0); 
+        box.setHeight(100.0);   
+        box.setDepth(100.0);
+        box.setMaterial(phongMaterial);
+        
+        Rotate rxBox = new Rotate(0, 0, 0, 0, Rotate.X_AXIS);
+        Rotate ryBox = new Rotate(0, 0, 0, 0, Rotate.Y_AXIS);
+        Rotate rzBox = new Rotate(0, 0, 0, 0, Rotate.Z_AXIS);
+        rxBox.setAngle(30);
+        ryBox.setAngle(50);
+        rzBox.setAngle(30);
+        box.getTransforms().addAll(rxBox, ryBox, rzBox);
+        
+        root.getChildren().add(box);
+        return (scene);
+    }
     
     static public boolean imgScale (double factor) {
         int tmp = (int) (imgSize * factor) ;
@@ -1034,6 +1122,7 @@ public class NewController extends JFrame implements WindowListener {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton j3DExperimental;
     private javax.swing.JComboBox<String> jActivity;
     public static javax.swing.JMenuItem jConnection;
     private javax.swing.JSpinner jDisparity;
