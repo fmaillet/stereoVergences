@@ -5,6 +5,9 @@
  */
 package orthostereogram;
 
+import com.studiohartman.jamepad.ControllerButton;
+import com.studiohartman.jamepad.ControllerIndex;
+import com.studiohartman.jamepad.ControllerUnpluggedException;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -31,6 +34,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -111,6 +116,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int EXO_CD_ALTER = 3 ;
     final static public int EXO_CD_JUMP  = 4 ;
     
+    ControllerIndex currController = OrthoStereogram.controller.controllers.getControllerIndex(0);
+    
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
         this.size = stereogramSize ;
         this.workingDistance = workingDistance ;
@@ -180,6 +187,34 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         this.getContentPane().add(OD) ; OD.repaint();
         this.getContentPane().add(OG) ; OG.repaint();
         repaint () ;
+        
+        //Init xBox
+        
+        //ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        //exec.scheduleAtFixedRate(checkXBOX, 0, 100, TimeUnit.MILLISECONDS);
+        
+        ScheduledThreadPoolExecutor xboxcutor = new ScheduledThreadPoolExecutor(1);
+        xboxcutor.scheduleAtFixedRate(() -> checkXBOX(), 0, 200, TimeUnit.MILLISECONDS);
+    }
+    
+    private void checkXBOX () {
+        OrthoStereogram.controller.controllers.update();
+            try {
+                if(currController.isButtonPressed(ControllerButton.DPAD_UP)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.DPAD_DOWN)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.DPAD_LEFT)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.DPAD_RIGHT)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
+                }
+            } catch (ControllerUnpluggedException e) {   
+                //
+              }
     }
     
     private void resetStereogram (boolean keepClue) {
@@ -382,6 +417,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         }
         
         resizingIsActive = false;
+        //keypressedIsActive = false;
     }
     
     public void timeOut () {

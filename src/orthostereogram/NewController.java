@@ -85,7 +85,7 @@ public class NewController extends JFrame implements WindowListener {
     //XBOX
     static public boolean xboxConnected = false ;
     static boolean glfwInit = false ;
-    ControllerManager controllers;
+    public ControllerManager controllers;
     
     public NewController() {
         
