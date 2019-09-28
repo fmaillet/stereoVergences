@@ -648,8 +648,9 @@ class ResetStereogram implements Runnable {
     BufferedImage od, og ;
     Random rand = new Random ();
     //Thread t ;
-    int r = -16711681 ;
-    int c = -65536 ;
+    int red = -16711681 ;
+    int cyan = -65536 ;
+    int white = Color.WHITE.getRGB();
     int position = 0 ;
     int size ;
     int disparity ; // depht from back
@@ -664,9 +665,9 @@ class ResetStereogram implements Runnable {
         this.game = game ;
         //Quel type de lunettes ?
         if (!OrthoStereogram.BR_glasses) {
-            int t = c ;
-            c = r ;
-            r = t ;
+            int t = cyan ;
+            cyan = red ;
+            red = t ;
         }
                 
         size = od.getHeight() ;
@@ -682,8 +683,8 @@ class ResetStereogram implements Runnable {
         for (int i= 0; i<size; i++)
             for (int j=0; j<size; j++) {
                 b = rand.nextBoolean() ;
-                od.setRGB(i, j, (b ? Color.WHITE.getRGB() : r));
-                og.setRGB(i, j, (b ? Color.WHITE.getRGB() : c));
+                od.setRGB(i, j, (b ? white : red));
+                og.setRGB(i, j, (b ? white : cyan));
             }
         
         //paramètres du carré
@@ -700,40 +701,119 @@ class ResetStereogram implements Runnable {
             default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
         }
         //On crée le carré
-        for (int i=0; i<t; i++)
-            for (int j=0; j<t; j++) {
-                b = rand.nextBoolean() ;
-                //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
-                //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - disparity, j+dh, (b ? Color.WHITE.getRGB() : r));
-                og.setRGB(dc+i + disparity, j+dh, (b ? Color.WHITE.getRGB() : c));
-            }
+        if (game < 2) {
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                    og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                }
+        }
+        else {
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
+                    if (rt <= t/2) {
+                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                    }
+                }
+        }
         //s'il n'y a qu'un carré on sort
         if (game == 0) return ;
-        //sinon on dessine un deuxième carré
-        switch (position) {
-            case 0 : position = 3; break ;
-            case 1 : position = 2 ; break ;
-            case 2 : position = 1 ; break ;
-            default : position = 0 ; break ;
-        }
-        switch (position) {
-            case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
-            case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
-            case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
-            default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
-        }
-        //On crée le carré
-        disparity = disparity - 2 ;
-        for (int i=0; i<t; i++)
-            for (int j=0; j<t; j++) {
-                b = rand.nextBoolean() ;
-                //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
-                //else couleurRGB = Color.WHITE.getRGB() ;
-                od.setRGB(dc+i - disparity, j+dh, (b ? Color.WHITE.getRGB() : r));
-                og.setRGB(dc+i + disparity, j+dh, (b ? Color.WHITE.getRGB() : c));
+        if (game == 1) {
+            //sinon on dessine un deuxième carré
+            switch (position) {
+                case 0 : position = 3; break ;
+                case 1 : position = 2 ; break ;
+                case 2 : position = 1 ; break ;
+                default : position = 0 ; break ;
             }
-        //On a fini
-        //System.out.println ( System.currentTimeMillis() - begin ) ;
+            switch (position) {
+                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
+            }
+            //On crée le carré ou le rond
+            disparity = disparity - 2 ;
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                    og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                }
+        }
+        if (game == 2) {
+            //sinon on dessine un deuxième rond
+            int pos3 = 0; //position du 3ème rond
+            int pos4 = 0; //position du 4ème rond
+            switch (position) {
+                case 0 : position = 3; pos3 = 1; pos4 = 2; break ;
+                case 1 : position = 2 ; pos3 = 3; pos4 = 0; break ;
+                case 2 : position = 1 ; pos3 = 0; pos4 = 3; break ;
+                default : position = 0 ; pos3 = 2; pos4 = 1; break ;
+            }
+            switch (position) {
+                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
+            }
+            //On crée un rond
+            disparity = disparity - 2 ;
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                    //else couleurRGB = Color.WHITE.getRGB() ;
+                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
+                    if (rt <= t/2) {
+                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                    }
+                }
+            //On dessine un 3ème rond
+            switch (pos3) {
+                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
+            }
+            //On crée un rond
+            disparity = disparity - 2 ;
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                    //else couleurRGB = Color.WHITE.getRGB() ;
+                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
+                    if (rt <= t/2) {
+                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                    }
+                }
+            //On dessine un 4ème rond
+            switch (pos4) {
+                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
+                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
+                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
+                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
+            }
+            //On crée un rond
+            disparity = disparity - 2 ;
+            for (int i=0; i<t; i++)
+                for (int j=0; j<t; j++) {
+                    b = rand.nextBoolean() ;
+                    //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
+                    //else couleurRGB = Color.WHITE.getRGB() ;
+                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
+                    if (rt <= t/2) {
+                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
+                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
+                    }
+                }
+        }
     }
 }

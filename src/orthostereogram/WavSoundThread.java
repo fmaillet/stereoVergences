@@ -3,8 +3,10 @@ package orthostereogram;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import javafx.scene.media.AudioClip;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
@@ -41,7 +43,13 @@ public class WavSoundThread extends Thread {
         try {
             
             clip = AudioSystem.getClip();
-        
+                       
+            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                double gain = 0.25;
+                float dB = (float) (Math.log(gain) / Math.log(10.0) * 20.0);
+                gainControl.setValue(dB);
+            }
             clip.open(AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(fichier))));
             clip.start();
             /*try {

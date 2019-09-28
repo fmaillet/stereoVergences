@@ -527,7 +527,7 @@ public class NewController extends JFrame implements WindowListener {
 
         jLabel16.setText("Stims :");
 
-        jStims.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Un carré", "Deux carrés" }));
+        jStims.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Un carré", "Deux carrés", "Quatre ronds" }));
         jStims.setToolTipText("Number of stims");
         jStims.setEnabled(false);
         jStims.addActionListener(new java.awt.event.ActionListener() {
