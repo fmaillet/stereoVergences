@@ -39,6 +39,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -212,6 +214,11 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
                 else if(currController.isButtonPressed(ControllerButton.DPAD_RIGHT)) {
                   this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
                 }
+                else if (!currController.isButtonPressed(ControllerButton.DPAD_UP) &&
+                         !currController.isButtonPressed(ControllerButton.DPAD_DOWN) &&
+                         !currController.isButtonPressed(ControllerButton.DPAD_LEFT) &&
+                         !currController.isButtonPressed(ControllerButton.DPAD_RIGHT))
+                    this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
             } catch (ControllerUnpluggedException e) {   
                 //
               }
@@ -377,7 +384,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         int keyCode = ke.getKeyCode();
         char c  = ke.getKeyChar() ;
         if (resizingIsActive | keypressedIsActive) return ;
-        if (c != 'A' & !ke.isControlDown() & ! ke.isShiftDown()) keypressedIsActive = true ;
+        //if (c != 'A' & !ke.isControlDown() & ! ke.isShiftDown()) keypressedIsActive = true ;
+        if (!ke.isControlDown() & ! ke.isShiftDown()) keypressedIsActive = true ;
         
         //Echap : on sort
         if (keyCode == VK_ESCAPE) this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -417,7 +425,6 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         }
         
         resizingIsActive = false;
-        //keypressedIsActive = false;
     }
     
     public void timeOut () {
@@ -524,10 +531,19 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //A-t-on fait un cycle ? oui, on affiche un trophé
         if (currentVergenceValue == 0 && obtainedMax == maxRequired && obtainedMin == minRequired) {
             trophy[trophyNumber].setEnabled(true);
+            xboxVibre();
             if (trophyNumber<NB_TROPHY-1) trophyNumber++ ;
+            
         }
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
+    }
+    
+    private void xboxVibre() {
+        //XBox vibre
+        try {
+            currController.doVibration(0.8f, 0.0f, 500);
+        } catch (ControllerUnpluggedException ex) {}
     }
     
     public void badAnswer () {
