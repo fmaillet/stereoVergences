@@ -137,7 +137,7 @@ public class MySQLClass {
         }
     }
     
-    //On sauvegarde la calibration...
+    //On récupère la calibration...
     public boolean getCalibration() {
         int jeton = 0 ;
         if (connect () != null) {
@@ -157,6 +157,49 @@ public class MySQLClass {
             } catch (Exception e) {}
         }
         return (jeton > 0) ;
+    }
+    
+    //On récupère les lunettes utilisées...
+    public boolean getAnaglyphes() {
+        int jeton = 0 ;
+        if (connect () != null) {
+            try {
+                transmission = connection.createStatement (ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE) ;
+                leResultat = transmission.executeQuery ("select ADELI, ANAGLYPH from Pro where ADELI = " + OrthoStereogram.user.adeli) ;
+                if (leResultat.next()) {
+                    // On rend le jeton
+                    jeton = leResultat.getInt("ANAGLYPH") ;
+                    if (jeton == 0) OrthoStereogram.BR_glasses = false;
+                    else OrthoStereogram.BR_glasses = true;
+                        
+                    
+                    //On met à jour
+                    //leResultat.updateRow () ;
+                }
+            } catch (Exception e) {}
+        }
+        return (true) ;
+    }
+    
+    //On sauvegarde le type de lunettes...
+    public void saveAnaglyphes() {
+        //connect () ;
+        if (connect () != null) {
+            try {
+                transmission = connection.createStatement (ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE) ;
+                leResultat = transmission.executeQuery ("select ADELI, ANAGLYPH from Pro where ADELI = " + OrthoStereogram.user.adeli) ;
+                if (leResultat.next()) {
+                    // On rend le jeton
+                    double jeton = leResultat.getDouble("ANAGLYPH") ;
+                    jeton = (double) (OrthoStereogram.BR_glasses ? 0 : 1) ;
+                    leResultat.updateDouble("ANAGLYPH", jeton);
+                    
+                    //On met à jour
+                    leResultat.updateRow () ;
+                }
+            } catch (Exception e) {}
+            
+        }
     }
     
 }//Fin de la classe MySQLClass

@@ -22,6 +22,7 @@ public class OrthoStereogram {
     static public MySQLClass mySQLConnection ;
     
     public static int screenResolution ;
+    
     public static NewController controller ;
 
     static public boolean master = false ;
@@ -78,7 +79,10 @@ public class OrthoStereogram {
     public static void sortir () {
         
         controller.setEnabled(false);
-        if (OrthoStereogram.user.nom != null) OrthoStereogram.mySQLConnection.rendreJeton();
+        if (OrthoStereogram.user.nom != null) {
+            OrthoStereogram.mySQLConnection.rendreJeton();
+            OrthoStereogram.mySQLConnection.saveAnaglyphes();
+        }
         System.exit(0);
         
     }

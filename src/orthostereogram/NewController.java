@@ -1157,7 +1157,8 @@ public class NewController extends JFrame implements WindowListener {
             //jCalibrate.setBackground(Color.GREEN.brighter());
             isCalibrated = true ;
         } 
-        
+        OrthoStereogram.mySQLConnection.getAnaglyphes();
+        jImg3DMouseClicked(null);
     }
     
 
