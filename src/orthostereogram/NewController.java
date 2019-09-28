@@ -265,6 +265,7 @@ public class NewController extends JFrame implements WindowListener {
     private void initComponents() {
 
         jLabel8 = new javax.swing.JLabel();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jMax = new javax.swing.JSpinner();
@@ -325,12 +326,17 @@ public class NewController extends JFrame implements WindowListener {
         jMenuCalibration = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jQuit = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuVibration = new javax.swing.JCheckBoxMenuItem();
+        jMenuPlayers = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuSystemInfo = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuHelp = new javax.swing.JMenuItem();
 
         jLabel8.setText("jLabel8");
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.cyan);
@@ -575,6 +581,19 @@ public class NewController extends JFrame implements WindowListener {
         jMenu1.add(jQuit);
 
         jMenuBar1.add(jMenu1);
+
+        jMenu3.setText("Paramètres");
+
+        jMenuVibration.setSelected(true);
+        jMenuVibration.setText("xBox Vibration");
+        jMenu3.add(jMenuVibration);
+
+        jMenuPlayers.setText("Joueurs");
+        jMenuPlayers.setToolTipText("");
+        jMenuPlayers.setSelected(true);
+        jMenu3.add(jMenuPlayers);
+
+        jMenuBar1.add(jMenu3);
 
         jMenu2.setText("Help");
         jMenu2.addActionListener(new java.awt.event.ActionListener() {
@@ -1171,10 +1190,14 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JSpinner jMax;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuCalibration;
     private javax.swing.JMenuItem jMenuHelp;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuPlayers;
     private javax.swing.JMenuItem jMenuSystemInfo;
+    public static javax.swing.JCheckBoxMenuItem jMenuVibration;
     private javax.swing.JSpinner jMin;
     private javax.swing.JMenuItem jQuit;
     public static javax.swing.JRadioButton jRandomJumps;

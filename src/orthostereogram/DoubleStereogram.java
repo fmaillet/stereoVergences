@@ -541,6 +541,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     
     private void xboxVibre() {
         //XBox vibre
+        if (!OrthoStereogram.controller.jMenuVibration.isSelected()) return;
         try {
             currController.doVibration(0.8f, 0.0f, 500);
         } catch (ControllerUnpluggedException ex) {}
