@@ -99,7 +99,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     
     //Trphés
     JLabel trophy[] ;
-    final int NB_TROPHY = 8 ;
+    int NB_TROPHY = 8 ;
     int trophyNumber = 0 ;
     
     static private boolean alternate = false ;
@@ -144,8 +144,6 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         this.setAlwaysOnTop(true);
         this.setVisible(true);
 
-        
-        
         //On initialise les TimeOuts
         executor = new ScheduledThreadPoolExecutor(1);
     }
@@ -190,11 +188,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         this.getContentPane().add(OG) ; OG.repaint();
         repaint () ;
         
-        //Init xBox
-        
-        //ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        //exec.scheduleAtFixedRate(checkXBOX, 0, 100, TimeUnit.MILLISECONDS);
-        
+        //Init xBox        
         ScheduledThreadPoolExecutor xboxcutor = new ScheduledThreadPoolExecutor(1);
         xboxcutor.scheduleAtFixedRate(() -> checkXBOX(), 0, 200, TimeUnit.MILLISECONDS);
     }
@@ -319,6 +313,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         infosMax.setBounds(20, 85, 300, 30);
         this.getContentPane().add(infosMax) ;
         //Create trophy
+        NB_TROPHY = (this.getHeight() - 160 - 64) / 85 ;
+        System.out.println(NB_TROPHY);
         trophy = new JLabel[NB_TROPHY] ;
         for (int i=0; i<NB_TROPHY; i++) {
             trophy[i] = new JLabel() ;

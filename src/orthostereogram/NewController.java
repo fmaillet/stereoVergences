@@ -328,6 +328,7 @@ public class NewController extends JFrame implements WindowListener {
         jQuit = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuVibration = new javax.swing.JCheckBoxMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jMenuPlayers = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuSystemInfo = new javax.swing.JMenuItem();
@@ -553,7 +554,7 @@ public class NewController extends JFrame implements WindowListener {
             }
         });
 
-        jMenu1.setText("File");
+        jMenu1.setText("Fichier");
 
         jConnection.setText("Connection serveur");
         jConnection.addActionListener(new java.awt.event.ActionListener() {
@@ -572,7 +573,7 @@ public class NewController extends JFrame implements WindowListener {
         jMenu1.add(jMenuCalibration);
         jMenu1.add(jSeparator4);
 
-        jQuit.setText("Quit");
+        jQuit.setText("Quitter");
         jQuit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jQuitActionPerformed(evt);
@@ -587,22 +588,23 @@ public class NewController extends JFrame implements WindowListener {
         jMenuVibration.setSelected(true);
         jMenuVibration.setText("xBox Vibration");
         jMenu3.add(jMenuVibration);
+        jMenu3.add(jSeparator7);
 
         jMenuPlayers.setText("Joueurs");
         jMenuPlayers.setToolTipText("");
-        jMenuPlayers.setSelected(true);
+        jMenuPlayers.setEnabled(false);
         jMenu3.add(jMenuPlayers);
 
         jMenuBar1.add(jMenu3);
 
-        jMenu2.setText("Help");
+        jMenu2.setText("Aide");
         jMenu2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu2ActionPerformed(evt);
             }
         });
 
-        jMenuSystemInfo.setText("System info");
+        jMenuSystemInfo.setText("Infos système");
         jMenuSystemInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuSystemInfoActionPerformed(evt);
@@ -611,7 +613,7 @@ public class NewController extends JFrame implements WindowListener {
         jMenu2.add(jMenuSystemInfo);
         jMenu2.add(jSeparator5);
 
-        jMenuHelp.setText("Help");
+        jMenuHelp.setText("Instructions");
         jMenuHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuHelpActionPerformed(evt);
@@ -1210,6 +1212,7 @@ public class NewController extends JFrame implements WindowListener {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JSpinner jSize_acc;
     private javax.swing.JComboBox<String> jSliderTimeOut;
     private javax.swing.JButton jStart_Accommodation;
