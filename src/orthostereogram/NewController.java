@@ -5,6 +5,9 @@
  */
 package orthostereogram;
 
+import com.studiohartman.jamepad.ControllerIndex;
+import com.studiohartman.jamepad.ControllerManager;
+import com.studiohartman.jamepad.ControllerUnpluggedException;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
@@ -15,6 +18,9 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.Ellipse2D;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
@@ -38,9 +44,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.lwjgl.glfw.GLFW;
-import static org.lwjgl.glfw.GLFW.GLFW_JOYSTICK_1;
-import static org.lwjgl.glfw.GLFW.glfwGetJoystickName;
+
 
 
 /**
@@ -81,6 +85,7 @@ public class NewController extends JFrame implements WindowListener {
     //XBOX
     static public boolean xboxConnected = false ;
     static boolean glfwInit = false ;
+    ControllerManager controllers;
     
     public NewController() {
         
@@ -92,8 +97,11 @@ public class NewController extends JFrame implements WindowListener {
         jUnit6.setText("\u0394"); jUnit7.setText("\u0394");
         
         //AutoConnect
-        AutoConnect auto = new AutoConnect () ;
-        auto.start () ;
+        if (OrthoStereogram.master) connected () ;
+        else {
+            AutoConnect auto = new AutoConnect () ;
+            auto.start () ;
+        }
         
         //Image du trophé
         tinyTrophy = getToolkit().getImage(getClass().getResource("/Ressources/trophy-small.png"));
@@ -162,16 +170,22 @@ public class NewController extends JFrame implements WindowListener {
     public void initController () {
         
         //Si on a la xbox
-        //Removed beacause of missing dll blocked the rest of the controller init
-        /*try {
-            if (glfwInit = glfwInit()) {
-                xboxConnected = glfwJoystickPresent (GLFW_JOYSTICK_1) ;
-                jImgXBOX.setEnabled(xboxConnected);
-            }
-        } catch (Exception e) {}*/
+        //XBOX
+        controllers = new ControllerManager();
+        controllers.initSDLGamepad();
+        //int nControllers = controllers.getNumControllers();
+        xboxConnected = (controllers.getNumControllers() > 0); 
+        jImgXBOX.setEnabled(xboxConnected);
         
-        //Joystick state change
-        //GLFW.glfwSetJoystickCallback(new  GLFW.GLFWjoystickfun 
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable() {
+          @Override
+          public void run() {
+            controllers.update();
+            xboxConnected = (controllers.getNumControllers() > 0); 
+            jImgXBOX.setEnabled(xboxConnected);
+          }
+        }, 0, 5, TimeUnit.SECONDS);
                 
         //On redimensionne le controller
         this.setSize(900, 700);
@@ -927,11 +941,7 @@ public class NewController extends JFrame implements WindowListener {
         info.jText.append("Java version : " + System.getProperty("java.version") + "\n" );
         info.jText.append("System is : " + System.getProperty("os.name") + " (" +  System.getProperty("os.version") + " " + System.getProperty("os.arch") + ")\n") ;
         info.jText.append("Free memory : " + Runtime.getRuntime().freeMemory() + "\n") ;
-        //Game pad
-        System.out.println(org.lwjgl.Version.getVersion());
-        info.jText.append("LWJGL lib : " + org.lwjgl.Version.getVersion() + "\n") ;
-        if (glfwInit & xboxConnected) info.jText.append("LWJGL lib : " + glfwGetJoystickName(GLFW_JOYSTICK_1) + "\n\n") ;
-        else info.jText.append("\n") ;
+        
         //Computed resolution
         info.jText.append("Vergence : \n-----\n") ;
         info.jText.append("Estimated resolution : " + Toolkit.getDefaultToolkit().getScreenResolution() + " pixels/inch\n");
@@ -949,6 +959,14 @@ public class NewController extends JFrame implements WindowListener {
                 info.jText.append(String.valueOf(i) + ": isPrimaryScreen " + "\n") ;
             //screenDevices[i].getDisplayMode().
         }
+        info.jText.append("-----\n");
+        
+        //XBox infos
+        info.jText.append("Manettes : " + controllers.getNumControllers());
+        ControllerIndex currController = controllers.getControllerIndex(0);
+        try {
+            info.jText.append("\nManettes : " + currController.getName());
+        } catch (ControllerUnpluggedException e) {}
         
         //Visible
         info.setLocationRelativeTo(this);
@@ -994,6 +1012,7 @@ public class NewController extends JFrame implements WindowListener {
         doubleSt = new DoubleStereogram (imgSize, (Integer) jWorkingDistance.getValue(), (Integer) jInitial.getValue(), hd, (int) jStepC.getValue(), (double) jStepD.getValue()) ;
         
         //On affiche
+        this.setState(JFrame.ICONIFIED);
         screenDevices[sc].setFullScreenWindow(doubleSt);
         doubleSt.setAppearence(jStims.getSelectedIndex(), (Integer) jMax.getValue(), (Integer) jMin.getValue(), (Integer) jTimeOut.getValue(), jActivity.getSelectedIndex(), (Integer) jDisparity.getValue());
         currentFrame = doubleSt ; //Necessary for imgScale
@@ -1199,7 +1218,7 @@ public class NewController extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        if (glfwInit) GLFW.glfwTerminate();
+        controllers.quitSDLGamepad();
         OrthoStereogram.sortir () ;
     }
 

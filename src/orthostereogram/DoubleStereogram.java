@@ -38,9 +38,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static orthostereogram.ClassicStereogramView.CONVERGENCE_DOWN;
-import static orthostereogram.ClassicStereogramView.CONVERGENCE_UP;
-import static orthostereogram.ClassicStereogramView.DIVERGENCE_UP;
 
 /**
  *
@@ -137,6 +134,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         getContentPane().setBackground( Color.WHITE );
         this.setAlwaysOnTop(true);
         this.setVisible(true);
+
+        
         
         //On initialise les TimeOuts
         executor = new ScheduledThreadPoolExecutor(1);
@@ -168,7 +167,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         
         
         //Boudaries
-        this.maxRequired = Math.floor(max / stepC ) * stepC ; System.out.println(this.maxRequired);
+        this.maxRequired = Math.floor(max / stepC ) * stepC ; //System.out.println(this.maxRequired);
         this.minRequired = Math.floor(min / stepD ) * stepD ;
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
@@ -300,6 +299,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     public void windowClosed(WindowEvent e) {
         OrthoStereogram.controller.setEnabled(true);
         OrthoStereogram.controller.setVisible(true);
+        OrthoStereogram.controller.setState(JFrame.NORMAL);
     }
 
     @Override
@@ -495,6 +495,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     }
     
     public void badAnswer () {
+        String str = new String();
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
@@ -512,8 +513,18 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         }
         
         //On affiche un nouveau stéréogramme
-        resetStereogram (false) ;
+        //resetStereogram (false) ;
+        goToVergence(currentVergenceValue);
         repaint () ;
+        //Mise à jour affichage valeur courante
+        switch (currentDirectionOfWork) {
+            case CONVERGENCE_UP : str = "C\u2191 "; break;
+            case CONVERGENCE_DOWN : str = "C\u2193 "; break;
+            case DIVERGENCE_UP: str = "D\u2191"; break ;
+            default: str = "D\u2193" ; break; 
+        }
+        info.setText(str + String.valueOf(currentVergenceValue) + " \u0394");
+        infosMax.setText("C" + String.valueOf(obtainedMax) + " D" + String.valueOf(Math.abs(obtainedMin))) ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }

@@ -16,15 +16,15 @@ import java.io.StringWriter;
  */
 public class OrthoStereogram {
     
-    public static final String VERSION = "0.8.1" ;
-    public static boolean BR_glasses = true ;
+    public static final String VERSION = "0.8.3" ;
+    public static boolean BR_glasses = false ;
     static public UserInfo user ;
     static public MySQLClass mySQLConnection ;
     
     public static int screenResolution ;
     public static NewController controller ;
 
-    
+    static public boolean master = false ;
     
     
     
@@ -36,6 +36,14 @@ public class OrthoStereogram {
         //For connection
         user = new UserInfo () ;
         mySQLConnection = new MySQLClass () ;
+        if (args.length > 0) {
+            master = true ;
+            user.nom = "Maillet" ;
+            user.prenom = "Frédéric" ;
+            user.activite = "Orthoptiste Neuropsychologue" ;
+            user.adr1 = "209 avenue de castres" ;
+            user.adr2 = "RDC BAT G" ;
+        }
         
         // no flickering on resize
         //System.setProperty("sun.awt.noerasebackground", "true");
