@@ -25,6 +25,7 @@ import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SPACE;
 import static java.awt.event.KeyEvent.VK_SUBTRACT;
 import static java.awt.event.KeyEvent.VK_UP;
+import static java.awt.event.KeyEvent.VK_V;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -208,10 +209,26 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
                 else if(currController.isButtonPressed(ControllerButton.DPAD_RIGHT)) {
                   this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
                 }
+                else if(currController.isButtonPressed(ControllerButton.Y)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_UP, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.A)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.X)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, 'A'));
+                }
+                else if(currController.isButtonPressed(ControllerButton.B)) {
+                  this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
+                }
                 else if (!currController.isButtonPressed(ControllerButton.DPAD_UP) &&
                          !currController.isButtonPressed(ControllerButton.DPAD_DOWN) &&
                          !currController.isButtonPressed(ControllerButton.DPAD_LEFT) &&
-                         !currController.isButtonPressed(ControllerButton.DPAD_RIGHT))
+                         !currController.isButtonPressed(ControllerButton.DPAD_RIGHT) &&
+                         !currController.isButtonPressed(ControllerButton.Y) &&
+                         !currController.isButtonPressed(ControllerButton.A) &&
+                         !currController.isButtonPressed(ControllerButton.X) &&
+                         !currController.isButtonPressed(ControllerButton.B))
                     this.dispatchEvent(new KeyEvent(this, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, 'A'));
             } catch (ControllerUnpluggedException e) {   
                 //
@@ -394,6 +411,13 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             badAnswer () ;
         }
         
+        //Commandes
+        if (keyCode == VK_V) {
+            boolean b  = OrthoStereogram.controller.jMenuVibration.isSelected();
+            OrthoStereogram.controller.jMenuVibration.setSelected(!b);
+        }
+            
+        
         //Dynamic resizing
         if ((keyCode == VK_SUBTRACT | keyCode == VK_6) & ke.isControlDown() & ! ke.isShiftDown()) {
             resizingIsActive = true ;
@@ -539,7 +563,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         //XBox vibre
         if (!OrthoStereogram.controller.jMenuVibration.isSelected()) return;
         try {
-            currController.doVibration(0.8f, 0.0f, 500);
+            currController.doVibration(1.0f, 0.0f, 750);
         } catch (ControllerUnpluggedException ex) {}
     }
     
@@ -736,7 +760,7 @@ class ResetStereogram implements Runnable {
                 case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
                 default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
             }
-            //On crée le carré ou le rond
+            //On crée le carré
             disparity = disparity - 2 ;
             for (int i=0; i<t; i++)
                 for (int j=0; j<t; j++) {
@@ -762,7 +786,7 @@ class ResetStereogram implements Runnable {
                 default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
             }
             //On crée un rond
-            disparity = disparity - 2 ;
+            disparity = disparity - 1 ;
             for (int i=0; i<t; i++)
                 for (int j=0; j<t; j++) {
                     b = rand.nextBoolean() ;
@@ -782,7 +806,7 @@ class ResetStereogram implements Runnable {
                 default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
             }
             //On crée un rond
-            disparity = disparity - 2 ;
+            disparity = disparity - 1 ;
             for (int i=0; i<t; i++)
                 for (int j=0; j<t; j++) {
                     b = rand.nextBoolean() ;
@@ -802,7 +826,7 @@ class ResetStereogram implements Runnable {
                 default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
             }
             //On crée un rond
-            disparity = disparity - 2 ;
+            disparity = disparity - 1 ;
             for (int i=0; i<t; i++)
                 for (int j=0; j<t; j++) {
                     b = rand.nextBoolean() ;

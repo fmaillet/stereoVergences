@@ -238,7 +238,7 @@ public class NewController extends JFrame implements WindowListener {
         this.setAlwaysOnTop(false);
         //Default screen size
         int sc = jScreens.getSelectedIndex() ;
-        DEFAULT_IMG_SIZE = (int) (screenDevices[sc].getDisplayMode().getHeight() * 0.80) ;
+        DEFAULT_IMG_SIZE = (int) (screenDevices[sc].getDisplayMode().getHeight() * 0.90) ;
         if ( (DEFAULT_IMG_SIZE & 1) != 0 )  DEFAULT_IMG_SIZE--  ; // only odd values
         this.imgSize = DEFAULT_IMG_SIZE ;
     }
