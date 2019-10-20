@@ -98,7 +98,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     static double currentDivergenceValue ;
     static private int previousBadAnswer = 0 ;
     
-    //Trphés
+    //Trophés
     JLabel trophy[] ;
     int NB_TROPHY = 8 ;
     int trophyNumber = 0 ;
@@ -120,6 +120,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     final static public int EXO_CD_JUMP  = 4 ;
     
     ControllerIndex currController = OrthoStereogram.controller.controllers.getControllerIndex(0);
+    
+    long responseTimeBegin, responseTime ;
     
     public DoubleStereogram (int stereogramSize, int workingDistance, int initVergence, int verticality, int stepC, double stepD) {
         this.size = stereogramSize ;
@@ -175,7 +177,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         
         
         //Boudaries
-        this.maxRequired = Math.floor(max / stepC ) * stepC ; //System.out.println(this.maxRequired);
+        this.maxRequired = Math.floor(max / stepC ) * stepC ;
         this.minRequired = Math.floor(min / stepD ) * stepD ;
         
         int deltaX = calcPixelsForVergence (currentVergenceValue) ;
@@ -277,6 +279,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
             
         //Pour le prochain, on inverse la verticalité
         verticality = - verticality ;
+        //pour le calcul du temps de réponse
+        responseTimeBegin = System.currentTimeMillis() ;
     }
     
     public int calcPixelsForVergence (double vergence) {
@@ -331,7 +335,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         this.getContentPane().add(infosMax) ;
         //Create trophy
         NB_TROPHY = (this.getHeight() - 160 - 64) / 85 ;
-        System.out.println(NB_TROPHY);
+        //System.out.println(NB_TROPHY);
         trophy = new JLabel[NB_TROPHY] ;
         for (int i=0; i<NB_TROPHY; i++) {
             trophy[i] = new JLabel() ;
@@ -452,6 +456,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     }
     
     public void goodAnswer () {
+        responseTime = System.currentTimeMillis() - responseTimeBegin ;
         String str = new String() ;
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
@@ -543,7 +548,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         
         //On affiche un nouveau stéréogramme
         //resetStereogram () ;
-        repaint () ;
+        //repaint () ;
         
         info.setText(str+String.valueOf(currentVergenceValue)+" \u0394");
         infosMax.setText("C" + String.valueOf(obtainedMax) + "  D" + String.valueOf(Math.abs(obtainedMin))) ;
@@ -740,7 +745,6 @@ class ResetStereogram implements Runnable {
     public void run() {
         //long begin = System.currentTimeMillis() ;
         
-        
         boolean b ;
         //On rempli de valeurs aléatoires identiques OD=OG
         for (int i= 0; i<size; i++)
@@ -784,7 +788,7 @@ class ResetStereogram implements Runnable {
                 }
         }
         //s'il n'y a qu'un carré on sort
-        if (game == 0) return ;
+        //if (game == 0) return ;
         if (game == 1) {
             //sinon on dessine un deuxième carré
             switch (position) {
@@ -808,6 +812,7 @@ class ResetStereogram implements Runnable {
                     og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
                 }
         }
+        //Jeux avec les ronds
         if (game == 2) {
             //sinon on dessine un deuxième rond
             int pos3 = 0; //position du 3ème rond
@@ -818,55 +823,30 @@ class ResetStereogram implements Runnable {
                 case 2 : position = 1 ; pos3 = 0; pos4 = 3; break ;
                 default : position = 0 ; pos3 = 2; pos4 = 1; break ;
             }
-            switch (position) {
-                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
-                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
-                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
-                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
-            }
-            //On crée un rond
-            disparity = disparity - 1 ;
-            for (int i=0; i<t; i++)
-                for (int j=0; j<t; j++) {
-                    b = rand.nextBoolean() ;
-                    //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
-                    //else couleurRGB = Color.WHITE.getRGB() ;
-                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
-                    if (rt <= t/2) {
-                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
-                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
-                    }
-                }
+            drawCircle(position, disparity-1);
+            
             //On dessine un 3ème rond
-            switch (pos3) {
-                case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
-                case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
-                case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
-                default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
-            }
-            //On crée un rond
-            disparity = disparity - 1 ;
-            for (int i=0; i<t; i++)
-                for (int j=0; j<t; j++) {
-                    b = rand.nextBoolean() ;
-                    //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
-                    //else couleurRGB = Color.WHITE.getRGB() ;
-                    double rt  = Math.sqrt((i-t/2)*(i-t/2) + (j-t/2)*(j-t/2));
-                    if (rt <= t/2) {
-                        od.setRGB(dc+i - disparity, j+dh, (b ? white : red));
-                        og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
-                    }
-                }
+            drawCircle(pos3, disparity-2);
+            
             //On dessine un 4ème rond
-            switch (pos4) {
+            drawCircle(pos4, disparity-3);
+  
+        }
+        //System.out.println(System.currentTimeMillis() - begin);
+    }
+    
+    private void drawCircle(int pos, int disparity) {
+        int dh, dc ;
+        boolean b ;
+        int t = size / 3 ; // taille du carré
+        int bord = 30 ;    //distance du bord
+        switch (pos) {
                 case 0 : dh = bord ; dc = size/2 - t/2 ; break ;    //up
                 case 1 : dh = size/2 - t/2 ; dc = bord;  break ;    //left
                 case 2 : dh = size/2 - t/2 ; dc = size - t - bord ; break ;    //right
                 default : dh = size - t - bord ; dc = size/2 - t/2 ; break ;   //down
             }
-            //On crée un rond
-            disparity = disparity - 1 ;
-            for (int i=0; i<t; i++)
+        for (int i=0; i<t; i++)
                 for (int j=0; j<t; j++) {
                     b = rand.nextBoolean() ;
                     //if (rand.nextBoolean())  couleurRGB = Color.BLACK.getRGB() ;
@@ -877,6 +857,5 @@ class ResetStereogram implements Runnable {
                         og.setRGB(dc+i + disparity, j+dh, (b ? white : cyan));
                     }
                 }
-        }
     }
 }
