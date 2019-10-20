@@ -458,6 +458,8 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         executor.remove(() -> timeOut());
         //On joue de la musique
         sndGood.run();
+        //On se souvient que c'est une bonne réponse
+        previousBadAnswer = 0 ; 
         
         //On sauvegarde la valeur max atteinte
         if (alternate) {
@@ -569,26 +571,62 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
     
     public void badAnswer () {
         String str = new String();
+        double step = this.step ;
         //On arrête le Time out
         if (scheduledFuture != null) scheduledFuture.cancel (true) ;
         executor.remove(() -> timeOut());
         //On joue de la musique
         sndBad.run();
         
-        //Si on est à zéro, on restera à zéro
-        if (currentVergenceValue != 0) {
+        //Première mauvaise réponse ?
+        if (! alternate & ! jump & previousBadAnswer > 1) {
             switch (currentDirectionOfWork) {
-                case CONVERGENCE_UP   : if (currentVergenceValue > 0) currentVergenceValue = currentVergenceValue - step ; break ;
-                case CONVERGENCE_DOWN : if (currentVergenceValue > 0) currentVergenceValue = currentVergenceValue + step ; break ;
-                case DIVERGENCE_UP    : if (currentVergenceValue < 0) currentVergenceValue = currentVergenceValue - step ; break ;
-                case DIVERGENCE_DOWN  : if (currentVergenceValue < 0) currentVergenceValue = currentVergenceValue + step ; break ;
+                case CONVERGENCE_UP : 
+                    currentDirectionOfWork = CONVERGENCE_DOWN ;
+                    this.step = - stepC ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    currentDirectionOfWork = DIVERGENCE_DOWN ;
+                    this.step = stepD ;
+                    break ;
             }
+            //previousBadAnswer = 0 ;
         }
+        else if (previousBadAnswer == 1) {
+            step = 2 * step ;
+        }
+        previousBadAnswer++ ;
+        //Si on alterne
+        if (jump)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : 
+                    goToVergence(maxRequired);
+                    currentDirectionOfWork = DIVERGENCE_UP ;
+                    break ;
+                case DIVERGENCE_UP  :
+                    goToVergence(minRequired);
+                    currentDirectionOfWork = CONVERGENCE_UP ;
+                    break ;
+            }
+        else if (alternate)
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : goToVergence(currentDivergenceValue); currentDirectionOfWork = DIVERGENCE_UP ; break ;
+                case DIVERGENCE_UP  : goToVergence(currentConvergenceValue); currentDirectionOfWork = CONVERGENCE_UP ; break ;
+            }
+        //et si on alterne pas
+        else if (currentVergenceValue == 0) goToVergence(0);
+        else
+            switch (currentDirectionOfWork) {
+                case CONVERGENCE_UP : if (currentVergenceValue > 0) stepVergence(-step); break ;
+                case CONVERGENCE_DOWN : if (currentVergenceValue > 0) stepVergence(step); break ;
+                case DIVERGENCE_UP : if (currentVergenceValue < 0) stepVergence(-step); break ;
+                case DIVERGENCE_DOWN : if (currentVergenceValue < 0) stepVergence(step); break ;
+            }
         
         //On affiche un nouveau stéréogramme
         //resetStereogram (false) ;
         goToVergence(currentVergenceValue);
-        repaint () ;
+        
         //Mise à jour affichage valeur courante
         switch (currentDirectionOfWork) {
             case CONVERGENCE_UP : str = "C\u2191 "; break;
@@ -598,6 +636,7 @@ public class DoubleStereogram extends JFrame implements WindowListener, MouseMot
         }
         info.setText(str + String.valueOf(currentVergenceValue) + " \u0394");
         infosMax.setText("C" + String.valueOf(obtainedMax) + " D" + String.valueOf(Math.abs(obtainedMin))) ;
+        repaint () ;
         //On relance le timer
         scheduledFuture = executor.schedule(() -> timeOut(), timeOut, TimeUnit.SECONDS);
     }
